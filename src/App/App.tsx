@@ -1,5 +1,3 @@
-import './App.css';
-
 import View from '../View/View';
 
 import testData from '../test.json'
@@ -15,7 +13,8 @@ const taskOption = testData.taskOption;
 
 function App() {
 
-  //useMemo
+  // 可以使用 useMemo
+  // 從 task 中取得大節點資料
   const node = taskOption.filter((task)=>{
     return task.dateSource === task.keyStage;
   });

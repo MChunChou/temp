@@ -1,3 +1,5 @@
+import { faFilter, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState } from 'react';
 
 export default (props) => {
@@ -9,7 +11,6 @@ export default (props) => {
   const onMenuClicked = () => {
     props.showColumnMenu(refButton.current);
   };
-
 
   const onSortChanged = () => {
     setAscSort(props.column.isSortAscending() ? 'active' : 'inactive');
@@ -39,7 +40,7 @@ export default (props) => {
         className="customHeaderMenuButton"
         onClick={() => onMenuClicked()}
       >
-        <i className={`fa fa-bar`}>F</i>
+        <i className={`fa fa-filter`}></i>
       </div>
     );
   }
@@ -54,14 +55,14 @@ export default (props) => {
           onTouchEnd={(event) => onSortRequested('asc', event)}
           className={`customSortDownLabel ${ascSort}`}
         >
-          <i className="fa fa-long-arrow-alt-down">s</i>
+          <i className="fa fa-long-arrow-down"></i>
         </div>
         <div
           onClick={(event) => onSortRequested('desc', event)}
           onTouchEnd={(event) => onSortRequested('desc', event)}
           className={`customSortUpLabel ${descSort}`}
         >
-          <i className="fa fa-long-arrow-alt-up">d</i>
+          <i className="fa fa-long-arrow-up"></i>
         </div>
         <div
           onClick={(event) => onSortRequested('', event)}
@@ -79,7 +80,6 @@ export default (props) => {
   if(props.controlComponent) {
     control = props.controlComponent
   }
-
 
   return (
     <div>

@@ -7,6 +7,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './GridTable.css';
 import CustomHeader from "./CustomHeader";
+// import CustomHeader from "./Header";
 
 const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const gridRef = useRef<any>();
@@ -19,8 +20,10 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const [defaultColDef] = useState({
         resizable: true,
         autoHeight: true,
-        initialWidth: 120,
+        minWidth: 150,
         sortable: true,
+        pagination: true,
+        paginationAutoPageSize: 2,
         suppressAutoSize: true,
         suppressSizeToFit: true,
         filter: 'agTextColumnFilter',
@@ -31,6 +34,10 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
             enableMenu: true,
         }
     });
+
+    useEffect(() => {
+        console.log(columnDefs)
+    }, [columnDefs])
 
     const components = useMemo(() => {
         return {
@@ -87,7 +94,6 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 components={components}
-                headerHeight={300}
             />
 
 

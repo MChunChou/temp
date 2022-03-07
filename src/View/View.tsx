@@ -3,8 +3,9 @@ import { AgGridReact } from "ag-grid-react";
 import GridTable from '../GridTable/GridTable';
 import * as fh from '../utils/fetch-helper';
 import TaskComponent from './TaskComponent'
-import './View.css'
+import Detail from "./Detail";
 
+//測試資料
 const tD = [{
     toolInfo: {
         bookNo: 'bookNo_1',
@@ -199,6 +200,7 @@ const tD = [{
         }]
 }]
 
+//返回 post 用的參數
 const getScheduleMainParams = (node: any, selected: any, task: any) => {
     const tool: string[] = [];
     const facCd: string[] = [];
@@ -237,20 +239,6 @@ const getScheduleMainParams = (node: any, selected: any, task: any) => {
 
 }
 
-const NodeInfo = (node: any, data: any, size: number) => {
-    const nd: any = [];
-    data.forEach( (d:any) => {
-        if(node.some((n:any) => {
-            console.log(d, n)
-           return d.taskId === node.taskId
-        })) {
-            nd.push(d)
-        }
-    })
-
-    console.log(nd)
-}
-
 const View: React.FC<any> = (props: any) => {
 
     const [data, setData] = useState<any>([]);
@@ -261,21 +249,22 @@ const View: React.FC<any> = (props: any) => {
     //需要使用useMemo 去取SET
 
     useEffect(() => {
+        // 取得 post 用資訊
         const params = getScheduleMainParams(props.node, props.selected, props.taskOptions)
-        // console.log(params)
         fh.post('http://localhost:8000/myschedule/main', {}, {handleError: ()=>{
             setData(tD)
         }})
-            .then(res => {
-                if(res){
-                    setData(res)
-                }
-            });
-    }, [])
+        .then(res => {
+            if(res){
+                setData(res)
+            }
+        });
+    }, [props.node, props.selected, props.taskOptions])
 
 
     const sortData = (isNode?: boolean) => {
         if (data.length > 0) {
+            // sort for toolInfo
             const afterSort = data.sort((a: any, b: any) => {
                 const ai = props.selected.List.indexOf(a.toolInfo.facCd)
                 const bi = props.selected.List.indexOf(b.toolInfo.facCd)
@@ -284,31 +273,9 @@ const View: React.FC<any> = (props: any) => {
 
             const gridData = data.map((d: any) => {
                 const newData = { ...d.toolInfo };
-
-                    // if(isNode) {
-                    //     d.taskList.forEach((task: {taskId: string | number }) => {
-                    //         if( props.node.some((n: any) => {
-                    //             return task.taskId === n.taskId
-                    //         })) {
-                    //             newData[task.taskId + ''] = task;
-                    //         }
-                    //     })
-                    // } else {
-                    //     //先過濾掉Node節點
-                    //     const tasks = d.taskList.filter((task: any) => {
-                    //         console.log(props.node.some((n: any) => n.taskId === task.taskId), task)
-                    //         return !props.node.some((n: any) => n.taskId === task.taskId)
-                    //     }).map((task: any) => {
-                    //         newData[task.taskId + ''] = task
-                    //     });
-
-                    //     return newData
-                    // }
-
                 d.taskList.forEach((task: { taskId: string | number; }) => {
                     newData[task.taskId + ''] = task
                 })
-
                 return newData
             })
 
@@ -337,7 +304,7 @@ const View: React.FC<any> = (props: any) => {
     }
 
     const getTaskColumn = (k: string) => {
-        console.log(k)
+        // 過濾大節點以及非屬於 "K" 節點的
         const res = props.selected.Task.filter((task: any) => {
             return !props.node.some((n: any) => n.taskId === task.taskId) && task.keyStage === k
         }).map((task: { taskId: string; taskName: any; }) => {
@@ -351,9 +318,6 @@ const View: React.FC<any> = (props: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
-                headerComponentParams: {
-                    // controlComponent: <div onClick={() => {console.log('control')}}> + </div>
-                }
             }
         })
 
@@ -390,7 +354,7 @@ const View: React.FC<any> = (props: any) => {
                     controlComponent: <div onClick={(v)=>{
                         setisDetail(true)
                         setDetailColumn(getTaskColumn(task.keyStage))
-                    }}> + </div>
+                    }}> <i className="fa fa-plus"></i> </div>
                 }
             }
         })
@@ -398,18 +362,7 @@ const View: React.FC<any> = (props: any) => {
         return res
     }
 
-
-    const CustomHeaderGroup: React.FC = () => {
-        return <span></span>
-    }
-
     const getColumn = (isExpand: boolean): any => {
-        // const columns: any[] = [];
-        // columns.push({
-        //     headerName: '',
-        //     children: getInfoColumn()
-        // })
-        // return [...getInfoColumn(isExpand), ...getTaskColumn()]
         return [...getInfoColumn(isExpand),  ...nodeColumns()]
     }
 
@@ -417,6 +370,14 @@ const View: React.FC<any> = (props: any) => {
         return getColumn(isExpand)
     }
 
+    let d = null
+    if(isDetail){
+        d = <Detail
+            setisDetail={setisDetail}
+            sortData={sortData}
+            detailColumn={detailColumn}
+        ></Detail>
+    }
     return (
         <div className='view'>
 
@@ -433,25 +394,7 @@ const View: React.FC<any> = (props: any) => {
             />
 
             {
-                isDetail?
-                <div style={{
-                    position:"absolute",
-                    height: '100vh',
-                    width: '100vw',
-                    background: 'white',
-                    top: 0
-                }}>
-                <button onClick={()=>{setisDetail(false)}}>X</button>
-                <GridTable
-                    dataDefs={{
-                        data: sortData(false)
-                    }}
-                    columnDefs={{
-                        groups: detailColumn
-                    }}
-                />
-                </div>
-                : <></>
+                d
             }
 
 
