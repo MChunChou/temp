@@ -35,7 +35,26 @@ const myschedule = [{
     isComplete: {
         'PHK': 'N'
     },
-    taskList: [{
+    taskList: [
+        {
+            taskId: '0001',
+            planDateStart: '2011/7/1',
+            planDateEnd: '2018/9/2',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        },
+        {
+            taskId: '0002',
+            planDateStart: '2017/5/20',
+            planDateEnd: '2021/7/8',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'false',
+            keyStaget: 'T1'
+        },
+        {
         taskId: 1000,
         planDateStart: '2020/1/11',
         planDateEnd: '2021/1/27',
@@ -80,7 +99,26 @@ const myschedule = [{
     isComplete: {
         'PHK': 'N'
     },
-    taskList: [{
+    taskList: [
+        {
+            taskId: '0001',
+            planDateStart: '2011/7/1',
+            planDateEnd: '2018/9/2',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        },
+        {
+            taskId: '0002',
+            planDateStart: '2017/5/20',
+            planDateEnd: '2021/7/8',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'false',
+            keyStaget: 'T1'
+        },
+        {
         taskId: 1000,
         planDateStart: '2020/1/1',
         planDateEnd: '2021/1/2',
@@ -125,31 +163,50 @@ const myschedule = [{
     isComplete: {
         'PHK': 'N'
     },
-    taskList: [{
-        taskId: 1000,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1001,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1002,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'T0'
-    }]
+    taskList: [
+        {
+            taskId: '0001',
+            planDateStart: '2011/7/1',
+            planDateEnd: '2018/9/2',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        },
+        {
+            taskId: '0002',
+            planDateStart: '2017/5/20',
+            planDateEnd: '2021/7/8',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'false',
+            keyStaget: 'T1'
+        },
+        {
+            taskId: '1000',
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: '1001',
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: '1002',
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'T0'
+        }]
 }]
 
 app.post("/myschedule/main", function (req, res) {

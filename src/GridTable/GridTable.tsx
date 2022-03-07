@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
@@ -6,14 +6,37 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './GridTable.css';
-
-import { ColDef, ColGroupDef } from "ag-grid-community";
+import CustomHeader from "./CustomHeader";
 
 const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
+    const gridRef = useRef<any>();
 
     const [columnDefs, setColumnDefs]: any[] = useState([]);
     const [rowData, setRowData]: any = useState();
+    const [gridAPI, setGridAPI] = useState<any>();
+    const [isExpand, setIsExpand] = useState(false)
 
+    const [defaultColDef] = useState({
+        resizable: true,
+        autoHeight: true,
+        initialWidth: 120,
+        sortable: true,
+        suppressAutoSize: true,
+        suppressSizeToFit: true,
+        filter: 'agTextColumnFilter',
+        // Default Use filter in first row
+        // suppressMenu: true,
+        // floatingFilter: true,
+        headerComponentParams: {
+            enableMenu: true,
+        }
+    });
+
+    const components = useMemo(() => {
+        return {
+            agColumnHeader: CustomHeader,
+        };
+    }, []);
 
     useEffect(() => {
         createColumns();
@@ -22,6 +45,11 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     useEffect(() => {
         getData();
     }, [props.dataDefs.data])
+
+    const onGridReady = (api: any) => {
+        console.log(api)
+        setGridAPI(api)
+    }
 
     const getData = () => {
         if (props.dataDefs.data) {
@@ -33,29 +61,36 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         setColumnDefs(props.columnDefs.groups)
     }
 
+    const handleClickExpand = () => {
+        if (props.getExpandColumns) {
+            const newColumnsDef = props.getExpandColumns(!isExpand);
+            gridRef.current.api.setColumnDefs(newColumnsDef)
+            setIsExpand(!isExpand);
+        }
+    }
+
     return (
-        <div className='grid-table ag-theme-alpine' style={{ height: '100vh' }}>
+        <div className='grid-table ag-theme-alpine'>
+
+            {
+                props.isExpandComponent ?
+                    <button onClick={handleClickExpand}>
+                        {isExpand ? "<<" : ">>"}
+                    </button>
+                    : <></>
+            }
+
             <AgGridReact
+                ref={gridRef}
+                onGridReady={onGridReady}
                 rowData={rowData}
                 columnDefs={columnDefs}
-                defaultColDef={{
-                    resizable: true,
-                    autoHeight: true,
-                    suppressAutoSize: true,
-                    suppressSizeToFit: true,
-                    // suppressMenu: true,
-                    // floatingFilter: true,
-                    filter: 'agTextColumnFilter',
-                    filterValueGetter: (params) => {
-                        const d = params.data[params.colDef.field as string]
-                        return d.planDateEnd + ' ' + d.planDateStart;
-                    },
-                    // floatingFilterComponentParams: {
-                        // suppressFilterButton: true,
-                    // },
-                    // floatingFilterComponent: Filter
-                }}
+                defaultColDef={defaultColDef}
+                components={components}
+                headerHeight={300}
             />
+
+
         </div>
     );
 }

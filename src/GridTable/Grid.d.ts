@@ -2,6 +2,9 @@
 interface GridTableProps {
     dataDefs: DataOptions
     columnDefs: ColumnsOptions
+    expandComponent?: React.Component
+    isExpandComponent?: boolean
+    getExpandColumns?: (isExpand) => any
 }
 
 interface DataOptions {
@@ -10,5 +13,4 @@ interface DataOptions {
 
 interface ColumnsOptions {
     groups?: any[]
-
 }
