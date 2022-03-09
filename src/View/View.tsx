@@ -285,10 +285,16 @@ const View: React.FC<any> = (props: any) => {
         return []
     }
 
-    const getInfoColumn = (isExpand: boolean): any[] => {
+    const getInfoColumn = (isExpand: boolean, isShrink?: boolean): any[] => {
         const res: any[] = []
 
+
+
         props.selected.Info.forEach((info: { name: string; }, idx: number) => {
+            if(isShrink && idx > 0) {
+                return
+            }
+
             if (!isExpand && idx > 2) {
                 return
             }
@@ -362,12 +368,16 @@ const View: React.FC<any> = (props: any) => {
         return res
     }
 
-    const getColumn = (isExpand: boolean): any => {
-        return [...getInfoColumn(isExpand),  ...nodeColumns()]
+    const getColumn = (isExpand: boolean, isShrink?: boolean): any => {
+        return [...getInfoColumn(isExpand, isShrink),  ...nodeColumns()]
     }
 
     const getExpandColumns = (isExpand: boolean) => {
         return getColumn(isExpand)
+    }
+
+    const getShrinkColumns = (isExpand: boolean) => {
+        return getColumn(false, isExpand)
     }
 
     let d = null
@@ -391,6 +401,7 @@ const View: React.FC<any> = (props: any) => {
                 }}
                 isExpandComponent={true}
                 getExpandColumns={getExpandColumns}
+                getShrinkColumns={getShrinkColumns}
             />
 
             {

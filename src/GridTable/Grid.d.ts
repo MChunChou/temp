@@ -1,10 +1,12 @@
 
 interface GridTableProps {
+
     dataDefs: DataOptions
     columnDefs: ColumnsOptions
     expandComponent?: React.Component
     isExpandComponent?: boolean
     getExpandColumns?: (isExpand) => any
+    getShrinkColumns?: (isExpand) => any
 }
 
 interface DataOptions {

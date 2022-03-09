@@ -16,6 +16,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const [rowData, setRowData]: any = useState();
     const [gridAPI, setGridAPI] = useState<any>();
     const [isExpand, setIsExpand] = useState(false)
+    const [isShrink, setIsShrink] = useState(false)
 
     const [defaultColDef] = useState({
         resizable: true,
@@ -54,7 +55,6 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     }, [props.dataDefs.data])
 
     const onGridReady = (api: any) => {
-        console.log(api)
         setGridAPI(api)
     }
 
@@ -76,6 +76,14 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         }
     }
 
+    const handleClickShrink = () => {
+        if (props.getShrinkColumns) {
+            const newColumnsDef = props.getShrinkColumns(!isShrink);
+            gridRef.current.api.setColumnDefs(newColumnsDef)
+            setIsShrink(!isShrink);
+        }
+    }
+
     return (
         <div className='grid-table ag-theme-alpine'>
 
@@ -85,6 +93,14 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                         {isExpand ? "<<" : ">>"}
                     </button>
                     : <></>
+            }
+
+            {
+                props.isExpandComponent ?
+                <button onClick={handleClickShrink}>
+                    {isShrink ? ">>>" : "<<<"}
+                </button>
+                : <></>
             }
 
             <AgGridReact

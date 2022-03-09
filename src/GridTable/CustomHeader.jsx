@@ -50,20 +50,22 @@ export default (props) => {
   if (props.enableSorting) {
     sort = (
       <div style={{ display: 'inline-block' }}>
-        <div
-          onClick={(event) => onSortRequested('asc', event)}
-          onTouchEnd={(event) => onSortRequested('asc', event)}
-          className={`customSortDownLabel ${ascSort}`}
-        >
-          <i className="fa fa-long-arrow-down"></i>
-        </div>
-        <div
-          onClick={(event) => onSortRequested('desc', event)}
-          onTouchEnd={(event) => onSortRequested('desc', event)}
-          className={`customSortUpLabel ${descSort}`}
-        >
-          <i className="fa fa-long-arrow-up"></i>
-        </div>
+
+          <div
+          onClick={(event) => onSortRequested(ascSort==='active'? 'desc': 'asc', event)}
+          // onTouchEnd={(event) => onSortRequested('asc', event)}
+            className={`customSortDownLabel ${ascSort}`}
+          >
+            <i className="fa fa-long-arrow-down"></i>
+          </div>
+          <div
+          onClick={(event) => onSortRequested(ascSort==='active'? 'desc': 'asc', event)}
+          // onTouchEnd={(event) => onSortRequested('desc', event)}
+            className={`customSortUpLabel ${descSort}`}
+          >
+            <i className="fa fa-long-arrow-up"></i>
+          </div>
+
         <div
           onClick={(event) => onSortRequested('', event)}
           onTouchEnd={(event) => onSortRequested('', event)}
