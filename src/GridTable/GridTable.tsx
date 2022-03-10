@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { AgGridReact } from 'ag-grid-react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
@@ -8,6 +8,8 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './GridTable.css';
 import CustomHeader from "./CustomHeader";
 // import CustomHeader from "./Header";
+import FullWidthCellRenderer from '../Control/Control'
+
 
 const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const gridRef = useRef<any>();
@@ -20,6 +22,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
 
     const [defaultColDef] = useState({
         resizable: true,
+        wrapText: true,
         autoHeight: true,
         minWidth: 150,
         sortable: true,
@@ -33,7 +36,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         // floatingFilter: true,
         headerComponentParams: {
             enableMenu: true,
-        }
+        },
     });
 
     useEffect(() => {
@@ -84,6 +87,23 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         }
     }
 
+    const isFullWidth = (data: any) => {
+        return data.fullWitdth
+    }
+
+    const isFullWidthCell = useCallback(function (rowNode) {
+        return isFullWidth(rowNode.data);
+      }, []);
+      const fullWidthCellRenderer = useMemo(() => {
+        return FullWidthCellRenderer;
+      }, []);
+
+      const getRowHeight = useCallback(function (params) {
+        // return 100px height for full width rows
+        if (isFullWidth(params.data)) {
+          return 100;
+        }
+      }, []);
     return (
         <div className='grid-table ag-theme-alpine'>
 
@@ -110,6 +130,9 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 components={components}
+                // getRowHeight={getRowHeight}
+                isFullWidthCell={isFullWidthCell}
+                fullWidthCellRenderer={fullWidthCellRenderer}
             />
 
 

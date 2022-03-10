@@ -17,7 +17,6 @@ code {
   height: 100vh;
 }
 
-
 .dd {
   position: absolute;
   display: flex;
@@ -31,4 +30,22 @@ code {
   justify-content: center;
   align-items: center;
 
+}
+
+.warn {
+  color: blue;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.hard {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 3px;
+  color: red
+}
+
+.today {
+  color: yellow
 }

@@ -2,6 +2,10 @@ import View from '../View/View';
 
 import testData from '../test.json'
 import 'font-awesome/css/font-awesome.min.css'
+import 'primereact/resources/themes/saga-blue/theme.css'
+import 'primereact/resources/primereact.min.css';
+
+import Calendar from '../Calendar/Calendar';
 
 const selected = {
   List: testData.list,
@@ -26,7 +30,6 @@ function App() {
         node={node}
         taskOptions={taskOption}
       />
-
     </div>
   );
 }

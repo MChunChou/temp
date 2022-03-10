@@ -46,30 +46,30 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-        taskId: 1000,
-        planDateStart: '2020/1/11',
-        planDateEnd: '2021/1/27',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1001,
-        planDateStart: '2020/1/28',
-        planDateEnd: '2021/1/30',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1002,
-        planDateStart: '2020/1/3',
-        planDateEnd: '2021/1/18',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'T0'
-    }]
+            taskId: 1000,
+            planDateStart: '2020/1/11',
+            planDateEnd: '2021/1/27',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1001,
+            planDateStart: '2020/1/28',
+            planDateEnd: '2021/1/30',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1002,
+            planDateStart: '2020/1/3',
+            planDateEnd: '2021/1/18',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'T0'
+        }]
 }, {
     toolInfo: {
         bookNo: 'bookNo_2',
@@ -110,30 +110,30 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-        taskId: 1000,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1001,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1002,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'T0'
-    }]
+            taskId: 1000,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1001,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1002,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'T0'
+        }]
 }, {
     toolInfo: {
         bookNo: 'bookNo_3',
@@ -234,7 +234,7 @@ const getScheduleMainParams = (node: any, selected: any, task: any) => {
         tool,
         facCd,
         tasks: [...tasks, ...Array.from(nodeSet)],
-        nodeLen : nodeSet.size
+        nodeLen: nodeSet.size
     }
 
 }
@@ -245,20 +245,27 @@ const View: React.FC<any> = (props: any) => {
     const [isDetail, setisDetail] = useState<any>(false)
     const [detail, setDetail] = useState<any>()
     const [detailColumn, setDetailColumn] = useState<any>({})
-
+    const [controlOpen, setControlOpen] = useState<any>({ })
     //需要使用useMemo 去取SET
+
+
+    useEffect(()=>{
+        console.warn(controlOpen)
+    }, [controlOpen])
 
     useEffect(() => {
         // 取得 post 用資訊
         const params = getScheduleMainParams(props.node, props.selected, props.taskOptions)
-        fh.post('http://localhost:8000/myschedule/main', {}, {handleError: ()=>{
-            setData(tD)
-        }})
-        .then(res => {
-            if(res){
-                setData(res)
+        fh.post('http://localhost:8000/myschedule/main', {}, {
+            handleError: () => {
+                setData(tD)
             }
-        });
+        })
+            .then(res => {
+                if (res) {
+                    setData(res)
+                }
+            });
     }, [props.node, props.selected, props.taskOptions])
 
 
@@ -291,7 +298,7 @@ const View: React.FC<any> = (props: any) => {
 
 
         props.selected.Info.forEach((info: { name: string; }, idx: number) => {
-            if(isShrink && idx > 0) {
+            if (isShrink && idx > 0) {
                 return
             }
 
@@ -301,7 +308,7 @@ const View: React.FC<any> = (props: any) => {
             res.push({
                 field: info.name,
                 pinned: 'left',
-                columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
+                // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
             })
         })
 
@@ -318,8 +325,8 @@ const View: React.FC<any> = (props: any) => {
                 field: task.taskId + '',
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
-                cellRendererParams: task,
-                sortable:false,
+                cellRendererParams: { test: "test", ...task },
+                sortable: false,
                 filterValueGetter: (v: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
@@ -344,20 +351,22 @@ const View: React.FC<any> = (props: any) => {
 
         const res = props.node.filter((n: any) => {
             return nodeSet.has(n.taskId)
-        }).map((task: { taskId: string; taskName: any; keyStage:string }) => {
+        }).map((task: { taskId: string; taskName: any; keyStage: string }) => {
 
             return {
                 field: task.taskId + '',
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
-                cellRendererParams: task,
-                sortable:false,
+                cellRendererParams: {
+                    ...task
+                },
+                sortable: false,
                 filterValueGetter: (v: any) => {
-                    console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
+                    // console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
                 headerComponentParams: {
-                    controlComponent: <div onClick={(v)=>{
+                    controlComponent: <div onClick={(v) => {
                         setisDetail(true)
                         setDetailColumn(getTaskColumn(task.keyStage))
                     }}> <i className="fa fa-plus"></i> </div>
@@ -369,7 +378,7 @@ const View: React.FC<any> = (props: any) => {
     }
 
     const getColumn = (isExpand: boolean, isShrink?: boolean): any => {
-        return [...getInfoColumn(isExpand, isShrink),  ...nodeColumns()]
+        return [...getInfoColumn(isExpand, isShrink), ...nodeColumns()]
     }
 
     const getExpandColumns = (isExpand: boolean) => {
@@ -381,7 +390,7 @@ const View: React.FC<any> = (props: any) => {
     }
 
     let d = null
-    if(isDetail){
+    if (isDetail) {
         d = <Detail
             setisDetail={setisDetail}
             sortData={sortData}

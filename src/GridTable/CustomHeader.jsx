@@ -56,7 +56,7 @@ export default (props) => {
           // onTouchEnd={(event) => onSortRequested('asc', event)}
             className={`customSortDownLabel ${ascSort}`}
           >
-            <i className="fa fa-long-arrow-down"></i>
+            <i className="fa fa-sort-amount-asc"></i>
           </div>
           <div
           onClick={(event) => onSortRequested(ascSort==='active'? 'desc': 'asc', event)}
@@ -86,7 +86,7 @@ export default (props) => {
   return (
     <div>
       {menu}
-      <div className="customHeaderLabel">{props.displayName}</div>
+      <div className="customHeaderLabel" >{props.displayName}</div>
       {sort}
       {control}
     </div>
