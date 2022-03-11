@@ -32,20 +32,22 @@ code {
 
 }
 
-.warn {
+.has-plan {
   color: blue;
   border: 1px solid;
   border-radius: 5px;
   padding: 3px;
 }
 
-.hard {
+.has-delay {
   border: 1px solid;
   border-radius: 5px;
   padding: 3px;
   color: red
 }
 
-.today {
-  color: yellow
+.has-today {
+  color: blue;
 }
+
+

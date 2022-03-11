@@ -4,6 +4,7 @@ import GridTable from '../GridTable/GridTable';
 import * as fh from '../utils/fetch-helper';
 import TaskComponent from './TaskComponent'
 import Detail from "./Detail";
+import MyCalendar from "../Calendar/Calendar";
 
 //測試資料
 const tD = [{
@@ -246,6 +247,7 @@ const View: React.FC<any> = (props: any) => {
     const [detail, setDetail] = useState<any>()
     const [detailColumn, setDetailColumn] = useState<any>({})
     const [controlOpen, setControlOpen] = useState<any>({ })
+    const [ctlDate, setCtlDate] = useState<any>(null);
     //需要使用useMemo 去取SET
 
 
@@ -358,6 +360,9 @@ const View: React.FC<any> = (props: any) => {
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
                 cellRendererParams: {
+                    setCtlDate: (ctlDate:any) => {
+                        setCtlDate(ctlDate)
+                    },
                     ...task
                 },
                 sortable: false,
@@ -399,7 +404,9 @@ const View: React.FC<any> = (props: any) => {
     }
     return (
         <div className='view'>
-
+            {/* <MyCalendar
+                ctlDate={ctlDate}
+            /> */}
             <div className="table-control"></div>
             <GridTable
                 dataDefs={{

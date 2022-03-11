@@ -22,10 +22,10 @@ const Test = (props: any) => {
                     if(typeof row.data[key] === 'object') {
 
                         if(row.data[key].taskId === props.getValue().taskId){
-                            newObject[key] = {...row.data[key], open: true}
+                            newObject[key] = {...row.data[key], open: true, setCtlDate: props.setCtlDate}
                         }
                         else {
-                            newObject[key] = {...row.data[key], open: false}
+                            newObject[key] = {...row.data[key], open: false, setCtlDate: props.setCtlDate}
                         }
 
                     }else {
@@ -37,14 +37,14 @@ const Test = (props: any) => {
             }
 
 
-            props.setValue({...props.getValue(), open: true})
+            props.setValue({...props.getValue(), open: true,  setCtlDate: props.setCtlDate})
             props.api.applyTransaction({
                 add: [{ fullWitdth: true, ...props.getValue() }],
                 addIndex: props.node.rowIndex + 1
             })
         }
         else {
-            props.setValue({...props.getValue(), open: false})
+            props.setValue({...props.getValue(), open: false,  setCtlDate: props.setCtlDate})
             handleRemove()
         }
     }
@@ -60,7 +60,6 @@ const Test = (props: any) => {
         }
 
     }
-
 
     return (
         <div
