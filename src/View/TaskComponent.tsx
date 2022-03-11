@@ -1,29 +1,50 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
 
+import { MyContext } from "../App/App"
+
 const Test = (props: any) => {
-    const [flag, setFlag] = useState(false)
+    const user = useContext(MyContext);
 
     const handleClick = () => {
-        const isOpen = !flag
+        const isOpen = props.value.open? false : true;
 
-        setFlag(isOpen)
         if (isOpen) {
+            const row = props.api.getDisplayedRowAtIndex(props.node.rowIndex);
             const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
-
 
             if(rowNode1 && rowNode1.data.fullWitdth) {
                 handleRemove()
+
+                const newObject:any = {}
+                Object.keys(row.data).forEach((key)=>{
+                    if(typeof row.data[key] === 'object') {
+
+                        if(row.data[key].taskId === props.getValue().taskId){
+                            newObject[key] = {...row.data[key], open: true}
+                        }
+                        else {
+                            newObject[key] = {...row.data[key], open: false}
+                        }
+
+                    }else {
+                        newObject[key] = row.data[key]
+                    }
+                })
+
+                row.setData(newObject)
             }
 
 
+            props.setValue({...props.getValue(), open: true})
             props.api.applyTransaction({
                 add: [{ fullWitdth: true, ...props.getValue() }],
                 addIndex: props.node.rowIndex + 1
             })
         }
         else {
+            props.setValue({...props.getValue(), open: false})
             handleRemove()
         }
     }
@@ -39,6 +60,7 @@ const Test = (props: any) => {
         }
 
     }
+
 
     return (
         <div
@@ -63,7 +85,7 @@ const Test = (props: any) => {
 
                 <div>
                     {
-                        flag ? <FontAwesomeIcon icon={faAngleUp} />
+                        props.value.open ? <FontAwesomeIcon icon={faAngleUp} />
                             : <FontAwesomeIcon icon={faAngleDown} />
                     }
                 </div>
@@ -72,8 +94,6 @@ const Test = (props: any) => {
     )
 }
 
-
-const ControlOpenIndex = {};
 const TaskComponent: React.FC<any> = (props: any) => {
 
 

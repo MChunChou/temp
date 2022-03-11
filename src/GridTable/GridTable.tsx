@@ -40,7 +40,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     });
 
     useEffect(() => {
-        console.log(columnDefs)
+        // console.log(columnDefs)
     }, [columnDefs])
 
     const components = useMemo(() => {

@@ -1,3 +1,5 @@
+import React , {useState, useEffect} from 'react';
+
 const Control = (props) => {
     const { planDateStart, planDateEnd, actlCompleteDate } = props.data
 
@@ -6,8 +8,8 @@ const Control = (props) => {
         planDateEnd <input value={planDateEnd} readOnly></input>
         actlCompleteDate <input value={actlCompleteDate || ''} readOnly></input>
 
-        <button>勾勾</button>
-        <button>叉叉</button>
+        <i className="fa fa-check"></i>
+        <i className="fa fa-close"></i>
     </div>)
 
 }

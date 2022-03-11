@@ -325,7 +325,7 @@ const View: React.FC<any> = (props: any) => {
                 field: task.taskId + '',
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
-                cellRendererParams: { test: "test", ...task },
+                cellRendererParams: { ...task },
                 sortable: false,
                 filterValueGetter: (v: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
@@ -413,10 +413,7 @@ const View: React.FC<any> = (props: any) => {
                 getShrinkColumns={getShrinkColumns}
             />
 
-            {
-                d
-            }
-
+            { d }
 
         </div>
     );
