@@ -1,6 +1,7 @@
 import { faFilter, faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useRef, useState } from 'react';
+import './style.css';
 
 export default (props) => {
   const [ascSort, setAscSort] = useState('inactive');
@@ -37,7 +38,7 @@ export default (props) => {
     menu = (
       <div
         ref={refButton}
-        className="customHeaderMenuButton"
+        className="filter"
         onClick={() => onMenuClicked()}
       >
         <i className={`fa fa-filter`}></i>
@@ -49,22 +50,22 @@ export default (props) => {
 
   if (props.enableSorting) {
     sort = (
-      <div style={{ display: 'inline-block' }}>
+      <div className='sort'>
 
-          <div
-          onClick={(event) => onSortRequested(ascSort==='active'? 'desc': 'asc', event)}
+        <div
+          onClick={(event) => onSortRequested(ascSort === 'active' ? 'desc' : 'asc', event)}
           // onTouchEnd={(event) => onSortRequested('asc', event)}
-            className={`customSortDownLabel ${ascSort}`}
-          >
-            <i className="fa fa-sort-amount-asc"></i>
-          </div>
-          <div
-          onClick={(event) => onSortRequested(ascSort==='active'? 'desc': 'asc', event)}
+          className={`customSortDownLabel ${ascSort}`}
+        >
+          <i className="fa fa-sort-amount-asc"></i>
+        </div>
+        <div
+          onClick={(event) => onSortRequested(ascSort === 'active' ? 'desc' : 'asc', event)}
           // onTouchEnd={(event) => onSortRequested('desc', event)}
-            className={`customSortUpLabel ${descSort}`}
-          >
-            <i className="fa fa-long-arrow-up"></i>
-          </div>
+          className={`customSortUpLabel ${descSort}`}
+        >
+          <i className="fa fa-sort-amount-desc"></i>
+        </div>
 
         <div
           onClick={(event) => onSortRequested('', event)}
@@ -79,16 +80,19 @@ export default (props) => {
 
   let control = null
 
-  if(props.controlComponent) {
+  if (props.controlComponent) {
     control = props.controlComponent
   }
 
   return (
-    <div>
-      {menu}
-      <div className="customHeaderLabel" >{props.displayName}</div>
-      {sort}
-      {control}
+    <div className="headerTitleCell">
+
+      <div className="headerLabel l">
+        <div className="customHeaderLabel">{props.displayName}</div>
+        {sort}
+      </div>
+      <div className="headerLabel r">{menu}{control}</div>
+
     </div>
   );
 };

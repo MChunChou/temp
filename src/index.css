@@ -32,6 +32,11 @@ code {
 
 }
 
+.dd .dd-table {
+  height: 80%;
+  width: 80%;
+}
+
 .has-plan {
   color: blue;
   border: 1px solid;

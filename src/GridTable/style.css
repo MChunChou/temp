@@ -1,0 +1,337 @@
+.view {
+  background-color: #f6f9fb;
+}
+
+.view .ag-theme-alpine .ag-root-wrapper {
+  border: 0;
+}
+
+.filter, .openDetail {
+  color: #a1b0b8;
+}
+
+.ag-header-row {
+  color: #647384;
+  font-weight: bold;
+  width: 100%;
+}
+
+.ag-header-cell[aria-sort='ascending'] .customSortDownLabel.active {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ag-header-cell[aria-sort='ascending'] .customSortUpLabel.inactive {
+  display: none;
+}
+
+.ag-header-cell[aria-sort='descending'] .customSortDownLabel.inactive {
+  display: none;
+}
+
+.ag-header-cell[aria-sort='descending'] .customSortUpLabel.active {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ag-header-cell:hover .headerLabel.r .filter,
+.ag-header-cell:hover .headerLabel.r .openDetail {
+  visibility: visible;
+}
+
+.ag-header-cell .headerLabel.r .filter,
+.ag-header-cell .headerLabel.r .openDetail {
+  visibility: hidden;
+}
+
+.ag-header-cell.ag-column-menu-visible .headerLabel.r .filter,
+.ag-header-cell.ag-header-active .headerLabel.r .filter:active,
+.ag-header-cell.ag-column-menu-visible .headerLabel.r .openDetail,
+.ag-header-cell.ag-header-active .headerLabel.r .openDetail:active {
+  visibility: visible;
+  color: #0094ff;
+}
+
+.headerLabel.r div:not(:last-child) {
+  margin-right: .25rem;
+}
+
+.headerLabel.l div:not(:first-child) {
+  margin-right: .25rem;
+}
+
+.ag-theme-alpine .ag-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.ag-theme-alpine .ag-ltr .ag-cell {
+  border-right-width: 0;
+}
+
+.ag-pinned-left-cols-container .ag-cell.ag-cell-not-inline-editing.ag-cell-auto-height {
+  line-height: 60px;
+}
+
+.ag-pinned-left-cols-container .ag-cell-wrapper {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.ag-theme-alpine .ag-cell, .ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
+  line-height: 25px;
+  /**/
+}
+
+.ag-cell-wrapper,
+.ag-theme-alpine .ag-cell-wrapper > *:not(.ag-cell-value):not(.ag-group-value) {
+  height: 60px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  width: 100px;
+}
+
+.ag-header-viewport .ag-header-cell {
+  width: 100px !important;
+}
+
+.headerTitleCell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.headerTitleCell .headerLabel.l, .headerTitleCell .headerLabel.r {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.headerTitleCell .headerLabel .customHeaderLabel {
+  color: #647384;
+  margin-right: 0.25rem;
+}
+
+.headerTitleCell .headerLabel .sort {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.ag-theme-alpine .ag-header {
+  background-color: #f6f9fb;
+  border-bottom: solid 2px #96b5ca8a;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 50px;
+  width: 100%;
+}
+
+.customSortDownLabel,
+.customSortUpLabel {
+  color: #a1b0b8;
+}
+
+.customSortDownLabel.active,
+.customSortUpLabel.active {
+  color: #0094ff;
+}
+
+.ag-theme-alpine .ag-pinned-left-header,
+.ag-theme-alpine .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(.ag-cell-range-single-cell) {
+  border-right: 1px solid #96b5ca8a;
+}
+
+.ag-header-cell:hover {
+  cursor: auto;
+}
+
+.ag-header-cell:hover .ag-header-cell-sortable:visited,
+.ag-header-cell:hover .ag-header-cell-sortable,
+.ag-header-cell-sortable:active,
+.ag-header-cell-sortable:focus {
+  cursor: pointer;
+}
+
+button.expand,
+button.splitter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  background: inherit;
+  cursor: pointer;
+  border: 0;
+}
+
+button.expand svg {
+  width: 24px;
+  height: 21px;
+  fill: #647384;
+}
+
+button.expand:hover svg,
+button.expand.active svg {
+  fill: #0094ff;
+}
+
+button.splitter {
+  z-index: 2;
+  color: #7292a7;
+  font-size: 2rem;
+}
+
+button.splitter i.fa-caret-left {
+  position: absolute;
+  top: 128px;
+  left: 588px;
+}
+
+button.splitter i.fa-caret-right {
+  position: absolute;
+  top: 128px;
+  left: 190px;
+}
+
+button.expand .messageE,
+button.expand .messageC,
+button.splitter i .message {
+  display: none;
+}
+
+button.expand:hover.open svg + .messageE,
+button.expand:hover.close svg + .messageE + .messageC,
+button.splitter:hover i .message {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  color: #ffffff;
+  font-size: 0.25rem;
+  background: #000;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  z-index: 3;
+}
+
+button.splitter:hover i .message {
+  left: -18px;
+}
+
+button.expand:hover svg + .messageE,
+button.expand:hover.close svg + .messageE + .messageC {
+  top: 24px;
+  left: 5px;
+}
+
+button.expand:hover.open svg + .messageE:before,
+button.expand:hover.close svg + .messageE + .messageC:before,
+button.splitter:hover i .message:before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  content: "";
+  border: solid transparent;
+  border-bottom-color: #000;
+  border-width: 5px;
+}
+
+button.expand:hover.open svg + .messageE:before,
+button.expand:hover.close svg + .messageE + .messageC:before {
+  left: 33%;
+}
+
+button.splitter i .messageV {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 164px;
+  background: #6398c3c7;
+  position: absolute;
+  top: -77px;
+  left: -32px;
+  direction: ltr;
+  -webkit-writing-mode: vertical-rl;
+      -ms-writing-mode: tb-rl;
+          writing-mode: vertical-rl;
+  font-size: 1rem;
+  padding: 0.5rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #fff;
+}
+
+i.fa.fa-caret-right:after,
+i.fa.fa-caret-left:after {
+  content: "";
+  width: 10px;
+  height: 240px;
+  position: absolute;
+  background: #96b5ca52;
+  top: -77px;
+  left: 0;
+}
+
+.ag-cell-wrapper > div > div {
+  padding: 0 0.5rem;
+  min-width: 80px;
+}
+
+.ag-cell-wrapper .has-delay {
+  color: red;
+}
+
+.has-ac-date {
+  border: 1px solid red;
+}
+
+.has-empty {
+  border: 1px solid #d8d8d8;
+  background: #fff;
+}
+/*# sourceMappingURL=style.css.map */

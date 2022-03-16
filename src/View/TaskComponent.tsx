@@ -64,10 +64,10 @@ const Test = (props: any) => {
     return (
         <div
             style={{
-                height: '100px',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row'
+                // height: '100px',
+                // width: '100%',
+                // display: 'flex',
+                // flexDirection: 'row'
 
             }}
             onClick={handleClick}

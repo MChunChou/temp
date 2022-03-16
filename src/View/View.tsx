@@ -328,6 +328,7 @@ const View: React.FC<any> = (props: any) => {
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
                 cellRendererParams: { ...task },
+                initialWidth: 100,
                 sortable: false,
                 filterValueGetter: (v: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
@@ -370,10 +371,13 @@ const View: React.FC<any> = (props: any) => {
                     // console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
+                initialWidth: 100,
                 headerComponentParams: {
-                    controlComponent: <div onClick={(v) => {
+                    controlComponent: <div
+                        className='openDetail'
+                        onClick={(v) => {
                         setisDetail(true)
-                        setDetailColumn(getTaskColumn(task.keyStage))
+                        setDetailColumn([...getInfoColumn(false, true),...getTaskColumn(task.keyStage)])
                     }}> <i className="fa fa-plus"></i> </div>
                 }
             }

@@ -1,6 +1,7 @@
 import React , {useState, useEffect} from 'react';
 import MyCalendar from '../Calendar/Calendar';
 import DateHelper from '../utils/date-helper';
+
 const Control = (props) => {
     const { planDateStart, planDateEnd, actlCompleteDate } = props.data
     const helper = new DateHelper({
@@ -19,4 +20,5 @@ const Control = (props) => {
     </div>)
 
 }
+
 export default Control;
