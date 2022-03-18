@@ -1,88 +1,152 @@
 import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
+import DateHelper from "../utils/date-helper"
+import '../GridTable/style.css';
 
-import { MyContext } from "../App/App"
+const isEditAble = (dataSource: any, isAutoSync: any) => {
+    if (isAutoSync === "Y" || dataSource === 'PHK' || dataSource === 'group' || dataSource === 'T1') {
+        return false
+    }
+    return true
+}
 
 const Test = (props: any) => {
-    const user = useContext(MyContext);
+    const [helper, setHelper] = useState(
+        new DateHelper({
+            startDate: props.value.planDateStart,
+            endDate: props.value.planDateEnd,
+            completeDate: props.value.actlCompleteDate
+        })
+    )
+    const [update, setUpdate] = useState([]);
+
+    const onUpdate = () => {
+        setUpdate([]);
+    }
+
+    const collapseAll = (callback: () => void) => {
+        const destoryNode: any[] = [];
+
+        const dataFields = props.api.getColumnDefs().filter((column: any) => {
+            return column.cellRendererParams;
+        }).map((column: any) => {
+            return column.field;
+        });
+
+        props.api.forEachNode((node: any, idx: any) => {
+            // console.log(node.data, node)
+            const data = node.data;
+
+            dataFields.forEach((field: any) => {
+                data[field].open = false;
+            });
+
+            node.setData({ ...data })
+            // node.setData('open', false)
+
+            if (node.data.fullWitdth) {
+                destoryNode.push(node.data)
+            }
+        })
+
+        if (destoryNode.length > 0) {
+            props.api.applyTransactionAsync({
+                remove: destoryNode
+            }, ()=>{
+                callback();
+            })
+        } else {
+            callback();
+        }
+
+    }
+
+    const getExpandData = () => {
+        const { dateSource, isAutoSync } = props;
+
+        return [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }]
+    }
 
     const handleClick = () => {
-        const isOpen = props.value.open? false : true;
+        const isOpen = props.value.open ? false : true;
+        const { dateSource, isAutoSync } = props;
 
-        if (isOpen) {
-            const row = props.api.getDisplayedRowAtIndex(props.node.rowIndex);
-            const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
+        collapseAll(() => {
 
-            if(rowNode1 && rowNode1.data.fullWitdth) {
-                handleRemove()
+            if (isOpen) {
+                const row = props.api.getDisplayedRowAtIndex(props.node.rowIndex);
+                const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
 
-                const newObject:any = {}
-                Object.keys(row.data).forEach((key)=>{
-                    if(typeof row.data[key] === 'object') {
+                // if (rowNode1 && rowNode1.data.fullWitdth) {
+                //     handleRemove()
 
-                        if(row.data[key].taskId === props.getValue().taskId){
-                            newObject[key] = {...row.data[key], open: true, setCtlDate: props.setCtlDate}
-                        }
-                        else {
-                            newObject[key] = {...row.data[key], open: false, setCtlDate: props.setCtlDate}
-                        }
+                //     const newObject: any = {}
+                //     Object.keys(row.data).forEach((key) => {
+                //         if (typeof row.data[key] === 'object') {
 
-                    }else {
-                        newObject[key] = row.data[key]
-                    }
+                //             if (row.data[key].taskId === props.getValue().taskId) {
+                //                 newObject[key] = { ...row.data[key], open: true }
+                //             }
+                //             else {
+                //                 newObject[key] = { ...row.data[key], open: false }
+                //             }
+
+                //         } else {
+                //             newObject[key] = row.data[key]
+                //         }
+                //     })
+
+                //     row.setData(newObject)
+                // }
+
+                props.setValue({ ...props.getValue(), open: true, setCtlDate: props.setCtlDate })
+                props.api.applyTransactionAsync({
+                    add: [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }],
+                    addIndex: props.node.rowIndex + 1
                 })
-
-                row.setData(newObject)
             }
+            // else {
+            //     props.setValue({ ...props.getValue(), open: false, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate })
+            //     // handleRemove()
+            // }
+        });
 
 
-            props.setValue({...props.getValue(), open: true,  setCtlDate: props.setCtlDate})
-            props.api.applyTransaction({
-                add: [{ fullWitdth: true, ...props.getValue() }],
-                addIndex: props.node.rowIndex + 1
-            })
-        }
-        else {
-            props.setValue({...props.getValue(), open: false,  setCtlDate: props.setCtlDate})
-            handleRemove()
-        }
     }
 
-    const handleRemove = () => {
-        const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
+    // const handleRemove = () => {
+    //     const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
 
-        if(rowNode1.data.fullWitdth) {
-            props.api.applyTransaction({
-                remove: [rowNode1.data]
-            })
-
-        }
-
-    }
+    //     if (rowNode1.data.fullWitdth) {
+    //         props.api.applyTransactionAsync({
+    //             remove: [rowNode1.data]
+    //         })
+    //     }
+    // }
 
     return (
         <div
-            style={{
-                // height: '100px',
-                // width: '100%',
-                // display: 'flex',
-                // flexDirection: 'row'
-
-            }}
+            className="cell"
             onClick={handleClick}
         >
             <>
                 {props.value ?
-                    <div style={{
-
-                    }}>
-                        <div>{props.value.planDateStart}</div>
-                        <div>{props.value.planDateEnd}</div>
+                    <div className="cellDate">
+                        <div className={helper.isDelay() ? "has-delay planDate end" : "planDate end"}>
+                            {helper.getEndDate(true) || props.value.planDateEnd}
+                        </div>
+                        <div className={
+                            (helper.isActualDate() ? "has-ac-date planDate" : "planDate")
+                            + " "
+                            + (isEditAble(props.dateSource, props.isAutoSync) && !helper.getCompleteDate() ? "has-empty" : "")
+                        }>
+                            {helper.getCompleteDate(true) || props.value.actlCompleteDate}
+                        </div>
                     </div> : <></>
                 }
 
-                <div>
+                <div className="cellDetailSwitch">
                     {
                         props.value.open ? <FontAwesomeIcon icon={faAngleUp} />
                             : <FontAwesomeIcon icon={faAngleDown} />
@@ -90,24 +154,6 @@ const Test = (props: any) => {
                 </div>
             </>
         </div >
-    )
-}
-
-const TaskComponent: React.FC<any> = (props: any) => {
-
-
-    const className = `task-component ${props.className}`
-
-    const handleClick = () => {
-
-    }
-
-    return (
-        <div
-            className={className}
-            onClick={handleClick}
-        >
-        </div>
     )
 }
 

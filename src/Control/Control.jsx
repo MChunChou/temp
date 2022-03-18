@@ -1,22 +1,40 @@
-import React , {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import MyCalendar from '../Calendar/Calendar';
 import DateHelper from '../utils/date-helper';
 
 const Control = (props) => {
-    const { planDateStart, planDateEnd, actlCompleteDate } = props.data
-    const helper = new DateHelper({
-        startDate: planDateStart,
-        endDate: planDateEnd,
-        completeDate: actlCompleteDate
-    })
+    const { isEditAble, helper, onUpdate } = props.data
+    const [update, setUpdate] = useState(false);
 
+    const onChange = (type) => {
+        return (evt) => {
+            helper.setDate({ [type]: evt })
+            setUpdate(!update)
+            onUpdate()
+        }
+    }
+
+    const renderMyCalendar = (value, disabled, maxDate, minDate, type, autoFocus) => {
+        return <MyCalendar
+            helper={helper}
+            disabled={!isEditAble}
+            value={value}
+            maxDate={maxDate}
+            minDate={minDate}
+            onChange={onChange(type)}
+            autoFocus={autoFocus} />
+    }
 
     return (<div className="full-width-cell">
-        planDateStart <input value={planDateStart} readOnly />
-        planDateEnd <input value={planDateEnd} readOnly></input>
-        actlCompleteDate <MyCalendar helper={helper}/>
-        <i className="fa fa-check"></i>
-        <i className="fa fa-close"></i>
+        <div className='cell l'>
+            <div className='date'><label>planDateStart</label>{renderMyCalendar(helper.getStartDate(), !isEditAble, helper.getEndDate(), null, 'start')} </div>
+            <div className='date'><label>planDateEnd</label> {renderMyCalendar(helper.getEndDate(), !isEditAble, null, helper.getStartDate(), 'end')} </div>
+            <div className='date'><label>actlCompleteDate</label>{renderMyCalendar(helper.getCompleteDate(), !isEditAble, new Date(), null, 'complete')}  </div>
+        </div>
+        <div className="cell r">
+            <button className="ok"><i className="fa fa-check"></i></button>
+            <button className="cancel"><i className="fa fa-times"></i></button>
+        </div>
     </div>)
 
 }

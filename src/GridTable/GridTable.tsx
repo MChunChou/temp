@@ -22,13 +22,13 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const [isShrink, setIsShrink] = useState(false)
 
     const [defaultColDef] = useState({
-        resizable: true,
+        resizable: false,
         wrapText: true,
         autoHeight: true,
         minWidth: 100,
         sortable: true,
-        pagination: true,
-        paginationAutoPageSize: 2,
+        // pagination: true,
+        // paginationAutoPageSize: 2,
         suppressAutoSize: true,
         suppressSizeToFit: true,
         filter: 'agTextColumnFilter',
@@ -39,10 +39,6 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
             enableMenu: true,
         },
     });
-
-    useEffect(() => {
-        // console.log(columnDefs)
-    }, [columnDefs])
 
     const components = useMemo(() => {
         return {
@@ -95,14 +91,15 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const isFullWidthCell = useCallback(function (rowNode) {
         return isFullWidth(rowNode.data);
     }, []);
+
     const fullWidthCellRenderer = useMemo(() => {
         return FullWidthCellRenderer;
     }, []);
 
     const getRowHeight = useCallback(function (params) {
-        // return 100px height for full width rows
+        // return 120px height for full width rows
         if (isFullWidth(params.data)) {
-            return 100;
+            return 120;
         }
     }, []);
 
@@ -150,9 +147,11 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
                 components={components}
-                // getRowHeight={getRowHeight}
+                getRowHeight={getRowHeight}
                 isFullWidthCell={isFullWidthCell}
                 fullWidthCellRenderer={fullWidthCellRenderer}
+                onRowSelected={()=>{}}
+                onSelectionChanged={()=>{}}
             />
 
 

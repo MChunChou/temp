@@ -311,6 +311,9 @@ const View: React.FC<any> = (props: any) => {
                 field: info.name,
                 pinned: 'left',
                 // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
+                comparator:  function(valueA: any, valueB: any, nodeA: any, nodeB: any, isInverted: any) {
+                    return nodeA.data[info.name] === nodeB.data[info.name] ? 0 : nodeA.data[info.name] > nodeB.data[info.name] ? 1: -1
+                },
             })
         })
 
@@ -334,6 +337,7 @@ const View: React.FC<any> = (props: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
+
             }
         })
 
@@ -342,6 +346,7 @@ const View: React.FC<any> = (props: any) => {
 
     const nodeColumns = () => {
         const nodeSet = new Set();
+
         props.selected.Task.forEach((task: any) => {
             //檢查在 selected 中用到的大節點 並取其 taskId
             nodeSet.add(
@@ -379,7 +384,8 @@ const View: React.FC<any> = (props: any) => {
                         setisDetail(true)
                         setDetailColumn([...getInfoColumn(false, true),...getTaskColumn(task.keyStage)])
                     }}> <i className="fa fa-plus"></i> </div>
-                }
+                },
+
             }
         })
 
@@ -408,10 +414,8 @@ const View: React.FC<any> = (props: any) => {
     }
     return (
         <div className='view'>
-            {/* <MyCalendar
-                ctlDate={ctlDate}
-            /> */}
             <div className="table-control"></div>
+
             <GridTable
                 dataDefs={{
                     data: sortData(false)

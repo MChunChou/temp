@@ -1,5 +1,18 @@
+@charset "UTF-8";
 .view {
   background-color: #f6f9fb;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  height: 100vh;
+  width: 90vw;
+  min-width: 24em;
+  margin: auto;
+  position: relative;
 }
 
 .view .ag-theme-alpine .ag-root-wrapper {
@@ -13,7 +26,33 @@
 .ag-header-row {
   color: #647384;
   font-weight: bold;
-  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+.ag-header-cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .ag-header-cell[aria-sort='ascending'] .customSortDownLabel.active {
@@ -66,13 +105,30 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
   -webkit-box-pack: start;
       -ms-flex-pack: start;
           justify-content: flex-start;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  border: none;
+}
+
+.ag-theme-alpine .ag-cell, .ag-cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-bottom: 1px solid #dde2eb;
 }
 
 .ag-theme-alpine .ag-ltr .ag-cell {
@@ -83,15 +139,43 @@
   line-height: 60px;
 }
 
+.ag-theme-alpine .ag-header-cell,
+.ag-theme-alpine .ag-cell.ag-cell-wrap-text,
+.ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ag-theme-alpine .ag-row > .ag-cell-wrapper {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .ag-pinned-left-cols-container .ag-cell-wrapper {
   display: block;
-  overflow: hidden;
+  overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: 0;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+}
+
+.ag-theme-alpine .ag-header-cell:after {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  content: "";
+  position: absolute;
+  z-index: 1;
+  height: 20px;
+  width: 1px;
+  right: 0;
+  background-color: #96b5ca8a;
+}
+
+.ag-theme-alpine .ag-pinned-left-header .ag-header-cell:last-child:after {
+  display: none;
 }
 
 .ag-theme-alpine .ag-cell, .ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
@@ -109,11 +193,6 @@
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
-  width: 100px;
-}
-
-.ag-header-viewport .ag-header-cell {
-  width: 100px !important;
 }
 
 .headerTitleCell {
@@ -182,6 +261,10 @@
   border-right: 1px solid #96b5ca8a;
 }
 
+.ag-pinned-left-cols-container .ag-row-hover .ag-cell:first-child {
+  border-left: 3px solid #0094ff;
+}
+
 .ag-header-cell:hover {
   cursor: auto;
 }
@@ -217,7 +300,7 @@ button.expand.active svg {
 
 button.splitter {
   z-index: 2;
-  color: #7292a7;
+  color: #71a7d3;
   font-size: 2rem;
 }
 
@@ -286,11 +369,13 @@ button.splitter i .messageV {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 164px;
-  background: #6398c3c7;
+  height: 224px;
+  /*要修*/
+  background: #71a7d3;
   position: absolute;
   top: -77px;
-  left: -32px;
+  /*要修*/
+  left: -31px;
   direction: ltr;
   -webkit-writing-mode: vertical-rl;
       -ms-writing-mode: tb-rl;
@@ -317,7 +402,7 @@ i.fa.fa-caret-left:after {
   left: 0;
 }
 
-.ag-cell-wrapper > div > div {
+.ag-cell-wrapper .cellDate .planDate {
   padding: 0 0.5rem;
   min-width: 80px;
 }
@@ -333,5 +418,198 @@ i.fa.fa-caret-left:after {
 .has-empty {
   border: 1px solid #d8d8d8;
   background: #fff;
+  height: 27px;
+}
+
+.ag-theme-alpine .ag-ltr .ag-cell-focus:focus,
+.ag-theme-alpine .ag-ltr .ag-cell:focus,
+.ag-theme-alpine .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected) {
+  background-color: #b5c6d7;
+  border: none;
+}
+
+.ag-cell-wrapper .cell {
+  -webkit-box-orient: horizontal !important;
+  -webkit-box-direction: normal !important;
+      -ms-flex-direction: row !important;
+          flex-direction: row !important;
+  -ms-flex-pack: distribute !important;
+      justify-content: space-around !important;
+}
+
+.ag-cell-wrapper .cell .cellDate {
+  line-height: 25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-width: 80px;
+}
+
+.ag-cell-wrapper .cell .cellDetailSwitch {
+  opacity: 0;
+}
+
+.ag-row-hover .ag-cell-wrapper .cell .cellDetailSwitch,
+.ag-cell-focus .ag-cell-wrapper .cell .cellDetailSwitch {
+  opacity: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: inherit;
+}
+
+.ag-full-width-container .ag-row {
+  background-color: #b5c6d7;
+  z-index: 2;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0.5rem;
+}
+
+.full-width-cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.full-width-cell .cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.full-width-cell .cell .date {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-right: 0.5rem;
+}
+
+.full-width-cell .cell .date label {
+  font-size: .25rem;
+  font-weight: bolder;
+}
+
+.full-width-cell .cell .date input {
+  border: none;
+  -webkit-box-shadow: 2px 2px 3px #ccdbe8 inset, -1px -1px 2px #ffffff80 inset;
+          box-shadow: 2px 2px 3px #ccdbe8 inset, -1px -1px 2px #ffffff80 inset;
+  padding: 0.25rem;
+}
+
+.full-width-cell .cell .date input:focus {
+  outline: none;
+  border: 2px solid #0094ff;
+}
+
+.full-width-cell .cell .date input:-moz-read-only {
+  background-color: #dfdfe3;
+  color: #5f5f6a;
+  box-shadow: none;
+}
+
+.full-width-cell .cell .date input:read-only {
+  background-color: #dfdfe3;
+  color: #5f5f6a;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.full-width-cell .cell button {
+  border-radius: 0.25rem;
+  border: 0;
+  margin-right: 0.5rem;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  cursor: pointer;
+  -webkit-box-shadow: 0px 2px 3px #0000001a, 0px 1px 2px #0000000f;
+          box-shadow: 0px 2px 3px #0000001a, 0px 1px 2px #0000000f;
+}
+
+.full-width-cell .cell button.ok {
+  background-color: #0094ff;
+}
+
+.full-width-cell .cell button.cancel {
+  background-color: red;
+}
+
+.table2nd {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: inherit;
+  width: inherit;
+  background: #fff;
+  top: 0;
+  left: 0;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  z-index: 5;
+}
+
+.table2nd button {
+  font-size: 2rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  position: absolute;
+  top: -10px;
+  right: -16px;
+  z-index: 8;
+}
+
+.table2nd button:hover {
+  color: #0094ff;
+}
+
+.table2nd .table {
+  width: inherit;
+  height: inherit;
+  -webkit-box-shadow: 0px 0.0625em 0.0625em #00000040 ,  0px 0.125em 0.5em #00000040, 0px 0px 0px 1px  #ffffff1a inset;
+          box-shadow: 0px 0.0625em 0.0625em #00000040 ,  0px 0.125em 0.5em #00000040, 0px 0px 0px 1px  #ffffff1a inset;
 }
 /*# sourceMappingURL=style.css.map */

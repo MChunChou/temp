@@ -29,18 +29,18 @@
     }],
     "list": ["PDAPK2|AQ312", "PDAPK3|AQ313", "PDAPK1|AQ314"],
     "task": [
-        { "taskName": "T1", "taskId": "0002", "keyStage": "T1"},
-        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK" },
-        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK" },
-        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1" }
+        { "taskName": "T1", "taskId": "0002", "keyStage": "T1", "isAutoSync": "N"},
+        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK", "isAutoSync": "N" },
+        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK", "isAutoSync": "Y" },
+        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1", "isAutoSync": "N"  }
     ],
     "taskOption": [
-        { "taskName": "T1", "taskId": "0002", "keyStage": "T1", "dateSource": "T1" },
-        { "taskName": "PHK", "taskId": "0001", "keyStage": "PHK", "dateSource": "PHK"  },
-        { "taskName": "T2", "taskId": "0003", "keyStage": "T2", "dateSource": "T2"  },
-        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK", "dateSource": "Manual"  },
-        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK", "dateSource": "Manual"  },
-        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1", "dateSource": "Manual"  }
+        { "taskName": "T1", "taskId": "0002", "keyStage": "T1", "dateSource": "T1", "isAutoSync": "N"},
+        { "taskName": "PHK", "taskId": "0001", "keyStage": "PHK", "dateSource": "PHK", "isAutoSync": "N"  },
+        { "taskName": "T2", "taskId": "0003", "keyStage": "T2", "dateSource": "T2", "isAutoSync": "N"  },
+        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK", "dateSource": "Manual", "isAutoSync": "N"  },
+        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK", "dateSource": "Manual", "isAutoSync": "Y"  },
+        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1", "dateSource": "Manual", "isAutoSync": "N"  }
     ]
 }
 

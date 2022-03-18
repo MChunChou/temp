@@ -2,6 +2,7 @@ import React from 'react'
 import GridTable from '../GridTable/GridTable';
 import { Breadcrumbs } from '@mui/material';
 import Link from '@mui/material/Link';
+import '../GridTable/style.css';
 
 const Detail: React.FC<any> = (props: any) => {
 
@@ -9,8 +10,8 @@ const Detail: React.FC<any> = (props: any) => {
 
   const data = props.sortData(false);
   const columns = props.detailColumn;
-  return <div className="dd" >
-    <button onClick={()=>{setisDetail(false)}}>X</button>
+  return <div className="table2nd" >
+    <button onClick={()=>{setisDetail(false)}}><i className="fa fa-times-circle"></i></button>
 
     {/* 這邊只是先寫個大概 */}
     <Breadcrumbs aria-label="breadcrumb">
@@ -24,7 +25,7 @@ const Detail: React.FC<any> = (props: any) => {
     </Breadcrumbs>
 
 
-    <div className='dd-table'>
+    <div className='table'>
     <GridTable
         dataDefs={{
             data: data

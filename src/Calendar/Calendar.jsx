@@ -12,10 +12,15 @@ const MyCalendar = (props) => {
     const helper = props.helper
     // console.log('isDelay', helper.isDelay(), 'delayDats', helper.getDelayDays())
 
+    useEffect( () => {
+        setDate(props.value)
+    }, [props.value])
+
     function dateTemplate(date) {
         const { day, month, year, today, selectable, otherMonth } = date;
         const d = new Date(year, month, day);
         const [delayDateStart, delayDateEnd] = helper.getDelayDays();
+
 
         // 被選取日 : day-active
         // has-plan , has-range, has-range-start, has-range-end
@@ -106,20 +111,26 @@ const MyCalendar = (props) => {
             visible={visible}
             onVisibleChange={onVisibleChange} />
             <div/> */}
-
             <Calendar
                 id="datetemplate"
+                disabled={props.disabled}
+                minDate={props.minDate}
+                maxDate={props.maxDate}
                 panelClassName="my-calendar"
                 value={select}
                 onFocus={()=>{
-                    if(!helper.getCompleteDate()){
+                    if(props.autoFocus && !helper.getCompleteDate()){
                         setDate(new Date())}
+                        // props.onChange(new Date())
                     }
                 }
-                onChange={(e) => setDate(e.value)}
+                onChange={(e) => {
+                    setDate(e.value)
+                    props.onChange(e.value)
+                }}
                 dateTemplate={dateTemplate}
-                visible={visible}
-                onVisibleChange={onVisibleChange}
+                // visible={visible}
+                // onVisibleChange={onVisibleChange}
                 // inline
                 monthNavigator yearNavigator yearRange="2015:2050"
                 yearNavigatorTemplate={yearNavigatorTemplate}

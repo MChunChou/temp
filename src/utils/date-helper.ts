@@ -4,7 +4,7 @@ interface DateHelperParams {
     completeDate: string | null
 }
 
-const DAY_MS = 86400000;
+const DAY_MS = 86400000; //1000*60*60*24
 
 class DateHelper {
     startDate: Date | null;
@@ -17,18 +17,33 @@ class DateHelper {
         this.completeDate = completeDate ? new Date(completeDate) : null;
     }
 
+    setDate({start, end, complete}: { start: Date, end: Date, complete: Date }) {
+        console.log(start, end ,complete)
+        if (start) {
+            this.startDate = start;
+        }
+
+        if (end) {
+            this.endDate = end;
+        }
+
+        if (complete) {
+            this.completeDate = complete;
+        }
+    }
+
     isDelay() {
         const today = this.getToday();
-        return !this.completeDate &&  (this.endDate && (today > this.endDate));
+        return !this.completeDate && (this.endDate && (today > this.endDate));
     }
 
     getDelayDays() {
 
-        if(this.endDate){
+        if (this.endDate) {
             const today = this.getToday();
             const endDate = new Date(this.endDate);
             endDate.setDate(this.endDate.getDate() + 1);
-            return [endDate, this.completeDate?this.completeDate:today]
+            return [endDate, this.completeDate ? this.completeDate : today]
         }
 
         return []
@@ -36,7 +51,7 @@ class DateHelper {
 
     isPlanRange() {
 
-        if(this.startDate && this.endDate) {
+        if (this.startDate && this.endDate) {
             return this.startDate > this.endDate
         }
 
@@ -44,11 +59,11 @@ class DateHelper {
     }
 
     isDateInPlan(date: Date) {
-        if(this.startDate && this.endDate) {
+        if (this.startDate && this.endDate) {
             return date >= this.startDate && date <= this.endDate
         }
 
-        if(this.startDate) {
+        if (this.startDate) {
             return date >= this.startDate;
         }
 
@@ -59,20 +74,41 @@ class DateHelper {
 
     }
 
-    getStartDate() {
+    getStartDate(format: boolean = false) {
+        if(format && this.startDate){
+            return this.startDate.toLocaleDateString('en-CA')
+        }
+
         return this.startDate;
     }
 
-    getEndDate() {
+    getEndDate(format: boolean = false) {
+        if(format && this.endDate){
+            return this.endDate.toLocaleDateString('en-CA')
+        }
+
         return this.endDate;
     }
 
-    getCompleteDate() {
+    getCompleteDate(format: boolean = false) {
+        if(format && this.completeDate){
+            return this.completeDate.toLocaleDateString('en-CA')
+        }
+
         return this.completeDate;
     }
 
     getToday(format: boolean = false) {
         return format ? new Date().toLocaleDateString('en-CA') : new Date();
+    }
+
+    isActualDate(){
+        return this.completeDate && this.endDate && this.completeDate > this.endDate;
+    }
+
+    //名稱忘了 記得查
+    isDateWarn(date: Date) {
+        return Math.floor(Date.now() - date.getTime()) / DAY_MS;
     }
 }
 
