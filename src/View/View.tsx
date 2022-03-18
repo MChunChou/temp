@@ -137,7 +137,7 @@ const tD = [{
         }]
 }, {
     toolInfo: {
-        bookNo: 'bookNo_3',
+        bookNo: 'bookNo_333333333333333333333333333333333333',
         IocPhase: 'IocPhase_3',
         deptName: 'deptName_3',
         facCd: 'PDAPK3',
@@ -296,10 +296,9 @@ const View: React.FC<any> = (props: any) => {
 
     const getInfoColumn = (isExpand: boolean, isShrink?: boolean): any[] => {
         const res: any[] = []
-
-
-
         props.selected.Info.forEach((info: { name: string; }, idx: number) => {
+            let pinned: string | null = null;
+
             if (isShrink && idx > 0) {
                 return
             }
@@ -307,9 +306,14 @@ const View: React.FC<any> = (props: any) => {
             if (!isExpand && idx > 2) {
                 return
             }
+
+            if (idx < 3) {
+                pinned = 'left'
+            }
+
             res.push({
                 field: info.name,
-                pinned: 'left',
+                pinned: pinned,
                 // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
                 comparator:  function(valueA: any, valueB: any, nodeA: any, nodeB: any, isInverted: any) {
                     return nodeA.data[info.name] === nodeB.data[info.name] ? 0 : nodeA.data[info.name] > nodeB.data[info.name] ? 1: -1
@@ -331,7 +335,7 @@ const View: React.FC<any> = (props: any) => {
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
                 cellRendererParams: { ...task },
-                initialWidth: 100,
+                initialWidth: 120,
                 sortable: false,
                 filterValueGetter: (v: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
@@ -376,14 +380,14 @@ const View: React.FC<any> = (props: any) => {
                     // console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
-                initialWidth: 100,
+                initialWidth: 120,
                 headerComponentParams: {
                     controlComponent: <div
                         className='openDetail'
                         onClick={(v) => {
                         setisDetail(true)
                         setDetailColumn([...getInfoColumn(false, true),...getTaskColumn(task.keyStage)])
-                    }}> <i className="fa fa-plus"></i> </div>
+                    }}> <i className="fa fa-plus-square"></i> </div>
                 },
 
             }

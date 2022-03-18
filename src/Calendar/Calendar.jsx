@@ -121,7 +121,7 @@ const MyCalendar = (props) => {
                 onFocus={()=>{
                     if(props.autoFocus && !helper.getCompleteDate()){
                         setDate(new Date())}
-                        // props.onChange(new Date())
+                        props.onChange(new Date())
                     }
                 }
                 onChange={(e) => {

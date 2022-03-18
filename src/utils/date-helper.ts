@@ -6,6 +6,8 @@ interface DateHelperParams {
 
 const DAY_MS = 86400000; //1000*60*60*24
 
+const LOCALE_FORMAT = 'zh-TW'
+
 class DateHelper {
     startDate: Date | null;
     endDate: Date | null;
@@ -18,7 +20,7 @@ class DateHelper {
     }
 
     setDate({start, end, complete}: { start: Date, end: Date, complete: Date }) {
-        console.log(start, end ,complete)
+        // console.log(start, end ,complete)
         if (start) {
             this.startDate = start;
         }
@@ -76,7 +78,7 @@ class DateHelper {
 
     getStartDate(format: boolean = false) {
         if(format && this.startDate){
-            return this.startDate.toLocaleDateString('en-CA')
+            return this.startDate.toLocaleDateString(LOCALE_FORMAT)
         }
 
         return this.startDate;
@@ -84,7 +86,7 @@ class DateHelper {
 
     getEndDate(format: boolean = false) {
         if(format && this.endDate){
-            return this.endDate.toLocaleDateString('en-CA')
+            return this.endDate.toLocaleDateString(LOCALE_FORMAT)
         }
 
         return this.endDate;
@@ -92,14 +94,14 @@ class DateHelper {
 
     getCompleteDate(format: boolean = false) {
         if(format && this.completeDate){
-            return this.completeDate.toLocaleDateString('en-CA')
+            return this.completeDate.toLocaleDateString(LOCALE_FORMAT)
         }
 
         return this.completeDate;
     }
 
     getToday(format: boolean = false) {
-        return format ? new Date().toLocaleDateString('en-CA') : new Date();
+        return format ? new Date().toLocaleDateString(LOCALE_FORMAT) : new Date();
     }
 
     isActualDate(){

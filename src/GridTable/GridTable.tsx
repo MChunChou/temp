@@ -25,7 +25,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         resizable: false,
         wrapText: true,
         autoHeight: true,
-        minWidth: 100,
+        // minWidth: 100,
         sortable: true,
         // pagination: true,
         // paginationAutoPageSize: 2,
@@ -35,6 +35,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         // Default Use filter in first row
         // suppressMenu: true,
         // floatingFilter: true,
+        alwaysShowHorizontalScroll: true,
+        alwaysShowVerticalScroll: true,
         headerComponentParams: {
             enableMenu: true,
         },
@@ -101,6 +103,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         if (isFullWidth(params.data)) {
             return 120;
         }
+
+        return 52;
     }, []);
 
 
@@ -134,11 +138,9 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 props.isExpandComponent ?
                     <button className={'splitter ' + (isShrink ? 'close' : 'open')} onClick={handleClickShrink}>
                         {isShrink ? <i className="fa fa-caret-right"><span className="message">Expand left freeze column</span><span className="messageV">Tool Information</span></i> : <i className="fa fa-caret-left"><span className="message">Collapse left freeze column</span></i>}
-
                     </button>
                     : <></>
             }
-
 
             <AgGridReact
                 ref={gridRef}

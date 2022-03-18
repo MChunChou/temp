@@ -29,7 +29,7 @@ const Control = (props) => {
         <div className='cell l'>
             <div className='date'><label>planDateStart</label>{renderMyCalendar(helper.getStartDate(), !isEditAble, helper.getEndDate(), null, 'start')} </div>
             <div className='date'><label>planDateEnd</label> {renderMyCalendar(helper.getEndDate(), !isEditAble, null, helper.getStartDate(), 'end')} </div>
-            <div className='date'><label>actlCompleteDate</label>{renderMyCalendar(helper.getCompleteDate(), !isEditAble, new Date(), null, 'complete')}  </div>
+            <div className='date'><label>actlCompleteDate</label>{renderMyCalendar(helper.getCompleteDate(), !isEditAble, new Date(), null, 'complete', true)}  </div>
         </div>
         <div className="cell r">
             <button className="ok"><i className="fa fa-check"></i></button>

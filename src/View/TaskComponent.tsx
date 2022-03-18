@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
 import DateHelper from "../utils/date-helper"
+import * as fh from '../utils/fetch-helper'
 import '../GridTable/style.css';
 
 const isEditAble = (dataSource: any, isAutoSync: any) => {
-    if (isAutoSync === "Y" || dataSource === 'PHK' || dataSource === 'group' || dataSource === 'T1') {
-        return false
-    }
+    // if (isAutoSync === "Y" || dataSource === 'PHK' || dataSource === 'group' || dataSource === 'T1') {
+    //     return false
+    // }
     return true
 }
 
@@ -20,8 +21,20 @@ const Test = (props: any) => {
         })
     )
     const [update, setUpdate] = useState([]);
+    const { dateSource, isAutoSync } = props;
+    const [isEditabled] = useState(isEditAble(dateSource, isAutoSync));
 
     const onUpdate = () => {
+        const updateData = {
+            SUB_FAB:'F18A',
+            FAC_CD: props.data.facCd,
+            TAST_ID: 1,
+            PLAN_DATE_START: helper.getStartDate(true),
+            PLAN_DATE_END: helper.getEndDate(true),
+            ACTL_COMPLETE_DATE: helper.getCompleteDate(true),
+            REMARK:123
+        }
+        console.log(updateData)
         setUpdate([]);
     }
 
@@ -53,9 +66,7 @@ const Test = (props: any) => {
         if (destoryNode.length > 0) {
             props.api.applyTransactionAsync({
                 remove: destoryNode
-            }, ()=>{
-                callback();
-            })
+            }, callback)
         } else {
             callback();
         }
@@ -63,9 +74,12 @@ const Test = (props: any) => {
     }
 
     const getExpandData = () => {
-        const { dateSource, isAutoSync } = props;
-
-        return [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }]
+        return {
+            fullWitdth: true,
+            ...props.data,
+            isEditAble: isEditabled,
+            helper: helper,
+            onUpdate: onUpdate };
     }
 
     const handleClick = () => {
@@ -100,9 +114,10 @@ const Test = (props: any) => {
                 //     row.setData(newObject)
                 // }
 
-                props.setValue({ ...props.getValue(), open: true, setCtlDate: props.setCtlDate })
+                props.setValue({ ...props.getValue(), open: true})
                 props.api.applyTransactionAsync({
-                    add: [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }],
+                    // add: [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }],
+                    add: [getExpandData()],
                     addIndex: props.node.rowIndex + 1
                 })
             }
