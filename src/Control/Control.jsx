@@ -27,14 +27,14 @@ const Control = (props) => {
 
     return (<div className="full-width-cell">
         <div className='cell l'>
-            <div className='date'><label>planDateStart</label>{renderMyCalendar(helper.getStartDate(), !isEditAble, helper.getEndDate(), null, 'start')} </div>
-            <div className='date'><label>planDateEnd</label> {renderMyCalendar(helper.getEndDate(), !isEditAble, null, helper.getStartDate(), 'end')} </div>
-            <div className='date'><label>actlCompleteDate</label>{renderMyCalendar(helper.getCompleteDate(), !isEditAble, new Date(), null, 'complete', true)}  </div>
+            <div className='date'><label>plan Start</label>{renderMyCalendar(helper.getStartDate(), !isEditAble, helper.getEndDate(), null, 'start')} </div>
+            <div className='date'><label>plan End</label> {renderMyCalendar(helper.getEndDate(), !isEditAble, null, helper.getStartDate(), 'end')} </div>
+            <div className='date'><label>Complete Date</label>{renderMyCalendar(helper.getCompleteDate(), !isEditAble, new Date(), null, 'complete', true)}  </div>
         </div>
-        <div className="cell r">
+        {/* <div className="cell r">
             <button className="ok"><i className="fa fa-check"></i></button>
             <button className="cancel"><i className="fa fa-times"></i></button>
-        </div>
+        </div> */}
     </div>)
 
 }

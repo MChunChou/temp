@@ -10,7 +10,23 @@ import CustomHeader from "./CustomHeader";
 // import CustomHeader from "./Header";
 import FullWidthCellRenderer from '../Control/Control'
 import icons from './icon.svg';
+import { ConnectedOverlayScrollHandler } from "primereact/utils";
 
+const ToolTip = (props: any) => {
+//     const data = useMemo(
+//         () => props.api.getDisplayedRowAtIndex(props.rowIndex).data,
+//         []
+//     );
+// console.log(data, props)
+    return (
+    <div
+        className="custom-tooltip"
+        style={{ backgroundColor: props.color || 'white' }}
+    >
+        {props.value}
+    </div>
+    );
+}
 
 const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const gridRef = useRef<any>();
@@ -24,7 +40,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const [defaultColDef] = useState({
         resizable: false,
         wrapText: true,
-        autoHeight: true,
+        // autoHeight: true,
         // minWidth: 100,
         sortable: true,
         // pagination: true,
@@ -40,6 +56,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         headerComponentParams: {
             enableMenu: true,
         },
+        tooltipComponent: ToolTip,
     });
 
     const components = useMemo(() => {
@@ -99,12 +116,13 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     }, []);
 
     const getRowHeight = useCallback(function (params) {
+        console.log(params)
         // return 120px height for full width rows
         if (isFullWidth(params.data)) {
             return 120;
         }
 
-        return 52;
+        return 80;
     }, []);
 
 
@@ -154,6 +172,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 fullWidthCellRenderer={fullWidthCellRenderer}
                 onRowSelected={()=>{}}
                 onSelectionChanged={()=>{}}
+                tooltipShowDelay={0}
+                tooltipHideDelay={8000}
             />
 
 

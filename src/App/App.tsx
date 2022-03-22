@@ -1,9 +1,12 @@
 import View from '../View/View';
-
-import testData from '../test.json'
 import 'font-awesome/css/font-awesome.min.css'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
+import { Routes, Route, Link } from "react-router-dom";
+
+
+import testData from '../test.json'
+
 
 import Calendar from '../Calendar/Calendar';
 import React, { useState } from 'react';
@@ -11,7 +14,7 @@ import { Provider } from 'react-redux'
 import createStore from '../Reducer'
 
 import store from '../Reducer/index'
-
+import Filter from '../Filter'
 const selected = {
   List: testData.list,
   Info: testData.info,
@@ -42,25 +45,17 @@ function App() {
 
   return (
     <Provider store={store}>
-      <MyContext.Provider value={{
-        controlOpen: controlOpen,
-        setControlOpen: (idx: any, open: any): void => {
-          // setControlOpen({...controlOpen, [idx+'']: open})
-          setControlOpen(idx)
-        },
-        getControlOpen: (idx) => {
-          // return controlOpen[idx]
-          return controlOpen ? true : false
-        }
-      }}>
-        <div className="App">
-          <View
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<View
             selected={selected}
             node={node}
             taskOptions={taskOption}
-          />
-        </div>
-      </MyContext.Provider>
+          />} />
+          <Route path="filter" element={<Filter />} />
+        </Routes>
+      </div>
+
     </Provider>
   );
 }

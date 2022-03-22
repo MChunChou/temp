@@ -12,7 +12,7 @@ const MyCalendar = (props) => {
     const helper = props.helper
     // console.log('isDelay', helper.isDelay(), 'delayDats', helper.getDelayDays())
 
-    useEffect( () => {
+    useEffect(() => {
         setDate(props.value)
     }, [props.value])
 
@@ -29,7 +29,7 @@ const MyCalendar = (props) => {
         // console.log(date)
         const className = ['day']
 
-        if(select && d.toLocaleDateString() == select.toLocaleDateString()) {
+        if (select && d.toLocaleDateString() == select.toLocaleDateString()) {
             className.push('day-active')
         }
 
@@ -37,35 +37,35 @@ const MyCalendar = (props) => {
             className.push('has-today')
         }
 
-        if(helper.isDelay()) {
-            if(d >= delayDateStart && d <= delayDateEnd) {
+        if (helper.isDelay()) {
+            if (d >= delayDateStart && d <= delayDateEnd) {
                 className.push('has-delay')
             }
 
-            if(d.getTime() === delayDateStart.getTime()){
+            if (d.getTime() === delayDateStart.getTime()) {
                 className.push('has-range-start')
             }
 
-            if(d.getTime() ===delayDateEnd.getTime()) {
+            if (d.getTime() === delayDateEnd.getTime()) {
                 className.push('has-range-end')
             }
         }
 
-        if(d.getTime() ===helper.getStartDate().getTime()) {
-            if(helper.isPlanRange()) {
+        if (d.getTime() === helper.getStartDate().getTime()) {
+            if (helper.isPlanRange()) {
                 className.push('has-range-start')
             }
         }
 
-        if(helper.isDateInPlan(d)) {
+        if (helper.isDateInPlan(d)) {
             className.push('has-plan')
-            if(helper.isPlanRange) {
+            if (helper.isPlanRange) {
                 className.push('has-range')
             }
         }
 
-        if(d.getTime() === helper.getEndDate().getTime()) {
-            if(helper.isPlanRange()) {
+        if (d.getTime() === helper.getEndDate().getTime()) {
+            if (helper.isPlanRange()) {
                 className.push('has-range-end')
             }
         }
@@ -118,12 +118,12 @@ const MyCalendar = (props) => {
                 maxDate={props.maxDate}
                 panelClassName="my-calendar"
                 value={select}
-                onFocus={()=>{
-                    if(props.autoFocus && !helper.getCompleteDate()){
-                        setDate(new Date())}
+                onFocus={() => {
+                    if (props.autoFocus && !helper.getCompleteDate()) {
+                        setDate(new Date())
                         props.onChange(new Date())
                     }
-                }
+                }}
                 onChange={(e) => {
                     setDate(e.value)
                     props.onChange(e.value)

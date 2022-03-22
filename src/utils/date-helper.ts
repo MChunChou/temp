@@ -8,6 +8,62 @@ const DAY_MS = 86400000; //1000*60*60*24
 
 const LOCALE_FORMAT = 'zh-TW'
 
+
+/**
+ * @name format
+ * @summary Format the date
+ * @description
+ * Return the formatted date string by giving format type
+ *
+ * Year format type accept YYYY or YY
+ * Month format type accept MM or M
+ * Day format type accept DD or D
+ *
+ * @param {Date} date
+ * @param {string} fortmatStr
+ * @returns {string}
+ *
+ * @example
+ *  YYYY/MM/DD -> 2022/03/22
+ */
+
+
+export const format = (
+    date: Date,
+    formatStr: string
+) => {
+    formatStr = formatStr.toLocaleLowerCase();
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    const result = formatStr
+        .match(/y+|m+|d+|./g)!
+        .map((substring)=>{
+            if (substring === "''") {
+                return "'"
+            }
+
+            const firstCharacter = substring[0];
+            const size = substring.length;
+            if(firstCharacter === 'y'){
+                return substring.replace(substring, (year+"").substring(size>2? 0: 2));
+            }
+            else if(firstCharacter === 'm'){
+                return substring.replace(substring, month+"").padStart(size > 1? 2 : 0, '0');
+            }
+            else if(firstCharacter === 'd'){
+                return substring.replace(substring, day+"").padStart(size > 1? 2 : 0, '0');
+            }
+
+            return substring;
+        })
+        .join('');
+
+    return result;
+}
+
 class DateHelper {
     startDate: Date | null;
     endDate: Date | null;

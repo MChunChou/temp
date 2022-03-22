@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
-import DateHelper from "../utils/date-helper"
+import DateHelper, {format as DateFormat} from "../utils/date-helper"
 import * as fh from '../utils/fetch-helper'
 import '../GridTable/style.css';
+
 
 const isEditAble = (dataSource: any, isAutoSync: any) => {
     // if (isAutoSync === "Y" || dataSource === 'PHK' || dataSource === 'group' || dataSource === 'T1') {
@@ -34,7 +35,7 @@ const Test = (props: any) => {
             ACTL_COMPLETE_DATE: helper.getCompleteDate(true),
             REMARK:123
         }
-        console.log(updateData)
+        // console.log(updateData)
         setUpdate([]);
     }
 
@@ -149,14 +150,14 @@ const Test = (props: any) => {
                 {props.value ?
                     <div className="cellDate">
                         <div className={helper.isDelay() ? "has-delay planDate end" : "planDate end"}>
-                            {helper.getEndDate(true) || props.value.planDateEnd}
+                            {helper.getEndDate()? DateFormat(helper.getEndDate() as Date, 'yyyy/mm/dd') : props.value.planDateEnd}
                         </div>
                         <div className={
                             (helper.isActualDate() ? "has-ac-date planDate" : "planDate")
                             + " "
                             + (isEditAble(props.dateSource, props.isAutoSync) && !helper.getCompleteDate() ? "has-empty" : "")
                         }>
-                            {helper.getCompleteDate(true) || props.value.actlCompleteDate}
+                            {helper.getCompleteDate()? DateFormat(helper.getCompleteDate() as Date, 'yyyy/mm/dd') : props.value.actlCompleteDate}
                         </div>
                     </div> : <></>
                 }

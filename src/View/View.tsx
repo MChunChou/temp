@@ -5,7 +5,9 @@ import * as fh from '../utils/fetch-helper';
 import TaskComponent from './TaskComponent'
 import Detail from "./Detail";
 import MyCalendar from "../Calendar/Calendar";
-
+import {
+    Link
+} from "react-router-dom";
 //測試資料
 const tD = [{
     toolInfo: {
@@ -201,6 +203,14 @@ const tD = [{
         }]
 }]
 
+const LinkC = (props: any) => {
+    return <Link  to={{
+        pathname: "/filter", // 連結的字串
+        search: "?sort=name",　// 搜尋的表達形式
+        hash: "#the-hash", // 將hash放到url上
+      }}>{props.value}</Link>
+}
+
 //返回 post 用的參數
 const getScheduleMainParams = (node: any, selected: any, task: any) => {
     const tool: string[] = [];
@@ -298,6 +308,7 @@ const View: React.FC<any> = (props: any) => {
         const res: any[] = []
         props.selected.Info.forEach((info: { name: string; }, idx: number) => {
             let pinned: string | null = null;
+            let cellRenderer = null;
 
             if (isShrink && idx > 0) {
                 return
@@ -309,11 +320,17 @@ const View: React.FC<any> = (props: any) => {
 
             if (idx < 3) {
                 pinned = 'left'
+
+                if( idx === 0) {
+                    cellRenderer = LinkC
+                }
             }
 
             res.push({
                 field: info.name,
                 pinned: pinned,
+                tooltipField: info.name,
+                cellRenderer: cellRenderer,
                 // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
                 comparator:  function(valueA: any, valueB: any, nodeA: any, nodeB: any, isInverted: any) {
                     return nodeA.data[info.name] === nodeB.data[info.name] ? 0 : nodeA.data[info.name] > nodeB.data[info.name] ? 1: -1
@@ -335,7 +352,7 @@ const View: React.FC<any> = (props: any) => {
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
                 cellRendererParams: { ...task },
-                initialWidth: 120,
+                initialWidth: 150,
                 sortable: false,
                 filterValueGetter: (v: any) => {
                     console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
@@ -370,9 +387,6 @@ const View: React.FC<any> = (props: any) => {
                 headerName: task.taskName,
                 cellRenderer: TaskComponent,
                 cellRendererParams: {
-                    setCtlDate: (ctlDate:any) => {
-                        setCtlDate(ctlDate)
-                    },
                     ...task
                 },
                 sortable: false,
@@ -380,7 +394,7 @@ const View: React.FC<any> = (props: any) => {
                     // console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
                     return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
                 },
-                initialWidth: 120,
+                initialWidth: 150,
                 headerComponentParams: {
                     controlComponent: <div
                         className='openDetail'
