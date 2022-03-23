@@ -8,6 +8,9 @@ import MyCalendar from "../Calendar/Calendar";
 import {
     Link
 } from "react-router-dom";
+
+import Progress from "../Progress/Progress";
+import { DesktopDateTimePicker } from "@mui/lab";
 //測試資料
 const tD = [{
     toolInfo: {
@@ -49,30 +52,30 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-            taskId: 1000,
-            planDateStart: '2020/1/11',
-            planDateEnd: '2021/1/27',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'PHK'
-        }, {
-            taskId: 1001,
-            planDateStart: '2020/1/28',
-            planDateEnd: '2021/1/30',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'PHK'
-        }, {
-            taskId: 1002,
-            planDateStart: '2020/1/3',
-            planDateEnd: '2021/1/18',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'T0'
-        }]
+        taskId: 1000,
+        planDateStart: '2020/1/11',
+        planDateEnd: '2021/1/27',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'PHK'
+    }, {
+        taskId: 1001,
+        planDateStart: '2020/1/28',
+        planDateEnd: '2021/1/30',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'T1'
+    }, {
+        taskId: 1002,
+        planDateStart: '2020/1/3',
+        planDateEnd: '2021/1/18',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'PHK'
+    }]
 }, {
     toolInfo: {
         bookNo: 'bookNo_2',
@@ -113,33 +116,33 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-            taskId: 1000,
-            planDateStart: '2020/1/1',
-            planDateEnd: '2021/1/2',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'PHK'
-        }, {
-            taskId: 1001,
-            planDateStart: '2020/1/1',
-            planDateEnd: '2021/1/2',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'PHK'
-        }, {
-            taskId: 1002,
-            planDateStart: '2020/1/1',
-            planDateEnd: '2021/1/2',
-            actlCompleteDate: '2021/2/2',
-            isActlEdieable: 'true',
-            isPlanEditable: 'true',
-            keyStaget: 'T0'
-        }]
+        taskId: 1000,
+        planDateStart: '2020/1/1',
+        planDateEnd: '2021/1/2',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'PHK'
+    }, {
+        taskId: 1001,
+        planDateStart: '2020/1/1',
+        planDateEnd: '2021/1/2',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'T1'
+    }, {
+        taskId: 1002,
+        planDateStart: '2020/1/1',
+        planDateEnd: '2021/1/2',
+        actlCompleteDate: '2021/2/2',
+        isActlEdieable: 'true',
+        isPlanEditable: 'true',
+        keyStaget: 'PHK'
+    }]
 }, {
     toolInfo: {
-        bookNo: 'bookNo_333333333333333333333333333333333333',
+        bookNo: 'bookNo_3',
         IocPhase: 'IocPhase_3',
         deptName: 'deptName_3',
         facCd: 'PDAPK3',
@@ -191,7 +194,7 @@ const tD = [{
             actlCompleteDate: '2021/2/2',
             isActlEdieable: 'true',
             isPlanEditable: 'true',
-            keyStaget: 'PHK'
+            keyStaget: 'T1'
         }, {
             taskId: '1002',
             planDateStart: '2020/1/1',
@@ -199,7 +202,7 @@ const tD = [{
             actlCompleteDate: '2021/2/2',
             isActlEdieable: 'true',
             isPlanEditable: 'true',
-            keyStaget: 'T0'
+            keyStaget: 'PHK'
         }]
 }]
 
@@ -422,6 +425,52 @@ const View: React.FC<any> = (props: any) => {
         return getColumn(false, isExpand)
     }
 
+    const getProgressCards = () => {
+        console.log(data, props.node);
+        /**
+         * {
+         *  title: 大節點名稱,
+         *  max: 總數
+         *  value: 完成數量
+         * }
+         *
+         */
+
+        const result: any = {
+
+        }
+
+        props.node.forEach((n:any)=>{
+            result[n.taskName] = {max: 0, value: 0};
+        })
+
+        data.forEach((d:any)=>{
+            d.taskList.forEach((task: any) => {
+                if(!props.node.some((n: any) => n.taskId === task.taskId)) {
+                    const {actlCompleteDate , keyStaget} = task;
+                    if(result[keyStaget]){
+                        result[keyStaget].max += 1;
+                        if(actlCompleteDate) {
+                            result[keyStaget].value += 1;
+                        }
+                    }
+                }
+            })
+        })
+
+        return Object.keys(result).filter((key)=>{
+            return result[key].max > 0;
+        }).map((key)=>{
+            return {
+                title: key,
+                max: result[key].max,
+                value: result[key].value
+            }
+        })
+
+        // return null
+    }
+
     let d = null
     if (isDetail) {
         d = <Detail
@@ -432,6 +481,8 @@ const View: React.FC<any> = (props: any) => {
     }
     return (
         <div className='view'>
+            <Progress cards={getProgressCards()}/>
+
             <div className="table-control"></div>
 
             <GridTable

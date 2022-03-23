@@ -69,7 +69,7 @@ const myschedule = [{
         actlCompleteDate: '2021/2/2',
         isActlEdieable: 'true',
         isPlanEditable: 'true',
-        keyStaget: 'PHK'
+        keyStaget: 'T1'
     }, {
         taskId: 1002,
         planDateStart: '2020/1/3',
@@ -77,7 +77,7 @@ const myschedule = [{
         actlCompleteDate: '2021/2/2',
         isActlEdieable: 'true',
         isPlanEditable: 'true',
-        keyStaget: 'T0'
+        keyStaget: 'PHK'
     }]
 }, {
     toolInfo: {
@@ -133,7 +133,7 @@ const myschedule = [{
         actlCompleteDate: '2021/2/2',
         isActlEdieable: 'true',
         isPlanEditable: 'true',
-        keyStaget: 'PHK'
+        keyStaget: 'T1'
     }, {
         taskId: 1002,
         planDateStart: '2020/1/1',
@@ -141,7 +141,7 @@ const myschedule = [{
         actlCompleteDate: '2021/2/2',
         isActlEdieable: 'true',
         isPlanEditable: 'true',
-        keyStaget: 'T0'
+        keyStaget: 'PHK'
     }]
 }, {
     toolInfo: {
@@ -197,7 +197,7 @@ const myschedule = [{
             actlCompleteDate: '2021/2/2',
             isActlEdieable: 'true',
             isPlanEditable: 'true',
-            keyStaget: 'PHK'
+            keyStaget: 'T1'
         }, {
             taskId: '1002',
             planDateStart: '2020/1/1',
@@ -205,7 +205,7 @@ const myschedule = [{
             actlCompleteDate: '2021/2/2',
             isActlEdieable: 'true',
             isPlanEditable: 'true',
-            keyStaget: 'T0'
+            keyStaget: 'PHK'
         }]
 }]
 

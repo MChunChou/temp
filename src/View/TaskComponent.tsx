@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons"
-import DateHelper, {format as DateFormat} from "../utils/date-helper"
+import DateHelper, { format as DateFormat } from "../utils/date-helper"
 import * as fh from '../utils/fetch-helper'
 import '../GridTable/style.css';
 
+
+const timeout = 10
 
 const isEditAble = (dataSource: any, isAutoSync: any) => {
     // if (isAutoSync === "Y" || dataSource === 'PHK' || dataSource === 'group' || dataSource === 'T1') {
@@ -24,16 +26,17 @@ const Test = (props: any) => {
     const [update, setUpdate] = useState([]);
     const { dateSource, isAutoSync } = props;
     const [isEditabled] = useState(isEditAble(dateSource, isAutoSync));
+    const [isClick, setIsClick] = useState(false);
 
     const onUpdate = () => {
         const updateData = {
-            SUB_FAB:'F18A',
+            SUB_FAB: 'F18A',
             FAC_CD: props.data.facCd,
             TAST_ID: 1,
             PLAN_DATE_START: helper.getStartDate(true),
             PLAN_DATE_END: helper.getEndDate(true),
             ACTL_COMPLETE_DATE: helper.getCompleteDate(true),
-            REMARK:123
+            REMARK: 123
         }
         // console.log(updateData)
         setUpdate([]);
@@ -65,11 +68,16 @@ const Test = (props: any) => {
         })
 
         if (destoryNode.length > 0) {
-            props.api.applyTransactionAsync({
-                remove: destoryNode
-            }, callback)
+            setTimeout(() => {
+                props.api.applyTransactionAsync({
+                    remove: destoryNode
+                }, callback)
+            }, timeout)
+
         } else {
-            callback();
+            setTimeout(() => {
+                callback();
+            }, timeout);
         }
 
     }
@@ -80,55 +88,60 @@ const Test = (props: any) => {
             ...props.data,
             isEditAble: isEditabled,
             helper: helper,
-            onUpdate: onUpdate };
+            onUpdate: onUpdate
+        };
     }
 
     const handleClick = () => {
         const isOpen = props.value.open ? false : true;
         const { dateSource, isAutoSync } = props;
 
-        collapseAll(() => {
+        if (!isClick) {
+            setIsClick(true);
+            collapseAll(() => {
 
-            if (isOpen) {
-                const row = props.api.getDisplayedRowAtIndex(props.node.rowIndex);
-                const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
+                if (isOpen) {
+                    // const row = props.api.getDisplayedRowAtIndex(props.node.rowIndex);
+                    // const rowNode1 = props.api.getDisplayedRowAtIndex(props.node.rowIndex + 1);
 
-                // if (rowNode1 && rowNode1.data.fullWitdth) {
-                //     handleRemove()
+                    // if (rowNode1 && rowNode1.data.fullWitdth) {
+                    //     handleRemove()
 
-                //     const newObject: any = {}
-                //     Object.keys(row.data).forEach((key) => {
-                //         if (typeof row.data[key] === 'object') {
+                    //     const newObject: any = {}
+                    //     Object.keys(row.data).forEach((key) => {
+                    //         if (typeof row.data[key] === 'object') {
 
-                //             if (row.data[key].taskId === props.getValue().taskId) {
-                //                 newObject[key] = { ...row.data[key], open: true }
-                //             }
-                //             else {
-                //                 newObject[key] = { ...row.data[key], open: false }
-                //             }
+                    //             if (row.data[key].taskId === props.getValue().taskId) {
+                    //                 newObject[key] = { ...row.data[key], open: true }
+                    //             }
+                    //             else {
+                    //                 newObject[key] = { ...row.data[key], open: false }
+                    //             }
 
-                //         } else {
-                //             newObject[key] = row.data[key]
-                //         }
-                //     })
+                    //         } else {
+                    //             newObject[key] = row.data[key]
+                    //         }
+                    //     })
 
-                //     row.setData(newObject)
+                    //     row.setData(newObject)
+                    // }
+
+                    props.setValue({ ...props.getValue(), open: true })
+                    props.api.applyTransactionAsync({
+                        // add: [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }],
+                        add: [getExpandData()],
+                        addIndex: props.node.rowIndex + 1
+                    })
+                }
+                // else {
+                //     props.setValue({ ...props.getValue(), open: false, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate })
+                //     // handleRemove()
                 // }
+                setIsClick(false);
 
-                props.setValue({ ...props.getValue(), open: true})
-                props.api.applyTransactionAsync({
-                    // add: [{ fullWitdth: true, ...props.getValue(), ...props.data, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate }],
-                    add: [getExpandData()],
-                    addIndex: props.node.rowIndex + 1
-                })
-            }
-            // else {
-            //     props.setValue({ ...props.getValue(), open: false, isEditAble: isEditAble(dateSource, isAutoSync), helper: helper, onUpdate: onUpdate })
-            //     // handleRemove()
-            // }
-        });
+            });
 
-
+        }
     }
 
     // const handleRemove = () => {
@@ -150,14 +163,14 @@ const Test = (props: any) => {
                 {props.value ?
                     <div className="cellDate">
                         <div className={helper.isDelay() ? "has-delay planDate end" : "planDate end"}>
-                            {helper.getEndDate()? DateFormat(helper.getEndDate() as Date, 'yyyy/mm/dd') : props.value.planDateEnd}
+                            {helper.getEndDate() ? DateFormat(helper.getEndDate() as Date, 'yyyy/mm/dd') : props.value.planDateEnd}
                         </div>
                         <div className={
                             (helper.isActualDate() ? "has-ac-date planDate" : "planDate")
                             + " "
                             + (isEditAble(props.dateSource, props.isAutoSync) && !helper.getCompleteDate() ? "has-empty" : "")
                         }>
-                            {helper.getCompleteDate()? DateFormat(helper.getCompleteDate() as Date, 'yyyy/mm/dd') : props.value.actlCompleteDate}
+                            {helper.getCompleteDate() ? DateFormat(helper.getCompleteDate() as Date, 'yyyy/mm/dd') : props.value.actlCompleteDate}
                         </div>
                     </div> : <></>
                 }

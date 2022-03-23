@@ -3,11 +3,8 @@ import 'font-awesome/css/font-awesome.min.css'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
 import { Routes, Route, Link } from "react-router-dom";
-
-
+import {getData} from '../FakeDoc/createSelection'
 import testData from '../test.json'
-
-
 import Calendar from '../Calendar/Calendar';
 import React, { useState } from 'react';
 import { Provider } from 'react-redux'
@@ -15,11 +12,15 @@ import createStore from '../Reducer'
 
 import store from '../Reducer/index'
 import Filter from '../Filter'
+import Progress from '../Progress/Progress';
+
 const selected = {
   List: testData.list,
   Info: testData.info,
   Task: testData.task
 }
+
+const filterData = getData();
 
 const taskOption = testData.taskOption;
 
@@ -52,7 +53,16 @@ function App() {
             node={node}
             taskOptions={taskOption}
           />} />
-          <Route path="filter" element={<Filter />} />
+          <Route path="/filter" element={<Filter
+            filter={[
+
+            ]}
+          />} />
+          <Route path='/swiper' element={<Progress cards={[
+            {title: 'PHK', value: 20, max: 60},
+            {title: 'T1', value: 20, max: 60},
+            {title: 'T2', value: 20, max: 60},
+          ]}/>}/>
         </Routes>
       </div>
 

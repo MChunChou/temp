@@ -116,12 +116,10 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     }, []);
 
     const getRowHeight = useCallback(function (params) {
-        console.log(params)
         // return 120px height for full width rows
         if (isFullWidth(params.data)) {
             return 120;
         }
-
         return 80;
     }, []);
 
@@ -174,6 +172,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onSelectionChanged={()=>{}}
                 tooltipShowDelay={0}
                 tooltipHideDelay={8000}
+                // asyncTransactionWaitMillis={10}
             />
 
 
