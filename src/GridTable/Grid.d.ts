@@ -5,8 +5,12 @@ interface GridTableProps {
     columnDefs: ColumnsOptions
     expandComponent?: React.Component
     isExpandComponent?: boolean
+    control?: React.ReactElement
+    isCsv?: boolean
+    getCsvData?: (api) => any
     getExpandColumns?: (isExpand) => any
     getShrinkColumns?: (isExpand) => any
+    onRefresh?: () => void
 }
 
 interface DataOptions {

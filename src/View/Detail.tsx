@@ -15,13 +15,11 @@ const Detail: React.FC<any> = (props: any) => {
 
     {/* 這邊只是先寫個大概 */}
     <Breadcrumbs aria-label="breadcrumb">
-    <Link underline="hover">
-        A
-    </Link>
-    <Link
-        underline="hover">
-        B
-    </Link>
+        {props.breadcrumb.map((name:string)=>{
+            return <Link underline="hover">
+                {name}
+            </Link>
+        })}
     </Breadcrumbs>
 
 

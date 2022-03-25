@@ -10,7 +10,7 @@ import CustomHeader from "./CustomHeader";
 // import CustomHeader from "./Header";
 import FullWidthCellRenderer from '../Control/Control'
 import icons from './icon.svg';
-import { ConnectedOverlayScrollHandler } from "primereact/utils";
+import * as eh from '../utils/export-helper'
 
 const ToolTip = (props: any) => {
 //     const data = useMemo(
@@ -140,6 +140,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     return (
         <div className='grid-table ag-theme-alpine'>
 
+
+
             {
                 props.isExpandComponent ?
                     <button className={'expand ' + (isExpand ? 'close' : 'open')} onClick={handleClickExpand}>
@@ -156,6 +158,27 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                         {isShrink ? <i className="fa fa-caret-right"><span className="message">Expand left freeze column</span><span className="messageV">Tool Information</span></i> : <i className="fa fa-caret-left"><span className="message">Collapse left freeze column</span></i>}
                     </button>
                     : <></>
+            }
+
+            {
+                props.isCsv ?
+                    <button onClick={()=>{
+                        let csvData;
+                        if (props.getCsvData){
+                            csvData = props.getCsvData(gridRef.current.api)
+                        } else {
+                            csvData = gridRef.current.api.getDataAsCsv()
+                        }
+
+                        eh.csv(csvData, 'testFileName');
+                    }}>csv</button>:<></>
+            }
+
+            {
+                props.onRefresh?
+                <button onClick={()=>{
+                    props.onRefresh!();
+                }}> refresh </button> : <></>
             }
 
             <AgGridReact

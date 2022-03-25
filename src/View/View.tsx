@@ -8,7 +8,7 @@ import MyCalendar from "../Calendar/Calendar";
 import {
     Link
 } from "react-router-dom";
-
+import * as eh  from '../utils/export-helper'
 import Progress from "../Progress/Progress";
 import { DesktopDateTimePicker } from "@mui/lab";
 //測試資料
@@ -259,6 +259,7 @@ const View: React.FC<any> = (props: any) => {
     const [isDetail, setisDetail] = useState<any>(false)
     const [detail, setDetail] = useState<any>()
     const [detailColumn, setDetailColumn] = useState<any>({})
+    const [detailKeyStage, setDetailKeyStage] = useState<string>("");
     const [controlOpen, setControlOpen] = useState<any>({ })
     const [ctlDate, setCtlDate] = useState<any>(null);
     //需要使用useMemo 去取SET
@@ -269,6 +270,10 @@ const View: React.FC<any> = (props: any) => {
     }, [controlOpen])
 
     useEffect(() => {
+        getData();
+    }, [props.node, props.selected, props.taskOptions])
+
+    const getData = () => {
         // 取得 post 用資訊
         const params = getScheduleMainParams(props.node, props.selected, props.taskOptions)
         fh.post('http://localhost:8000/myschedule/main', {}, {
@@ -281,8 +286,7 @@ const View: React.FC<any> = (props: any) => {
                     setData(res)
                 }
             });
-    }, [props.node, props.selected, props.taskOptions])
-
+    }
 
     const sortData = (isNode?: boolean) => {
         if (data.length > 0) {
@@ -404,6 +408,7 @@ const View: React.FC<any> = (props: any) => {
                         onClick={(v) => {
                         setisDetail(true)
                         setDetailColumn([...getInfoColumn(false, true),...getTaskColumn(task.keyStage)])
+                        setDetailKeyStage(task.keyStage)
                     }}> <i className="fa fa-plus-square"></i> </div>
                 },
 
@@ -477,13 +482,16 @@ const View: React.FC<any> = (props: any) => {
             setisDetail={setisDetail}
             sortData={sortData}
             detailColumn={detailColumn}
+            breadcrumb={['fileName', detailKeyStage]}
         ></Detail>
     }
     return (
         <div className='view'>
-            <Progress cards={getProgressCards()}/>
+            {/* <Progress cards={getProgressCards()}/> */}
 
-            <div className="table-control"></div>
+            <div className="table-control">
+
+            </div>
 
             <GridTable
                 dataDefs={{
@@ -495,6 +503,63 @@ const View: React.FC<any> = (props: any) => {
                 isExpandComponent={true}
                 getExpandColumns={getExpandColumns}
                 getShrinkColumns={getShrinkColumns}
+                isCsv={true}
+                getCsvData={(api: any)=>{
+                    const csvData:any[] = [];
+                    const csvInfoHead: any[] = [];
+                    const nodeHead: any[] = [];
+                    const infoHead: any[] = [];
+
+                    props.selected.Info.forEach((info: { name: string; }, idx: number) => {
+                        csvInfoHead.push({name: info.name, header: info.name});
+                    });
+
+                    nodeColumns().forEach((node:any)=>{
+                        nodeHead.push(node.headerName);
+                        const task = getTaskColumn(node.headerName);
+                        task.forEach((t:any, i:number) => {
+
+                            if(i > 0) {
+                                nodeHead.push('');
+                            }
+
+                            console.log(t)
+                            infoHead.push({field: t.field, name: t.headerName});
+                        })
+                    });
+
+                    csvData.push(['',...csvInfoHead.map((head)=>head.name), ...nodeHead])
+                    csvData.push(['',...csvInfoHead.map((head)=>''), ...infoHead.map((info)=>info.name)])
+
+                    sortData(false).forEach((data:any)=>{
+                        const start:string[] = ['Start'];
+                        const end:string[] = ['End'];
+                        const conplete:string[] = ['Complete'];
+
+                        csvInfoHead.forEach((head) => {
+                            start.push(data[head.header])
+                            end.push(data[head.header])
+                            conplete.push(data[head.header])
+                        })
+
+                        infoHead.forEach((info)=>{
+                            start.push(data[info.field].planDateStart)
+                            end.push(data[info.field].planDateEnd)
+                            conplete.push(data[info.field].actlCompleteDate)
+                        })
+                        csvData.push(start)
+                        csvData.push(end)
+                        csvData.push(conplete)
+                    });
+
+
+                    // console.log(sortData(), csvInfoHead,nodeHead,infoHead);
+
+                    return csvData
+                }}
+                onRefresh={()=>{
+                    getData();
+                }}
             />
 
             { d }

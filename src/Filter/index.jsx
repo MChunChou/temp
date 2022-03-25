@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { CSSTransition } from 'react-transition-group';
 
 /**
  *
