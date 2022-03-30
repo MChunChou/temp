@@ -13,7 +13,7 @@ import createStore from '../Reducer'
 import store from '../Reducer/index'
 import Filter from '../Filter'
 import Progress from '../Progress/Progress';
-
+import Block from '../usePrompt/Demo';
 const selected = {
   List: testData.list,
   Info: testData.info,
@@ -47,13 +47,19 @@ function App() {
   return (
     <Provider store={store}>
       <div className="App">
+        <span><Link to={'/'}>Root</Link> </span>
+        <span> <Link to={'/filter'}>Filter</Link></span>
+        <span> <Link to={'/block'}>block</Link></span>
+
         <Routes>
           <Route path="/" element={<View
             selected={selected}
             node={node}
             taskOptions={taskOption}
           />} />
-          <Route path="/filter" element={<Filter
+          <Route
+            path="/filter"
+            element={<Filter
             filter={[
 
             ]}
@@ -63,6 +69,7 @@ function App() {
             {title: 'T1', value: 20, max: 60},
             {title: 'T2', value: 20, max: 60},
           ]}/>}/>
+          <Route path='/block' element={<Block/>}/>
         </Routes>
       </div>
 

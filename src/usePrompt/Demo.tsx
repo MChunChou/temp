@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { usePrompt } from '../usePrompt/usePrompt';
 
-/**
- *
- * @param {*} props
- * @returns
- */
-const Filter = (props) => {
+const Demo = (props:any) => {
     const [isSave, setIsSave] = useState(false);
 
-    usePrompt((location, action)=>{
+    usePrompt((location, action) =>{
         console.log(location , action);
-        return window.confirm("??")
+        return window.confirm("??");
     }, isSave);
 
     return (
@@ -25,4 +20,4 @@ const Filter = (props) => {
     )
 }
 
-export default Filter;
+export default Demo;

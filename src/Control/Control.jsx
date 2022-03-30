@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import MyCalendar from '../Calendar/Calendar';
+import MyCalendar from '../Calendar/FixCalendar';
+// import MyCalendar from '../Calendar/Calendar';
 import DateHelper from '../utils/date-helper';
 
 const Control = (props) => {
