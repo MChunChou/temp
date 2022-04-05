@@ -12,6 +12,21 @@ import FullWidthCellRenderer from '../Control/Control'
 import icons from './icon.svg';
 import * as eh from '../utils/export-helper'
 
+
+
+
+const Icon = (props: any) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/2000/xlink"
+            className={`icon-${props.name}`}
+        >
+            <use xlinkHref={`${icons}#${props.name}`} />
+        </svg>
+    )
+}
+
 const ToolTip = (props: any) => {
 //     const data = useMemo(
 //         () => props.api.getDisplayedRowAtIndex(props.rowIndex).data,
@@ -124,23 +139,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     }, []);
 
 
-
-    const Icon = (props: any) => {
-        return (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlnsXlink="http://www.w3.org/2000/xlink"
-                className={`icon-${props.name}`}
-            >
-                <use xlinkHref={`${icons}#${props.name}`} />
-            </svg>
-        )
-    }
-
     return (
         <div className='grid-table ag-theme-alpine'>
-
-
 
             {
                 props.isExpandComponent ?
@@ -154,8 +154,14 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
 
             {
                 props.isExpandComponent ?
-                    <button className={'splitter ' + (isShrink ? 'close' : 'open')} onClick={handleClickShrink}>
-                        {isShrink ? <i className="fa fa-caret-right"><span className="message">Expand left freeze column</span><span className="messageV">Tool Information</span></i> : <i className="fa fa-caret-left"><span className="message">Collapse left freeze column</span></i>}
+                    <button
+                        className={'splitter ' + (isShrink ? 'close' : 'open')}
+                        onClick={handleClickShrink}>
+
+                        {isShrink ? <i className="fa fa-caret-right">
+                            <span className="message">Expand left freeze column</span>
+                            <span className="messageV">Tool Information</span></i>
+                            : <i className="fa fa-caret-left"><span className="message">Collapse left freeze column</span></i>}
                     </button>
                     : <></>
             }
@@ -194,7 +200,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onRowSelected={()=>{}}
                 onSelectionChanged={()=>{}}
                 tooltipShowDelay={0}
-                tooltipHideDelay={8000}
+                // tooltipHideDelay={8000}
                 // asyncTransactionWaitMillis={10}
             />
 

@@ -3,7 +3,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import 'primereact/resources/themes/saga-blue/theme.css'
 import 'primereact/resources/primereact.min.css';
 import { Routes, Route, Link } from "react-router-dom";
-import {getData} from '../FakeDoc/createSelection'
+import { getData } from '../FakeDoc/createSelection'
 import testData from '../test.json'
 import Calendar from '../Calendar/Calendar';
 import React, { useState } from 'react';
@@ -59,17 +59,28 @@ function App() {
           />} />
           <Route
             path="/filter"
-            element={<Filter
-            filter={[
-
-            ]}
-          />} />
+            element={
+              <Filter
+                data={getData()}
+                value={[]}
+                filter={[
+                  {label: 'Month', key: 'month', },
+                  {label: 'Year', key: 'year', },
+                  {label: 'Sales Rep', key: 'salesRep'},
+                  {label: 'Hand Set', key: 'handset'},
+                ]}
+                select={[
+                  {label: 'Sale', key: 'sale'},
+                  {label: 'Sale Date', key: 'saleDate'},
+                ]}
+              />}
+          />
           <Route path='/swiper' element={<Progress cards={[
-            {title: 'PHK', value: 20, max: 60},
-            {title: 'T1', value: 20, max: 60},
-            {title: 'T2', value: 20, max: 60},
-          ]}/>}/>
-          <Route path='/block' element={<Block/>}/>
+            { title: 'PHK', value: 20, max: 60 },
+            { title: 'T1', value: 20, max: 60 },
+            { title: 'T2', value: 20, max: 60 },
+          ]} />} />
+          <Route path='/block' element={<Block />} />
         </Routes>
       </div>
 

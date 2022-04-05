@@ -1,28 +1,24 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
-import { usePrompt } from '../usePrompt/usePrompt';
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useRef,
+    useCallback,
+} from "react";
 
-/**
- *
- * @param {*} props
- * @returns
- */
-const Filter = (props) => {
-    const [isSave, setIsSave] = useState(false);
+const Filter = ({ data: datas }) => {
+    console.log(datas);
+    const renderSelection = () => {};
+    const renderResult = () => {};
 
-    usePrompt((location, action)=>{
-        console.log(location , action);
-        return window.confirm("??")
-    }, isSave);
-
+    const selectPanel = renderSelection();
+    const resultPanel = renderResult();
     return (
-        <div className='filter'>
-            {/* <AlertDialog isBlocking={true} /> */}
-            <button onClick={
-                ()=>{setIsSave(!isSave)}
-            }> Test </button>
-            This is Filter : {isSave? 'T' : 'F'}
+        <div className="filter">
+            {selectPanel}
+            {resultPanel}
         </div>
-    )
-}
+    );
+};
 
 export default Filter;

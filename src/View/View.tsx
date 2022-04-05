@@ -8,7 +8,8 @@ import MyCalendar from "../Calendar/Calendar";
 import {
     Link
 } from "react-router-dom";
-import * as eh  from '../utils/export-helper'
+import * as eh from '../utils/export-helper'
+import {format as dateFormat } from '../utils/date-helper';
 import Progress from "../Progress/Progress";
 import { DesktopDateTimePicker } from "@mui/lab";
 //測試資料
@@ -52,30 +53,31 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-        taskId: 1000,
-        planDateStart: '2020/1/11',
-        planDateEnd: '2021/1/27',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1001,
-        planDateStart: '2020/1/28',
-        planDateEnd: '2021/1/30',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'T1'
-    }, {
-        taskId: 1002,
-        planDateStart: '2020/1/3',
-        planDateEnd: '2021/1/18',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }]
+            taskId: 1000,
+            planDateStart: '2020/1/11',
+            planDateEnd: '2021/1/27',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1001,
+            planDateStart: '2020/1/28',
+            planDateEnd: '2021/1/30',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'T1'
+        }, {
+            taskId: 1002,
+            planDateStart: '2020/1/3',
+            planDateEnd: '2021/1/18',
+            // actlCompleteDate: '2021/2/2',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }]
 }, {
     toolInfo: {
         bookNo: 'bookNo_2',
@@ -116,30 +118,30 @@ const tD = [{
             keyStaget: 'T1'
         },
         {
-        taskId: 1000,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }, {
-        taskId: 1001,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'T1'
-    }, {
-        taskId: 1002,
-        planDateStart: '2020/1/1',
-        planDateEnd: '2021/1/2',
-        actlCompleteDate: '2021/2/2',
-        isActlEdieable: 'true',
-        isPlanEditable: 'true',
-        keyStaget: 'PHK'
-    }]
+            taskId: 1000,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }, {
+            taskId: 1001,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: '2021/2/2',
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'T1'
+        }, {
+            taskId: 1002,
+            planDateStart: '2020/1/1',
+            planDateEnd: '2021/1/2',
+            actlCompleteDate: null,
+            isActlEdieable: 'true',
+            isPlanEditable: 'true',
+            keyStaget: 'PHK'
+        }]
 }, {
     toolInfo: {
         bookNo: 'bookNo_3',
@@ -207,11 +209,11 @@ const tD = [{
 }]
 
 const LinkC = (props: any) => {
-    return <Link  to={{
+    return <Link to={{
         pathname: "/filter", // 連結的字串
-        search: "?sort=name",　// 搜尋的表達形式
+        search: "?sort=name", // 搜尋的表達形式
         hash: "#the-hash", // 將hash放到url上
-      }}>{props.value}</Link>
+    }}>{props.value}</Link>
 }
 
 //返回 post 用的參數
@@ -260,14 +262,7 @@ const View: React.FC<any> = (props: any) => {
     const [detail, setDetail] = useState<any>()
     const [detailColumn, setDetailColumn] = useState<any>({})
     const [detailKeyStage, setDetailKeyStage] = useState<string>("");
-    const [controlOpen, setControlOpen] = useState<any>({ })
     const [ctlDate, setCtlDate] = useState<any>(null);
-    //需要使用useMemo 去取SET
-
-
-    useEffect(()=>{
-        console.warn(controlOpen)
-    }, [controlOpen])
 
     useEffect(() => {
         getData();
@@ -287,6 +282,14 @@ const View: React.FC<any> = (props: any) => {
                 }
             });
     }
+
+    const getDisplayData = useMemo (() => {
+        if (data.length > 0) {
+
+        }
+    },[data]);
+
+
 
     const sortData = (isNode?: boolean) => {
         if (data.length > 0) {
@@ -328,7 +331,7 @@ const View: React.FC<any> = (props: any) => {
             if (idx < 3) {
                 pinned = 'left'
 
-                if( idx === 0) {
+                if (idx === 0) {
                     cellRenderer = LinkC
                 }
             }
@@ -339,8 +342,8 @@ const View: React.FC<any> = (props: any) => {
                 tooltipField: info.name,
                 cellRenderer: cellRenderer,
                 // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
-                comparator:  function(valueA: any, valueB: any, nodeA: any, nodeB: any, isInverted: any) {
-                    return nodeA.data[info.name] === nodeB.data[info.name] ? 0 : nodeA.data[info.name] > nodeB.data[info.name] ? 1: -1
+                comparator: function (valueA: any, valueB: any, nodeA: any, nodeB: any, isInverted: any) {
+                    return nodeA.data[info.name] === nodeB.data[info.name] ? 0 : nodeA.data[info.name] > nodeB.data[info.name] ? 1 : -1
                 },
             })
         })
@@ -360,10 +363,14 @@ const View: React.FC<any> = (props: any) => {
                 cellRenderer: TaskComponent,
                 cellRendererParams: { ...task },
                 initialWidth: 150,
+                resizable: true,
+                minWidth: 150,
                 sortable: false,
                 filterValueGetter: (v: any) => {
-                    console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
-                    return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
+                    const actlCompleteDate = v.data[v.column.colId].actlCompleteDate;
+                    const planDateEnd = v.data[v.column.colId].planDateEnd;
+                    return (actlCompleteDate? dateFormat(new Date(actlCompleteDate), 'yyyy/mm/dd') : '') +
+                        (planDateEnd? dateFormat(new Date(planDateEnd), 'yyyy/mm/dd') : '');
                 },
 
             }
@@ -399,17 +406,17 @@ const View: React.FC<any> = (props: any) => {
                 sortable: false,
                 filterValueGetter: (v: any) => {
                     // console.log(v.column.colId, v.data, v.data[v.column.colId].startPlanDate)
-                    return v.data[v.column.colId].planDateStart + ',' + v.data[v.column.colId].planDateEnd
+                    return v.data[v.column.colId].actlCompleteDate + ' ' + v.data[v.column.colId].planDateEnd
                 },
                 initialWidth: 150,
                 headerComponentParams: {
                     controlComponent: <div
                         className='openDetail'
                         onClick={(v) => {
-                        setisDetail(true)
-                        setDetailColumn([...getInfoColumn(false, true),...getTaskColumn(task.keyStage)])
-                        setDetailKeyStage(task.keyStage)
-                    }}> <i className="fa fa-plus-square"></i> </div>
+                            setisDetail(true)
+                            setDetailColumn([...getInfoColumn(false, true), ...getTaskColumn(task.keyStage)])
+                            setDetailKeyStage(task.keyStage)
+                        }}> <i className="fa fa-plus-square"></i> </div>
                 },
 
             }
@@ -431,7 +438,7 @@ const View: React.FC<any> = (props: any) => {
     }
 
     const getProgressCards = () => {
-        console.log(data, props.node);
+        // console.log(data, props.node);
         /**
          * {
          *  title: 大節點名稱,
@@ -441,40 +448,81 @@ const View: React.FC<any> = (props: any) => {
          *
          */
 
+        const toolCount = data.length;
+
         const result: any = {
 
         }
 
-        props.node.forEach((n:any)=>{
-            result[n.taskName] = {max: 0, value: 0};
-        })
+        // props.node.forEach((n: any) => {
+        //     result[n.taskName] = { max: 0, value: 0 };
+        // })
 
-        data.forEach((d:any)=>{
+        /* TODO: 需要 Filter Dept */
+        data.forEach((d: any) => {
+
+            const res:any = {
+
+            };
+            let total = 0;
+            let complete = 0;
+
             d.taskList.forEach((task: any) => {
-                if(!props.node.some((n: any) => n.taskId === task.taskId)) {
-                    const {actlCompleteDate , keyStaget} = task;
-                    if(result[keyStaget]){
-                        result[keyStaget].max += 1;
-                        if(actlCompleteDate) {
-                            result[keyStaget].value += 1;
+
+                if (!props.node.some((n: any) => n.taskId === task.taskId)) {
+                    const { actlCompleteDate, keyStaget, planDateEnd } = task;
+
+                    if(!res[keyStaget]){
+                        res[keyStaget] = {total : 0 , complete : 0};
+                    }
+
+                    if (res[keyStaget] && planDateEnd) {
+                        res[keyStaget].total += 1;
+                        if (actlCompleteDate) {
+                            res[keyStaget].complete += 1;
                         }
                     }
                 }
-            })
+
+            });
+
+            Object.keys(res).filter((key)=>{
+                return res[key].total > 0;
+            }).map((key)=>{
+                if(!result[key]) {
+                    result[key] = 0
+                }
+
+                if(res[key].total === res[key].complete) {
+                    result[key] ++;
+                }
+            });
+
         })
 
-        return Object.keys(result).filter((key)=>{
-            return result[key].max > 0;
-        }).map((key)=>{
+        return Object.keys(result).map((key) => {
             return {
                 title: key,
-                max: result[key].max,
-                value: result[key].value
+                max: toolCount,
+                value: result[key]
             }
-        })
+        });
+
+        // return Object.keys(result).filter((key) => {
+        //     return result[key].max > 0;
+        // }).map((key) => {
+        //     return {
+        //         title: key,
+        //         max: result[key].max,
+        //         value: result[key].value
+        //     }
+        // })
 
         // return null
     }
+
+
+    // console.warn(getProgressCards());
 
     let d = null
     if (isDetail) {
@@ -504,37 +552,37 @@ const View: React.FC<any> = (props: any) => {
                 getExpandColumns={getExpandColumns}
                 getShrinkColumns={getShrinkColumns}
                 isCsv={true}
-                getCsvData={(api: any)=>{
-                    const csvData:any[] = [];
+                getCsvData={(api: any) => {
+                    const csvData: any[] = [];
                     const csvInfoHead: any[] = [];
                     const nodeHead: any[] = [];
                     const infoHead: any[] = [];
 
                     props.selected.Info.forEach((info: { name: string; }, idx: number) => {
-                        csvInfoHead.push({name: info.name, header: info.name});
+                        csvInfoHead.push({ name: info.name, header: info.name });
                     });
 
-                    nodeColumns().forEach((node:any)=>{
+                    nodeColumns().forEach((node: any) => {
                         nodeHead.push(node.headerName);
                         const task = getTaskColumn(node.headerName);
-                        task.forEach((t:any, i:number) => {
+                        task.forEach((t: any, i: number) => {
 
-                            if(i > 0) {
+                            if (i > 0) {
                                 nodeHead.push('');
                             }
 
                             console.log(t)
-                            infoHead.push({field: t.field, name: t.headerName});
+                            infoHead.push({ field: t.field, name: t.headerName });
                         })
                     });
 
-                    csvData.push(['',...csvInfoHead.map((head)=>head.name), ...nodeHead])
-                    csvData.push(['',...csvInfoHead.map((head)=>''), ...infoHead.map((info)=>info.name)])
+                    csvData.push(['', ...csvInfoHead.map((head) => head.name), ...nodeHead])
+                    csvData.push(['', ...csvInfoHead.map((head) => ''), ...infoHead.map((info) => info.name)])
 
-                    sortData(false).forEach((data:any)=>{
-                        const start:string[] = ['Start'];
-                        const end:string[] = ['End'];
-                        const conplete:string[] = ['Complete'];
+                    sortData(false).forEach((data: any) => {
+                        const start: string[] = ['Start'];
+                        const end: string[] = ['End'];
+                        const conplete: string[] = ['Complete'];
 
                         csvInfoHead.forEach((head) => {
                             start.push(data[head.header])
@@ -542,7 +590,7 @@ const View: React.FC<any> = (props: any) => {
                             conplete.push(data[head.header])
                         })
 
-                        infoHead.forEach((info)=>{
+                        infoHead.forEach((info) => {
                             start.push(data[info.field].planDateStart)
                             end.push(data[info.field].planDateEnd)
                             conplete.push(data[info.field].actlCompleteDate)
@@ -557,12 +605,12 @@ const View: React.FC<any> = (props: any) => {
 
                     return csvData
                 }}
-                onRefresh={()=>{
+                onRefresh={() => {
                     getData();
                 }}
             />
 
-            { d }
+            {d}
 
         </div>
     );
