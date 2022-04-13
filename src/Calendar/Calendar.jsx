@@ -5,12 +5,14 @@ import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
+import da from "date-fns/esm/locale/da/index.js";
 
 const MyCalendar = (props) => {
-    const [select, setDate] = useState();
+    const [select, setDate] = useState(null);
     const [visible, setVisible] = useState(false);
-    const helper = props.helper;
-    // console.log('isDelay', helper.isDelay(), 'delayDats', helper.getDelayDays())
+    const [inputValue, setInputValue] = useState("");
+    const [isOnFocus, setIsOnFocus] = useState(false);
+    const [helper] = useState(props.helper);
 
     useEffect(() => {
         setDate(props.value);
@@ -20,12 +22,10 @@ const MyCalendar = (props) => {
         const { day, month, year, today, selectable, otherMonth } = date;
         const d = new Date(year, month, day);
         const [delayDateStart, delayDateEnd] = helper.getDelayDays();
-
         // 被選取日 : day-active
         // has-plan , has-range, has-range-start, has-range-end
         // has-delay,
         // has-disabled
-        // console.log(date)
         const className = ["day"];
 
         if (select && d.toLocaleDateString() == select.toLocaleDateString()) {
@@ -41,7 +41,7 @@ const MyCalendar = (props) => {
                 className.push("has-delay");
             }
 
-            if (d.getTime() === delayDateStart.getTime()) {
+            if (delayDateStart && d.getTime() === delayDateStart.getTime()) {
                 className.push("has-range-start");
             }
 
@@ -50,7 +50,8 @@ const MyCalendar = (props) => {
             }
         }
 
-        if (d.getTime() === helper.getStartDate().getTime()) {
+        // if (d.getTime() === helper.getStartDate().getTime()) {
+        if (helper.startDate && d.getTime() === helper.startDate.getTime()) {
             if (helper.isPlanRange()) {
                 className.push("has-range-start");
             }
@@ -63,7 +64,7 @@ const MyCalendar = (props) => {
             }
         }
 
-        if (d.getTime() === helper.getEndDate().getTime()) {
+        if (helper.endDate && d.getTime() === helper.endDate.getTime()) {
             if (helper.isPlanRange()) {
                 className.push("has-range-end");
             }
@@ -99,15 +100,61 @@ const MyCalendar = (props) => {
         );
     };
 
-    const onVisibleChange = (e) => {
-        setVisible(e.type === "dateselect" || !visible);
-        if (e.callback) {
-            e.callback();
+    const onChange = (date) => {
+        const success = () => {
+            setDate(date);
+        };
+
+        const failed = () => {};
+
+        // helper.updateDate(props.type, date, props.remark, success, failed);
+        props.onChange(date);
+    };
+
+    const onFocus = (date) => {
+        if (date) {
+            onChange(date);
+        }
+
+        if (props.type === "complete" && !select) {
+            onChange(new Date());
         }
     };
 
     return (
         <>
+            <Calendar
+                id="datetemplate"
+                dateFormat="yy/mm/dd"
+                disabled={props.disabled}
+                // minDate={props.minDate}
+                // maxDate={props.maxDate}
+                panelClassName="my-calendar"
+                value={select}
+                // view={select ? select.toLocaleDateString() : ""}
+                // keepInvalid={true}
+                onFocus={() => {
+                    onFocus();
+                }}
+                onBlur={() => {
+                    // setTimeout(() => {
+                    //     onFocus(new Date("2022/4/6"));
+                    // }, 500);
+                }}
+                onChange={(e) => {
+                    //KeyIn date should save change, but not send
+                    if (e.value) {
+                        onChange(e.value);
+                    }
+                }}
+                dateTemplate={dateTemplate}
+                monthNavigator
+                yearNavigator
+                yearRange="2015:2050"
+                yearNavigatorTemplate={yearNavigatorTemplate}
+                monthNavigatorTemplate={monthNavigatorTemplate}
+            />
+
             {/* <Calendar
                 showWeek={true}
                 panelClassName='test-class-name'
@@ -127,34 +174,6 @@ const MyCalendar = (props) => {
             visible={visible}
             onVisibleChange={onVisibleChange} />
             <div/> */}
-            <Calendar
-                id="datetemplate"
-                dateFormat="yy/mm/dd"
-                disabled={props.disabled}
-                minDate={props.minDate}
-                maxDate={props.maxDate}
-                panelClassName="my-calendar"
-                value={select}
-                onFocus={() => {
-                    if (props.autoFocus && !helper.getCompleteDate()) {
-                        setDate(new Date());
-                        props.onChange(new Date());
-                    }
-                }}
-                onChange={(e) => {
-                    setDate(e.value);
-                    props.onChange(e.value);
-                }}
-                dateTemplate={dateTemplate}
-                // visible={visible}
-                // onVisibleChange={onVisibleChange}
-                // inline
-                monthNavigator
-                yearNavigator
-                yearRange="2015:2050"
-                yearNavigatorTemplate={yearNavigatorTemplate}
-                monthNavigatorTemplate={monthNavigatorTemplate}
-            />
         </>
     );
 };

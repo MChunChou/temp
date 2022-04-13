@@ -4,10 +4,8 @@ interface DateHelperParams {
     completeDate: string | null
 }
 
-const DAY_MS = 86400000; //1000*60*60*24
-
+const DAY_MS = 86400000; //1000*60*60*24 ( 24 h )
 const LOCALE_FORMAT = 'zh-TW'
-
 
 /**
  * @name format
@@ -26,7 +24,6 @@ const LOCALE_FORMAT = 'zh-TW'
  * @example
  *  YYYY/MM/DD -> 2022/03/22
  */
-
 
 export const format = (
     date: Date,
@@ -62,6 +59,17 @@ export const format = (
         .join('');
 
     return result;
+}
+
+/**
+ *  @name isDateEqual
+ *  @summary check two date is equal or not
+ *  @param {Date} date1
+ *  @param {Date} date2
+ *  @returns {boolean}
+ */
+export const isDateEqual = (date1:Date, date2: Date) => {
+    return date1.toLocaleDateString() === date2.toLocaleDateString();
 }
 
 class DateHelper {

@@ -28,3 +28,7 @@
 .mySwiper .swiper-button-next {
   color: #000;
 }
+
+.App span {
+  padding: 10px;
+}

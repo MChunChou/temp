@@ -2,7 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const path = require("path")
 const cors = require('cors');
-
+const createDate = require('./createTestData');
 const app = express()
 app
     .use(cors())
@@ -216,9 +216,14 @@ function getMySchedule() {
     }]
     return myschedule;
 }
-
+const date = createDate();
 app.post("/myschedule/main", function (req, res) {
-    res.json(getMySchedule())
+    // res.json(getMySchedule())
+    res.json(date);
+})
+
+app.get("/update/date", function(req, res){
+    res.json({ok: true});
 })
 
 const port = process.env.PORT || 8000;
