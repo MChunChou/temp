@@ -20,9 +20,6 @@ const useDate = (props: useDateProps) => {
     const [completeDate, setCompleteDate] = useState<DateType>(null);
     const [today, setToday] = useState<DateType>(null);
 
-    useEffect(() => {
-        // console.log("UPDATE IS DONE", { startDate, endDate, completeDate });
-    }, [startDate, endDate, completeDate]);
     // initial date
     useEffect(() => {
         setDate("start", props.startDate);
@@ -66,9 +63,6 @@ const useDate = (props: useDateProps) => {
                 REMARK: remark,
             };
 
-            console.warn("Date Update ::::::::::: ", updateData);
-            // setDate(type, date);
-            // onSuccess && onSuccess();
             const res = await fetch("http://localhost:8000/update/date?")
                 .then((r) => {
                     return r.json();

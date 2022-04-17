@@ -1,19 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 
-import { AgGridReact } from 'ag-grid-react';
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { AgGridReact } from "ag-grid-react";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import './GridTable.css';
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import "./GridTable.css";
 import CustomHeader from "./CustomHeader";
-// import CustomHeader from "./Header";
-import FullWidthCellRenderer from '../Control/Control'
-import icons from './icon.svg';
-import * as eh from '../utils/export-helper'
-
-
-
+import FullWidthCellRenderer from "../Control/Control";
+import icons from "./icon.svg";
+import * as eh from "../utils/export-helper";
 
 const Icon = (props: any) => {
     return (
@@ -24,24 +26,23 @@ const Icon = (props: any) => {
         >
             <use xlinkHref={`${icons}#${props.name}`} />
         </svg>
-    )
-}
+    );
+};
 
 const ToolTip = (props: any) => {
-//     const data = useMemo(
-//         () => props.api.getDisplayedRowAtIndex(props.rowIndex).data,
-//         []
-//     );
-// console.log(data, props)
+    //     const data = useMemo(
+    //         () => props.api.getDisplayedRowAtIndex(props.rowIndex).data,
+    //         []
+    //     );
     return (
-    <div
-        className="custom-tooltip"
-        style={{ backgroundColor: props.color || 'white' }}
-    >
-        {props.value}
-    </div>
+        <div
+            className="custom-tooltip"
+            style={{ backgroundColor: props.color || "white" }}
+        >
+            {props.value}
+        </div>
     );
-}
+};
 
 const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const gridRef = useRef<any>();
@@ -49,8 +50,9 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const [columnDefs, setColumnDefs]: any[] = useState([]);
     const [rowData, setRowData]: any = useState();
     const [gridAPI, setGridAPI] = useState<any>();
-    const [isExpand, setIsExpand] = useState(false)
-    const [isShrink, setIsShrink] = useState(false)
+    const [isExpand, setIsExpand] = useState(false);
+    const [isShrink, setIsShrink] = useState(false);
+    const [shrinkWidth, setShrinkWidth] = useState(0);
 
     const [defaultColDef] = useState({
         resizable: false,
@@ -58,16 +60,20 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         // autoHeight: true,
         // minWidth: 100,
         sortable: true,
+        // Using in paginatoion
         // pagination: true,
         // paginationAutoPageSize: 2,
-        suppressAutoSize: true,
-        suppressSizeToFit: true,
-        filter: 'agTextColumnFilter',
+        // suppressAutoSize: true,
+        // suppressSizeToFit: true,
+        filter: "agTextColumnFilter",
         // Default Use filter in first row
         // suppressMenu: true,
         // floatingFilter: true,
+        autoSizeAllColumns: true,
         alwaysShowHorizontalScroll: true,
         alwaysShowVerticalScroll: true,
+        // Set for not dnd
+        lockPinned: true,
         headerComponentParams: {
             enableMenu: true,
         },
@@ -84,43 +90,67 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         createColumns();
     }, []);
 
+    // useEffect(() => {
+    //     if (!isShrink && gridAPI) {
+    //         console.log(gridAPI);
+    //         autoSizeAll(false);
+    //         // getShrinkWidth(gridAPI.columnApi);
+    //     }
+    // }, [isShrink]);
+
     useEffect(() => {
         getData();
-    }, [props.dataDefs.data])
+    }, [props.dataDefs.data]);
 
     const onGridReady = (api: any) => {
-        setGridAPI(api)
-    }
+        setGridAPI(api);
+    };
+
+    const getShrinkWidth = (columnApi: any) => {
+        if (!columnApi) {
+            return;
+        }
+
+        let initShrinkWidth = 0;
+        columnApi.getAllColumns().forEach((columnDef: any) => {
+            if (columnDef.pinned === "left") {
+                initShrinkWidth += columnDef.actualWidth;
+            }
+        });
+        setShrinkWidth(initShrinkWidth - 12);
+    };
 
     const getData = () => {
         if (props.dataDefs.data) {
             setRowData(props.dataDefs.data);
         }
-    }
+    };
 
     const createColumns = () => {
-        setColumnDefs(props.columnDefs.groups)
-    }
+        setColumnDefs(props.columnDefs.groups);
+        // console.log(props.columnDefs);
+    };
 
     const handleClickExpand = () => {
         if (props.getExpandColumns) {
             const newColumnsDef = props.getExpandColumns(!isExpand);
-            gridRef.current.api.setColumnDefs(newColumnsDef)
+            gridRef.current.api.setColumnDefs(newColumnsDef);
             setIsExpand(!isExpand);
         }
-    }
+    };
 
     const handleClickShrink = () => {
         if (props.getShrinkColumns) {
             const newColumnsDef = props.getShrinkColumns(!isShrink);
-            gridRef.current.api.setColumnDefs(newColumnsDef)
+            gridRef.current.api.setColumnDefs(newColumnsDef);
+
             setIsShrink(!isShrink);
         }
-    }
+    };
 
     const isFullWidth = (data: any) => {
-        return data.fullWitdth
-    }
+        return data.fullWitdth;
+    };
 
     const isFullWidthCell = useCallback(function (rowNode) {
         return isFullWidth(rowNode.data);
@@ -138,58 +168,120 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         return 80;
     }, []);
 
+    const onGridSizeChanged = useCallback((params) => {
+        console.log(params, params.column.pinned);
+        getShrinkWidth(params.columnApi);
+    }, []);
+
+    const autoSizeAll = useCallback(
+        (skipHeader) => {
+            const allColumnIds: any[] = [];
+            gridRef.current.columnApi
+                .getAllColumns()
+                .forEach((column: { getId: () => any }) => {
+                    allColumnIds.push(column.getId());
+                });
+            // gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+            gridRef.current.columnApi.autoSizeAllColumns();
+            // console.log(gridAPI);
+            getShrinkWidth(gridRef.current.columnApi);
+            // gridAPI.columnApi.autoSizeAllColumns();
+        },
+        [gridAPI]
+    );
 
     return (
-        <div className='grid-table ag-theme-alpine'>
+        <div className="grid-table ag-theme-alpine">
+            <button onClick={() => autoSizeAll(false)}>Auto-Size All</button>
 
-            {
-                props.isExpandComponent ?
-                    <button className={'expand ' + (isExpand ? 'close' : 'open')} onClick={handleClickExpand}>
-                        {isExpand ? <Icon name='expandClose' /> : <Icon name='expandOpen' />}
-                        <span className="messageE">Expand column</span>
-                        <span className="messageC">Collapse column</span>
-                    </button>
-                    : <></>
-            }
+            <button onClick={() => autoSizeAll(true)}>
+                Auto-Size All (Skip Header)
+            </button>
+            {props.isExpandComponent ? (
+                <button
+                    className={"expand " + (isExpand ? "close" : "open")}
+                    onClick={handleClickExpand}
+                >
+                    {isExpand ? (
+                        <Icon name="expandClose" />
+                    ) : (
+                        <Icon name="expandOpen" />
+                    )}
+                    <span className="messageE">Expand column</span>
+                    <span className="messageC">Collapse column</span>
+                </button>
+            ) : (
+                <></>
+            )}
 
-            {
-                props.isExpandComponent ?
-                    <button
-                        className={'splitter ' + (isShrink ? 'close' : 'open')}
-                        onClick={handleClickShrink}>
+            {props.isExpandComponent ? (
+                <button
+                    className={"splitter " + (isShrink ? "close" : "open")}
+                    onClick={handleClickShrink}
+                >
+                    {isShrink ? (
+                        <i
+                            className="fa fa-caret-right"
+                            style={{ left: shrinkWidth }}
+                        >
+                            <span className="message">
+                                Expand left freeze column
+                            </span>
+                            <span className="messageV">Tool Information</span>
+                        </i>
+                    ) : (
+                        <i
+                            className="fa fa-caret-left"
+                            style={{ left: shrinkWidth }}
+                        >
+                            <span className="message">
+                                Collapse left freeze column
+                            </span>
+                        </i>
+                    )}
+                </button>
+            ) : (
+                <></>
+            )}
 
-                        {isShrink ? <i className="fa fa-caret-right">
-                            <span className="message">Expand left freeze column</span>
-                            <span className="messageV">Tool Information</span></i>
-                            : <i className="fa fa-caret-left"><span className="message">Collapse left freeze column</span></i>}
-                    </button>
-                    : <></>
-            }
-
-            {
-                props.isCsv ?
-                    <button onClick={()=>{
+            {props.isCsv ? (
+                <button
+                    onClick={() => {
                         let csvData;
-                        if (props.getCsvData){
-                            csvData = props.getCsvData(gridRef.current.api)
+                        if (props.getCsvData) {
+                            csvData = props.getCsvData(gridRef.current.api);
                         } else {
-                            csvData = gridRef.current.api.getDataAsCsv()
+                            csvData = gridRef.current.api.getDataAsCsv();
                         }
 
-                        eh.csv(csvData, 'testFileName');
-                    }}>csv</button>:<></>
-            }
+                        eh.csv(csvData, "testFileName");
+                    }}
+                >
+                    csv
+                </button>
+            ) : (
+                <></>
+            )}
 
-            {
-                props.onRefresh?
-                <button onClick={()=>{
-                    props.onRefresh!();
-                }}> refresh </button> : <></>
-            }
+            {props.onRefresh ? (
+                <button
+                    onClick={() => {
+                        props.onRefresh!();
+                    }}
+                >
+                    refresh
+                </button>
+            ) : (
+                <></>
+            )}
 
             <AgGridReact
                 ref={gridRef}
                 onGridReady={onGridReady}
+                onGridColumnsChanged={() => {
+                    autoSizeAll(false);
+                    // getShrinkWidthgr);
+                }}
                 rowData={rowData}
                 columnDefs={columnDefs}
                 defaultColDef={defaultColDef}
@@ -197,16 +289,15 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 getRowHeight={getRowHeight}
                 isFullWidthCell={isFullWidthCell}
                 fullWidthCellRenderer={fullWidthCellRenderer}
-                onRowSelected={()=>{}}
-                onSelectionChanged={()=>{}}
+                onRowSelected={() => {}}
+                onSelectionChanged={() => {}}
                 tooltipShowDelay={0}
+                // onColumnResized={onGridSizeChanged}
                 // tooltipHideDelay={8000}
                 // asyncTransactionWaitMillis={10}
             />
-
-
         </div>
     );
-}
+};
 
 export default GridTable;

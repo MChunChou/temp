@@ -1,46 +1,313 @@
 {
-    "info": [{
-        "name": "bookNo",
-        "header_name": "Book Number",
-        "data_type": "text",
-        "width": 100,
-        "display": "open"
-    },
-    {
-        "name": "deptName",
-        "header_name": "Dept.",
-        "data_type": "text",
-        "width": 100,
-        "display": "open"
-    },
-    {
-        "name": "facCd",
-        "header_name": "Fac Code",
-        "data_type": "text",
-        "width": 100,
-        "display": "open"
-    },
-    {
-        "name": "function",
-        "header_name": "Fun.",
-        "data_type": "text",
-        "width": 100,
-        "display": "open"
-    }],
-    "list": ["PDAPK2|AQ312", "PDAPK3|AQ313", "PDAPK1|AQ314"],
+    "info": [
+       {
+          "name": "bookNo",
+          "header_name": "Book Number",
+          "data_type": "text",
+          "width": 100,
+          "display": "open"
+       },
+       {
+          "name": "deptName",
+          "header_name": "Dept. Name",
+          "data_type": "text",
+          "width": 100,
+          "display": "open"
+       },
+       {
+          "name": "facCd",
+          "header_name": "Fac Code....................................A",
+          "data_type": "text",
+          "width": 100,
+          "display": "open"
+       },
+       {
+          "name": "function",
+          "header_name": "Fun.",
+          "data_type": "text",
+          "width": 100,
+          "display": "open"
+       }
+    ],
+    "list": [
+       "PDAPK2|AQ312",
+       "PDAPK3|AQ313",
+       "PDAPK1|AQ314"
+    ],
     "task": [
-        { "taskName": "T1", "taskId": "0002", "keyStage": "T1", "isAutoSync": "N"},
-        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK", "isAutoSync": "N" },
-        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK", "isAutoSync": "Y" },
-        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1", "isAutoSync": "N"  }
+       {
+          "taskName": "T1",
+          "taskId": "0002",
+          "keyStage": "T1",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "PIP check form",
+          "taskId": "1002",
+          "keyStage": "PHK",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "ICP-MASS",
+          "taskId": "1000",
+          "keyStage": "PHK",
+          "isAutoSync": "Y"
+       },
+       {
+          "taskName": "取水測值",
+          "taskId": "1001",
+          "keyStage": "T1",
+          "isAutoSync": "N"
+       }
     ],
     "taskOption": [
-        { "taskName": "T1", "taskId": "0002", "keyStage": "T1", "dateSource": "T1", "isAutoSync": "N"},
-        { "taskName": "PHK", "taskId": "0001", "keyStage": "PHK", "dateSource": "PHK", "isAutoSync": "N"  },
-        { "taskName": "T2", "taskId": "0003", "keyStage": "T2", "dateSource": "T2", "isAutoSync": "N"  },
-        { "taskName": "PIP check form", "taskId": "1002", "keyStage": "PHK", "dateSource": "Manual", "isAutoSync": "N"  },
-        { "taskName": "ICP-MASS", "taskId": "1000", "keyStage": "PHK", "dateSource": "Manual", "isAutoSync": "Y"  },
-        { "taskName": "取水測值", "taskId": "1001", "keyStage": "T1", "dateSource": "Manual", "isAutoSync": "N"  }
+       {
+          "taskName": "T1",
+          "taskId": "0002",
+          "keyStage": "T1",
+          "dateSource": "T1",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "PHK",
+          "taskId": "0001",
+          "keyStage": "PHK",
+          "dateSource": "PHK",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "T2",
+          "taskId": "0003",
+          "keyStage": "T2",
+          "dateSource": "T2",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "PIP check form",
+          "taskId": "1002",
+          "keyStage": "PHK",
+          "dateSource": "Manual",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "ICP-MASS",
+          "taskId": "1000",
+          "keyStage": "PHK",
+          "dateSource": "Manual",
+          "isAutoSync": "Y"
+       },
+       {
+          "taskName": "取水測值",
+          "taskId": "1001",
+          "keyStage": "T1",
+          "dateSource": "Manual",
+          "isAutoSync": "N"
+       }
+    ],
+    "main": [
+       {
+          "toolInfo": {
+             "bookNo": "bookNo_1",
+             "IocPhase": "IocPhase_1",
+             "deptName": "deptName_1",
+             "facCd": "PDAPK1",
+             "typeName": "typeName_1",
+             "sectionName": "sectionName_1",
+             "verdor": "vendor_1",
+             "scope": "scope_1",
+             "function": "function_1",
+             "model": "model_1",
+             "wisCd": "wisCd_1",
+             "catglist": "catglist_1",
+             "locId": "locId_1",
+             "templateCatg": "templateCatg_1"
+          },
+          "isComplete": {
+             "PHK": "N"
+          },
+          "taskList": [
+             {
+                "taskId": "0001",
+                "planDateStart": "2018/9/3",
+                "planDateEnd": "2018/9/6",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": "0002",
+                "planDateStart": "2017/5/20",
+                "planDateEnd": "2021/7/8",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "false",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": 1000,
+                "planDateStart": "2021/1/11",
+                "planDateEnd": "2021/1/27",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": 1001,
+                "planDateStart": "2020/1/28",
+                "planDateEnd": "2021/1/30",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": 1002,
+                "planDateStart": "2020/1/3",
+                "planDateEnd": "2021/1/18",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             }
+          ]
+       },
+       {
+          "toolInfo": {
+             "bookNo": "bookNo_2",
+             "IocPhase": "IocPhase_2",
+             "deptName": "deptName_2",
+             "facCd": "PDAPK2",
+             "typeName": "typeName_2",
+             "sectionName": "sectionName_2",
+             "verdor": "vendor_2",
+             "scope": "scope_2",
+             "function": "function_2",
+             "model": "model_2",
+             "wisCd": "wisCd_2",
+             "catglist": "catglist_2",
+             "locId": "locId_2",
+             "templateCatg": "templateCatg_2"
+          },
+          "isComplete": {
+             "PHK": "N"
+          },
+          "taskList": [
+             {
+                "taskId": "0001",
+                "planDateStart": "2011/7/1",
+                "planDateEnd": "2018/9/2",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": "0002",
+                "planDateStart": "2017/5/20",
+                "planDateEnd": "2021/7/8",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "false",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": 1000,
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": 1001,
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": 1002,
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             }
+          ]
+       },
+       {
+          "toolInfo": {
+             "bookNo": "bookNo_3",
+             "IocPhase": "IocPhase_3",
+             "deptName": "deptName_3",
+             "facCd": "PDAPK3",
+             "typeName": "typeName_3",
+             "sectionName": "sectionName_3",
+             "verdor": "vendor_3",
+             "scope": "scope_3",
+             "function": "function_3",
+             "model": "model_3",
+             "wisCd": "wisCd_3",
+             "catglist": "catglist_3",
+             "locId": "locId_3",
+             "templateCatg": "templateCatg_3"
+          },
+          "isComplete": {
+             "PHK": "N"
+          },
+          "taskList": [
+             {
+                "taskId": "0001",
+                "planDateStart": "2011/7/1",
+                "planDateEnd": "2018/9/2",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": "0002",
+                "planDateStart": "2017/5/20",
+                "planDateEnd": "2021/7/8",
+                "actlCompleteDate": null,
+                "isActlEdieable": "true",
+                "isPlanEditable": "false",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": "1000",
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             },
+             {
+                "taskId": "1001",
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "T1"
+             },
+             {
+                "taskId": "1002",
+                "planDateStart": "2020/1/1",
+                "planDateEnd": "2021/1/2",
+                "actlCompleteDate": "2021/2/2",
+                "isActlEdieable": "true",
+                "isPlanEditable": "true",
+                "keyStaget": "PHK"
+             }
+          ]
+       }
     ]
-}
-
+ }
