@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import DateHelper, { format as DateFormat } from "../utils/date-helper";
 import * as fh from "../utils/fetch-helper";
-import "../GridTable/style.css";
 import useDate from "../hook/useDate";
 
 const timeout = 0;

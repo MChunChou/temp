@@ -14,7 +14,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import "./GridTable.css";
 import CustomHeader from "./CustomHeader";
 import FullWidthCellRenderer from "../Control/Control";
-import icons from "./icon.svg";
+import icons from "../styles/icon.svg";
 import * as eh from "../utils/export-helper";
 
 const Icon = (props: any) => {
@@ -192,11 +192,11 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
 
     return (
         <div className="grid-table ag-theme-alpine">
-            <button onClick={() => autoSizeAll(false)}>Auto-Size All</button>
+            {/* <button onClick={() => autoSizeAll(false)}>Auto-Size All</button>
 
             <button onClick={() => autoSizeAll(true)}>
                 Auto-Size All (Skip Header)
-            </button>
+            </button> */}
             {props.isExpandComponent ? (
                 <button
                     className={"expand " + (isExpand ? "close" : "open")}
@@ -292,6 +292,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onRowSelected={() => {}}
                 onSelectionChanged={() => {}}
                 tooltipShowDelay={0}
+                suppressDragLeaveHidesColumns={true}
                 // onColumnResized={onGridSizeChanged}
                 // tooltipHideDelay={8000}
                 // asyncTransactionWaitMillis={10}

@@ -2,7 +2,6 @@ import React from "react";
 import GridTable from "../GridTable/GridTable";
 import { Breadcrumbs } from "@mui/material";
 import Link from "@mui/material/Link";
-import "../GridTable/style.css";
 
 const Detail: React.FC<any> = (props: any) => {
     const setisDetail = props.setisDetail;

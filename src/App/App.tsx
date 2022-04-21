@@ -1,4 +1,3 @@
-import View from "../View/View";
 import "font-awesome/css/font-awesome.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -20,6 +19,11 @@ import store from "../Reducer/index";
 import Filter from "../Filter";
 import Progress from "../Progress/Progress";
 import Block from "../usePrompt/Demo";
+// import View from "../View/View";
+import View from "../View";
+import DND from "../DND";
+import "../styles/style.css";
+
 const selected = {
     List: testData.list,
     Info: testData.info,
@@ -122,6 +126,9 @@ function App() {
                         <span>
                             <Link to={"/block"}>block</Link>
                         </span>
+                        <span>
+                            <Link to={"/dnd"}>dnd</Link>
+                        </span>
                         <Switch>
                             <Route exact path="/">
                                 <View
@@ -148,6 +155,9 @@ function App() {
                             </Route>
                             <Route exact path="/block">
                                 <Block />
+                            </Route>
+                            <Route exact path="/dnd">
+                                <DND />
                             </Route>
                         </Switch>
                     </div>

@@ -1,9 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
-import GridTable from './GridTable';
+import { configureStore } from "@reduxjs/toolkit";
+import myScheduleReducer from "./my-schedule";
 const store = configureStore({
     reducer: {
-        grid: GridTable
-    }
+        mySchedule: myScheduleReducer,
+    },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
 
 export default store;
