@@ -15,6 +15,7 @@ const isEditAble = (dataSource: any, isAutoSync: any) => {
 };
 
 const TaskComponent = (props: any) => {
+    // console.log(props);
     const [helper, setHelper] = useState(
         new DateHelper({
             startDate: props.value.planDateStart,
@@ -130,6 +131,7 @@ const TaskComponent = (props: any) => {
     const handleClick = () => {
         const isOpen = props.value.open ? false : true;
         const { dateSource, isAutoSync } = props;
+        console.log("Open", isOpen);
 
         if (!isClick) {
             setIsClick(true);

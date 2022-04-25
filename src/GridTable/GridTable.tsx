@@ -13,7 +13,8 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import "./GridTable.css";
 import CustomHeader from "./CustomHeader";
-import FullWidthCellRenderer from "../Control/Control";
+// import FullWidthCellRenderer from "../Control/Control";
+import FullWidthCellRenderer from "../Control";
 import icons from "../styles/icon.svg";
 import * as eh from "../utils/export-helper";
 
@@ -60,13 +61,13 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         // autoHeight: true,
         // minWidth: 100,
         sortable: true,
-        // Using in paginatoion
+        /* Using in paginatoion */
         // pagination: true,
         // paginationAutoPageSize: 2,
         // suppressAutoSize: true,
         // suppressSizeToFit: true,
         filter: "agTextColumnFilter",
-        // Default Use filter in first row
+        /* Default Use filter in first row */
         // suppressMenu: true,
         // floatingFilter: true,
         autoSizeAllColumns: true,

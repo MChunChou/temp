@@ -19,8 +19,8 @@ import store from "../Reducer/index";
 import Filter from "../Filter";
 import Progress from "../Progress/Progress";
 import Block from "../usePrompt/Demo";
-// import View from "../View/View";
-import View from "../View";
+import View from "../View/View";
+// import View from "../View";
 import DND from "../DND";
 import "../styles/style.css";
 

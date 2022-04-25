@@ -11,7 +11,6 @@ import GridTable from "../GridTable/GridTable";
 import Detail from "./Detail";
 
 const View: React.FC<any> = (props: any) => {
-    const ref = useRef(0);
     const dispatch = useDispatch();
 
     const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -50,7 +49,10 @@ const View: React.FC<any> = (props: any) => {
 
     return (
         <div className="view">
-            <div className="control"></div>
+            <div className="card">
+                <div className="control"></div>
+            </div>
+
             <div className="card">{/* <GridTable /> */}</div>
 
             {detail}

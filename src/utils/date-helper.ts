@@ -1,11 +1,13 @@
 interface DateHelperParams {
-    startDate: string | null,
-    endDate: string | null,
-    completeDate: string | null
+    startDate: string | null;
+    endDate: string | null;
+    completeDate: string | null;
 }
 
 const DAY_MS = 86400000; //1000*60*60*24 ( 24 h )
-const LOCALE_FORMAT = 'zh-TW'
+const LOCALE_FORMAT = "zh-TW";
+
+type DateType = Date | null | undefined;
 
 /**
  * @name format
@@ -24,11 +26,7 @@ const LOCALE_FORMAT = 'zh-TW'
  * @example
  *  YYYY/MM/DD -> 2022/03/22
  */
-
-export const format = (
-    date: Date,
-    formatStr: string
-) => {
+export const format = (date: Date, formatStr: string) => {
     formatStr = formatStr.toLocaleLowerCase();
 
     const year = date.getFullYear();
@@ -37,29 +35,34 @@ export const format = (
 
     const result = formatStr
         .match(/y+|m+|d+|./g)!
-        .map((substring)=>{
+        .map((substring) => {
             if (substring === "''") {
-                return "'"
+                return "'";
             }
 
             const firstCharacter = substring[0];
             const size = substring.length;
-            if(firstCharacter === 'y'){
-                return substring.replace(substring, (year+"").substring(size>2? 0: 2));
-            }
-            else if(firstCharacter === 'm'){
-                return substring.replace(substring, month+"").padStart(size > 1? 2 : 0, '0');
-            }
-            else if(firstCharacter === 'd'){
-                return substring.replace(substring, day+"").padStart(size > 1? 2 : 0, '0');
+            if (firstCharacter === "y") {
+                return substring.replace(
+                    substring,
+                    (year + "").substring(size > 2 ? 0 : 2)
+                );
+            } else if (firstCharacter === "m") {
+                return substring
+                    .replace(substring, month + "")
+                    .padStart(size > 1 ? 2 : 0, "0");
+            } else if (firstCharacter === "d") {
+                return substring
+                    .replace(substring, day + "")
+                    .padStart(size > 1 ? 2 : 0, "0");
             }
 
             return substring;
         })
-        .join('');
+        .join("");
 
     return result;
-}
+};
 
 /**
  *  @name isDateEqual
@@ -68,9 +71,101 @@ export const format = (
  *  @param {Date} date2
  *  @returns {boolean}
  */
-export const isDateEqual = (date1:Date, date2: Date) => {
+export const isDateEqual = (date1: Date, date2: Date) => {
     return date1.toLocaleDateString() === date2.toLocaleDateString();
-}
+};
+
+/**
+ * @name getDelayDays
+ * @description
+ *      Check how many delay days
+ *      isDelayDays: false, delaydays is 0
+ * @param endDate
+ * @param completeDate
+ * @returns [isDelayDays, delaydays]
+ *
+ */
+export const getDelayDays = (endDate: DateType, completeDate: DateType) => {
+    if (endDate) {
+        completeDate = completeDate || new Date();
+
+        const isDelay = completeDate > endDate;
+        if (isDelay) {
+            const days = (completeDate.getTime() - endDate.getTime()) / DAY_MS;
+            return [isDelay, ~~days];
+        }
+    }
+
+    return [isDelay, 0];
+};
+
+/**
+ *
+ * @param endDate
+ * @param completeDate
+ * @returns boolean
+ */
+export const isDelay = (endDate: DateType, completeDate: DateType) => {
+    const today = new Date();
+    if (endDate && !completeDate) {
+        return today > endDate;
+    }
+
+    return false;
+};
+/**
+ *
+ * @param startDate
+ * @param endDate
+ * @returns
+ */
+export const isPlanRange = (startDate: DateType, endDate: DateType) => {
+    if (startDate && endDate) {
+        return startDate > endDate;
+    }
+
+    return false;
+};
+
+/**
+ *
+ * @param date
+ * @param startDate
+ * @param endDate
+ * @returns
+ */
+export const isDateInPlan = (
+    date: DateType,
+    startDate: DateType,
+    endDate: DateType
+) => {
+    if (date) {
+        if (startDate && endDate) {
+            return date >= startDate && date <= endDate;
+        }
+
+        if (startDate) {
+            return date >= startDate;
+        }
+    }
+
+    return false;
+};
+
+/**
+ *
+ * @param startDate
+ * @param endDate
+ * @param completeDate
+ * @returns
+ */
+export const isActualDate = (
+    startDate: DateType,
+    endDate: DateType,
+    completeDate: DateType
+) => {
+    return completeDate && endDate && completeDate > endDate;
+};
 
 class DateHelper {
     startDate: Date | null;
@@ -83,7 +178,15 @@ class DateHelper {
         this.completeDate = completeDate ? new Date(completeDate) : null;
     }
 
-    setDate({start, end, complete}: { start: Date, end: Date, complete: Date }) {
+    setDate({
+        start,
+        end,
+        complete,
+    }: {
+        start: Date;
+        end: Date;
+        complete: Date;
+    }) {
         // console.log(start, end ,complete)
         if (start) {
             this.startDate = start;
@@ -100,76 +203,78 @@ class DateHelper {
 
     isDelay() {
         const today = this.getToday();
-        return !this.completeDate && (this.endDate && (today > this.endDate));
+        return !this.completeDate && this.endDate && today > this.endDate;
     }
 
     getDelayDays() {
-
         if (this.endDate) {
             const today = this.getToday();
             const endDate = new Date(this.endDate);
             endDate.setDate(this.endDate.getDate() + 1);
-            return [endDate, this.completeDate ? this.completeDate : today]
+            return [endDate, this.completeDate ? this.completeDate : today];
         }
 
-        return []
+        return [];
     }
 
     isPlanRange() {
-
         if (this.startDate && this.endDate) {
-            return this.startDate > this.endDate
+            return this.startDate > this.endDate;
         }
 
-        return false
+        return false;
     }
 
     isDateInPlan(date: Date) {
         if (this.startDate && this.endDate) {
-            return date >= this.startDate && date <= this.endDate
+            return date >= this.startDate && date <= this.endDate;
         }
 
         if (this.startDate) {
             return date >= this.startDate;
         }
 
-        return false
+        return false;
     }
 
-    isEqual(date1: Date, date2: Date) {
-
-    }
+    isEqual(date1: Date, date2: Date) {}
 
     getStartDate(format: boolean = false) {
-        if(format && this.startDate){
-            return this.startDate.toLocaleDateString(LOCALE_FORMAT)
+        if (format && this.startDate) {
+            return this.startDate.toLocaleDateString(LOCALE_FORMAT);
         }
 
         return this.startDate;
     }
 
     getEndDate(format: boolean = false) {
-        if(format && this.endDate){
-            return this.endDate.toLocaleDateString(LOCALE_FORMAT)
+        if (format && this.endDate) {
+            return this.endDate.toLocaleDateString(LOCALE_FORMAT);
         }
 
         return this.endDate;
     }
 
     getCompleteDate(format: boolean = false) {
-        if(format && this.completeDate){
-            return this.completeDate.toLocaleDateString(LOCALE_FORMAT)
+        if (format && this.completeDate) {
+            return this.completeDate.toLocaleDateString(LOCALE_FORMAT);
         }
 
         return this.completeDate;
     }
 
     getToday(format: boolean = false) {
-        return format ? new Date().toLocaleDateString(LOCALE_FORMAT) : new Date();
+        return format
+            ? new Date().toLocaleDateString(LOCALE_FORMAT)
+            : new Date();
     }
 
-    isActualDate(){
-        return this.completeDate && this.endDate && this.completeDate > this.endDate;
+    isActualDate() {
+        return (
+            this.completeDate &&
+            this.endDate &&
+            this.completeDate > this.endDate
+        );
     }
 
     //名稱忘了 記得查

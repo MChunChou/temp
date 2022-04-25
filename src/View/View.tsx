@@ -2,9 +2,12 @@ import React, { useState, useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import GridTable from "../GridTable/GridTable";
 import * as fh from "../utils/fetch-helper";
-import TaskComponent from "./TaskComponent";
+
+// import TaskComponent from "./TaskComponent";
+
+import TaskComponent from "./ViewTask";
+
 import Detail from "./Detail";
-import MyCalendar from "../Calendar/Calendar";
 import { Link } from "react-router-dom";
 import * as eh from "../utils/export-helper";
 import { format as dateFormat } from "../utils/date-helper";
