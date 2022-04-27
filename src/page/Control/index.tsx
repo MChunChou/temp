@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import React, { useState, useEffect } from "react";
-import MyCalendar from "../Calendar";
+import MyCalendar from "../../compoments/Calendar";
 
 const Control = (props: any) => {
     console.log("Control", props.data);

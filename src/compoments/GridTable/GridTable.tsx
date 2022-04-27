@@ -14,9 +14,9 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import "./GridTable.css";
 import CustomHeader from "./CustomHeader";
 // import FullWidthCellRenderer from "../Control/Control";
-import FullWidthCellRenderer from "../Control";
-import icons from "../styles/icon.svg";
-import * as eh from "../utils/export-helper";
+import FullWidthCellRenderer from "../../page/Control";
+import icons from "../../styles/icon.svg";
+import * as eh from "../../utils/export-helper";
 
 const Icon = (props: any) => {
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import GridTable from "../GridTable/GridTable";
+import GridTable from "../../compoments/GridTable/GridTable";
 import { Breadcrumbs } from "@mui/material";
 import Link from "@mui/material/Link";
 

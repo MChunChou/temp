@@ -11,7 +11,7 @@ const style = {
 
 const data = (() => {
     const res = [];
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 300; i++) {
         res.push({ id: i + 1, text: `dnd_string_${i + 1}` });
     }
     return res;

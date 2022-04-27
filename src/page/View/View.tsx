@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
-import GridTable from "../GridTable/GridTable";
-import * as fh from "../utils/fetch-helper";
+import GridTable from "../../compoments/GridTable/GridTable";
+import * as fh from "../../utils/fetch-helper";
 
 // import TaskComponent from "./TaskComponent";
 
@@ -9,14 +9,14 @@ import TaskComponent from "./ViewTask";
 
 import Detail from "./Detail";
 import { Link } from "react-router-dom";
-import * as eh from "../utils/export-helper";
-import { format as dateFormat } from "../utils/date-helper";
-import Progress from "../Progress/Progress";
+import * as eh from "../../utils/export-helper";
+import { format as dateFormat } from "../../utils/date-helper";
+import Progress from "../../compoments/Progress/Progress";
 import { DesktopDateTimePicker } from "@mui/lab";
 import { RowNode } from "ag-grid-community";
 
 //測試資料
-import testD from "../test.json";
+import testD from "../../test.json";
 
 const LinkC = (props: any) => {
     return (

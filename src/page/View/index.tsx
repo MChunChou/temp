@@ -6,8 +6,8 @@ import React, {
     useRef,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../Reducer/index";
-import GridTable from "../GridTable/GridTable";
+import { RootState } from "../../Reducer/index";
+import GridTable from "../../compoments/GridTable/GridTable";
 import Detail from "./Detail";
 
 const View: React.FC<any> = (props: any) => {
@@ -17,6 +17,10 @@ const View: React.FC<any> = (props: any) => {
     const [filterValues, setFilterValues] = useState<string[]>([]);
 
     const { editData } = useSelector((state: RootState) => state.mySchedule);
+
+    useEffect(() => {
+        /*  */
+    }, []);
 
     const filterData = useMemo(() => {
         if (editData && filterValues.length > 0) {

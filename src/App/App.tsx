@@ -10,19 +10,19 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import { getData } from "../FakeDoc/createSelection";
 import testData from "../test.json";
-import Calendar from "../Calendar/Calendar";
+import Calendar from "../compoments/Calendar/Calendar";
 import React, { useState } from "react";
 import { Provider } from "react-redux";
 import createStore from "../Reducer";
 
 import store from "../Reducer/index";
-import Filter from "../Filter";
-import Progress from "../Progress/Progress";
-import Block from "../usePrompt/Demo";
-import View from "../View/View";
+import Filter from "../page/Filter";
+import Demo from "../page/Demo";
+import View from "../page/View/View";
 // import View from "../View";
-import DND from "../DND";
+import DND from "../page/DND";
 import "../styles/style.css";
+import MySchedule from "../page/MySchedule";
 
 const selected = {
     List: testData.list,
@@ -112,13 +112,16 @@ function App() {
                             />
                         }
                     />
-                    <Route path="/block" element={<Block />} />
+                    <Route path="/block" element={<Demo />} />
                 </Routes> */}
 
                 <Router>
                     <div>
                         <span>
                             <Link to={"/"}>Root</Link>
+                        </span>
+                        <span>
+                            <Link to={"/view"}>MySchedule</Link>
                         </span>
                         <span>
                             <Link to={"/filter"}>Filter</Link>
@@ -137,6 +140,9 @@ function App() {
                                     taskOptions={taskOption}
                                 />
                             </Route>
+                            <Route exact path="/view">
+                                <MySchedule />
+                            </Route>
                             <Route exact path="/filter">
                                 <Filter
                                     data={getData()}
@@ -154,7 +160,7 @@ function App() {
                                 />
                             </Route>
                             <Route exact path="/block">
-                                <Block />
+                                <Demo />
                             </Route>
                             <Route exact path="/dnd">
                                 <DND />

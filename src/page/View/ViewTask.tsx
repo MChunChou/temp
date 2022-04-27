@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as dh from "../utils/date-helper";
+import * as dh from "../../utils/date-helper";
 
 const TIMEOUT = 0;
 

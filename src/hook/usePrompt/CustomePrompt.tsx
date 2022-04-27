@@ -1,7 +1,7 @@
 import { Location, Action } from "history";
 import React, { useEffect, useState } from "react";
 import { Prompt, Redirect, useHistory, useLocation } from "react-router-dom";
-import Confirm from "../component/Confirm";
+import Confirm from "../../compoments/Confirm";
 
 type messageFuntionType = (
     location?: Location,

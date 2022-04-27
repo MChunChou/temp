@@ -243,6 +243,10 @@ app.get("/update/date", function (req, res) {
     res.json({ ok: true });
 });
 
+app.get("/download/data", function (req, res) {
+    res.json(createDate());
+});
+
 const port = process.env.PORT || 8000;
 app.listen(port, function (error) {
     if (error) {

@@ -8,15 +8,15 @@ import React, {
 import { Prompt, Redirect, useHistory } from "react-router";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import useTest from "../hook/useTest";
-
+import useTest from "../../hook/useTest";
+import { download, upload } from "../../utils/schedule";
 // import { usePrompt } from '../usePrompt/usePrompt';
 // import AlertDialog from "./AlertDialog";
 
-import CustomePrompt from "./CustomePrompt";
-import useDate from "../hook/useDate";
+import CustomePrompt from "../../hook/usePrompt/CustomePrompt";
+import useDate from "../../hook/useDate";
 import DemoPage2 from "./DemoPage2";
-
+import { allStorage, getMaxSize, set } from "../../utils/loaclStorage";
 const Demo = (props: any) => {
     const [date, setDate] = useState<Date | Date[] | undefined>(undefined);
 
@@ -33,6 +33,21 @@ const Demo = (props: any) => {
     });
 
     const testHook = useTest();
+    const [downloadData, setDownloadData] = useState<any>(null);
+
+    useEffect(() => {
+        console.log(allStorage());
+        fetch("http://localhost:8000/download/data")
+            .then((res) => {
+                return res.json();
+            })
+            .then((res) => {
+                console.log(res);
+                setDownloadData(res);
+                // localStorage.setItem("test", JSON.stringify(res));
+                set(JSON.stringify(res));
+            });
+    }, []);
 
     const monthNavigatorTemplate = (e: any) => {
         return (
@@ -63,9 +78,27 @@ const Demo = (props: any) => {
 
     const [selectedCities1, setSelectedCities1] = useState(null);
 
-    console.log(mydate);
+    // console.log(mydate);
+
     return (
         <div className="filter">
+            <input
+                type="file"
+                accept="application/JSON"
+                onChange={(evt) => {
+                    if (evt.target.files && evt.target.files[0]) {
+                        upload(evt.target.files[0]);
+                    }
+                }}
+                value=""
+            />
+            <button
+                onClick={() => {
+                    download(downloadData);
+                }}
+            >
+                Download
+            </button>
             {/* <button
                 onClick={() => {
                     setIsSave(!isSave);
@@ -147,7 +180,7 @@ const Demo = (props: any) => {
                     Get TesT
                 </button>
             </div> */}
-            <DemoPage2 mydate={mydate} />
+            {/* <DemoPage2 mydate={mydate} /> */}
         </div>
     );
 };

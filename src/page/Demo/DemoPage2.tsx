@@ -1,10 +1,10 @@
 import React from "react";
-import Control from "../Control/Control";
-import MyCalendar from "../Calendar/Calendar";
+// import Control from "../../Control/Control";
+// import MyCalendar from "../../Calendar/Calendar";
 import { prependOnceListener } from "process";
 
 const DemoPage2 = (props: any) => {
-    console.log(props.mydate);
+    // console.log(props.mydate);
 
     const onChange = (type: string, date: Date) => {
         props.mydate.updateDate(type, date);
@@ -61,7 +61,7 @@ const DemoPage2 = (props: any) => {
                 helper={props.mydate}
                 value={props.mydate.completeDate}
             /> */}
-            <Control data={{ isEditAble: true, dateHelper: props.mydate }} />
+            {/* <Control data={{ isEditAble: true, dateHelper: props.mydate }} /> */}
         </div>
     );
 };

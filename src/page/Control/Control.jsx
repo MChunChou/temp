@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import MyCalendar from '../Calendar/FixCalendar';
-import MyCalendar from "../Calendar/Calendar";
+import MyCalendar from "../../compoments/Calendar/Calendar";
 
 const Control = (props) => {
     const { isEditAble, dateHelper, onChange } = props.data;
