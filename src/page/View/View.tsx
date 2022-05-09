@@ -138,6 +138,7 @@ const View: React.FC<any> = (props: any) => {
             (info: { name: string; header_name: string }, idx: number) => {
                 let pinned: string | null = null;
                 let cellRenderer = null;
+                let rowDrag = false;
 
                 if (isShrink && idx > 0) {
                     return;
@@ -152,6 +153,7 @@ const View: React.FC<any> = (props: any) => {
 
                     if (idx === 0) {
                         cellRenderer = LinkC;
+                        rowDrag = true;
                     }
                 }
 
@@ -162,9 +164,10 @@ const View: React.FC<any> = (props: any) => {
                     tooltipField: info.name,
                     cellRenderer: cellRenderer,
                     // suppressAutoSize: true,
+                    rowDrag: rowDrag,
                     suppressSizeToFit: true,
                     lockPinned: true,
-
+                    // rowDrag: true,
                     // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
                     comparator: function (
                         valueA: any,
@@ -205,14 +208,17 @@ const View: React.FC<any> = (props: any) => {
                 lockPinned: true,
                 sortable: true,
                 comparator: (v1: any, v2: any, n1: RowNode, n2: RowNode) => {
-                    console.log(v1, v2, n1, n2);
-                    const d1 = new Date(v1.planDateEnd);
-                    const d2 = new Date(v2.planDateEnd);
-                    return v1.planDateEnd === v2.planDateEnd
-                        ? 0
-                        : d1 > d2
-                        ? 1
-                        : -1;
+                    if (v1 && v2 && v1.planDateEnd && v2.planDateEnd) {
+                        const d1 = new Date(v1.planDateEnd);
+                        const d2 = new Date(v2.planDateEnd);
+                        return v1.planDateEnd === v2.planDateEnd
+                            ? 0
+                            : d1 > d2
+                            ? 1
+                            : -1;
+                    }
+
+                    return 0;
                 },
                 filterValueGetter: (v: any) => {
                     const actlCompleteDate =
@@ -262,7 +268,6 @@ const View: React.FC<any> = (props: any) => {
                             ...task,
                         },
                         sortable: false,
-
                         filterValueGetter: (v: any) => {
                             const date = v.data[v.column.colId];
                             return (

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import { Breadcrumbs } from "@mui/material";
 import Link from "@mui/material/Link";
 
 const Detail: React.FC<any> = (props: any) => {
+    const [gridAPI, setGridAPI] = useState<any>();
+
     const setisDetail = props.setisDetail;
 
     const data = props.sortData(false);
@@ -13,6 +15,19 @@ const Detail: React.FC<any> = (props: any) => {
             <button
                 onClick={() => {
                     setisDetail(false);
+
+                    const rowNodes: any[] = [];
+                    gridAPI.api.forEachNode((rowNode: any) => {
+                        rowNodes.push(rowNode.data.facCd);
+                    });
+                    console.log(rowNodes);
+                    const afterColumns = gridAPI.columnApi
+                        .getAllGridColumns()
+                        .map((column: { colId: any }) => {
+                            console.log(column);
+                            return column.colId;
+                        });
+                    console.log(afterColumns);
                 }}
             >
                 <i className="fa fa-times-circle"></i>
@@ -36,6 +51,9 @@ const Detail: React.FC<any> = (props: any) => {
                     }}
                     columnDefs={{
                         groups: columns,
+                    }}
+                    onGridReady={(api) => {
+                        setGridAPI(api);
                     }}
                 />
             </div>

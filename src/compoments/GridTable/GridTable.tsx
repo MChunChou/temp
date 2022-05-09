@@ -105,6 +105,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
 
     const onGridReady = (api: any) => {
         setGridAPI(api);
+        props.onGridReady && props.onGridReady(api);
     };
 
     const getShrinkWidth = (columnApi: any) => {
@@ -276,6 +277,26 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 <></>
             )}
 
+            {/* <button
+                onClick={() => {
+                    console.log("Save");
+                    console.log(gridAPI, gridRef.current);
+                    const rowNodes: any[] = [];
+                    gridRef.current.api.forEachNode((rowNode: any) => {
+                        rowNodes.push(rowNode.data.facCd);
+                    });
+                    console.log(rowNodes);
+                    const afterColumns = gridRef.current.columnApi
+                        .getAllGridColumns()
+                        .map((column: { colId: any }) => {
+                            return column.colId;
+                        });
+                    console.log(afterColumns);
+                }}
+            >
+                Save
+            </button> */}
+
             <AgGridReact
                 ref={gridRef}
                 onGridReady={onGridReady}
@@ -294,6 +315,15 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onSelectionChanged={() => {}}
                 tooltipShowDelay={0}
                 suppressDragLeaveHidesColumns={true}
+                rowDragManaged={true}
+                suppressMoveWhenRowDragging={true}
+                animateRows={true}
+                onColumnMoved={() => {
+                    console.log("columns");
+                }}
+                onRowDragEnd={() => {
+                    console.log("row move");
+                }}
                 // onColumnResized={onGridSizeChanged}
                 // tooltipHideDelay={8000}
                 // asyncTransactionWaitMillis={10}

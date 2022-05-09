@@ -16,7 +16,7 @@ interface GridTableProps {
     columnDef: ColDef;
 }
 
-const GridTable: React.FC = () => {
+const GridTable = (props: GridTableProps) => {
     const gridRef = useRef<AgGridReact>(null);
 
     const [rowData, setRowData] = useState();
@@ -24,17 +24,19 @@ const GridTable: React.FC = () => {
         resizable: false,
         wrapText: true,
         sortable: true,
-        alwaysShowHorizontalScroll: true,
-        alwaysShowVerticalScroll: true,
+        // alwaysShowHorizontalScroll: true,
+        // alwaysShowVerticalScroll: true,
         filter: "agTextColumnFilter",
         /* Set not dnd for pinned*/
         lockPinned: true,
         headerComponentParams: {
             enableMenu: true,
         },
+
         /* Default Use filter in first row */
         // suppressMenu: true,
         // floatingFilter: true,
+
         /* Using in paginatoion */
         // pagination: true,
         // paginationAutoPageSize: 2,
@@ -50,6 +52,10 @@ const GridTable: React.FC = () => {
                 ref={gridRef}
                 defaultColDef={defaultColDef}
                 rowData={rowData}
+                //row Drag
+                rowDragManaged={true}
+                suppressMoveWhenRowDragging={true}
+                animateRows={true}
             />
         </div>
     );

@@ -8,7 +8,6 @@ import "primereact/resources/primereact.min.css";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
-import { getData } from "../FakeDoc/createSelection";
 import testData from "../test.json";
 import Calendar from "../compoments/Calendar/Calendar";
 import React, { useState } from "react";
@@ -29,8 +28,6 @@ const selected = {
     Info: testData.info,
     Task: testData.task,
 };
-
-const filterData = getData();
 
 const taskOption = testData.taskOption;
 
@@ -144,26 +141,13 @@ function App() {
                                 <MySchedule />
                             </Route>
                             <Route exact path="/filter">
-                                <Filter
-                                    data={getData()}
-                                    // value={[]}
-                                    // filter={[
-                                    //     { label: "Month", key: "month" },
-                                    //     { label: "Year", key: "year" },
-                                    //     { label: "Sales Rep", key: "salesRep" },
-                                    //     { label: "Hand Set", key: "handset" },
-                                    // ]}
-                                    // select={[
-                                    //     { label: "Sale", key: "sale" },
-                                    //     { label: "Sale Date", key: "saleDate" },
-                                    // ]}
-                                />
+                                <Filter />
                             </Route>
                             <Route exact path="/block">
                                 <Demo />
                             </Route>
                             <Route exact path="/dnd">
-                                <DND />
+                                <DND cards={[]} />
                             </Route>
                         </Switch>
                     </div>

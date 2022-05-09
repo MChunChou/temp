@@ -1,12 +1,17 @@
 import update from "immutability-helper";
 import type { FC } from "react";
 import { useCallback, useState } from "react";
-import { useDrag, useDrop, DndProvider } from "react-dnd";
+import { useDrag, useDrop, useDragLayer, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Card } from "./Card";
+// import { Card } from "./Card";
+import Card from "./DNDCard";
 
 const style = {
-    width: 400,
+    width: "99vw",
+    height: "50vh",
+    overflow: "auto",
+    display: "flex",
+    flexWrap: "wrap",
 };
 
 const data = (() => {
@@ -26,7 +31,7 @@ export interface ContainerState {
     cards: Item[];
 }
 
-export const Container: FC = () => {
+export const Container = (props: ContainerState) => {
     {
         const [cards, setCards] = useState(data);
 
@@ -66,7 +71,7 @@ export const Container: FC = () => {
 
         return (
             <DndProvider backend={HTML5Backend}>
-                <div style={style}>
+                <div style={style as React.CSSProperties}>
                     {cards.map((card, i) => renderCard(card, i))}
                 </div>
             </DndProvider>

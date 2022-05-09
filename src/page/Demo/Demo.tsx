@@ -12,10 +12,13 @@ import useTest from "../../hook/useTest";
 import { download, upload } from "../../utils/schedule";
 // import { usePrompt } from '../usePrompt/usePrompt';
 // import AlertDialog from "./AlertDialog";
+import { TabView, TabPanel } from "primereact/tabview";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDove } from "@fortawesome/free-solid-svg-icons";
 
 import CustomePrompt from "../../hook/usePrompt/CustomePrompt";
 import useDate from "../../hook/useDate";
-import DemoPage2 from "./DemoPage2";
+import DemoPage2 from "./Demo2";
 import { allStorage, getMaxSize, set } from "../../utils/loaclStorage";
 const Demo = (props: any) => {
     const [date, setDate] = useState<Date | Date[] | undefined>(undefined);
@@ -125,7 +128,6 @@ const Demo = (props: any) => {
             />
             {isRedirect && location ? <Redirect to={location} /> : <></>} */}
             {/* <div>next Location :: {location}</div> */}
-
             {/* <CustomePrompt
                 when={isSave}
                 // Navigate function
@@ -147,7 +149,6 @@ const Demo = (props: any) => {
                 when={isSave}
                 message={"Are you sure leave without saving?"}
             /> */}
-
             {/* <Calendar
                 id="navigatorstemplate"
                 value={date}
@@ -161,9 +162,7 @@ const Demo = (props: any) => {
                 monthNavigatorTemplate={monthNavigatorTemplate}
                 yearNavigatorTemplate={yearNavigatorTemplate}
             /> */}
-
             {/* <DemoPage2 mydate={mydate} /> */}
-
             {/* <div>
                 <div>{testHook.d}</div>
                 <input
@@ -181,6 +180,14 @@ const Demo = (props: any) => {
                 </button>
             </div> */}
             {/* <DemoPage2 mydate={mydate} /> */}
+            <TabView>
+                <TabPanel header={<FontAwesomeIcon icon={faDove} />}>
+                    Content I
+                </TabPanel>
+                <TabPanel header="Header II">Content II</TabPanel>
+                <TabPanel header="Header III">Content III</TabPanel>
+            </TabView>
+            ABC
         </div>
     );
 };

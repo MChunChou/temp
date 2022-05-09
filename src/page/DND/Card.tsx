@@ -6,11 +6,13 @@ import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 
 const style = {
-    border: "1px dashed gray",
+    border: "1px solid gray",
     padding: "0.5rem 1rem",
-    marginBottom: ".5rem",
+    margin: "0.2rem .5rem",
     backgroundColor: "white",
     cursor: "move",
+    height: "50px",
+    width: "200px",
 };
 
 export interface CardProps {

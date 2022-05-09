@@ -33,9 +33,9 @@ const ViewTask: React.FC<any> = (props: any) => {
     );
     const [stateRemark, setStateRemark] = useState(remark);
 
-    useEffect(() => {
-        console.log(start, end, complete, stateRemark);
-    }, [start, end, complete, stateRemark]);
+    // useEffect(() => {
+    //     console.log(start, end, complete, stateRemark);
+    // }, [start, end, complete, stateRemark]);
 
     const collapseAll = (callback: () => void) => {
         const destoryNode: any[] = [];

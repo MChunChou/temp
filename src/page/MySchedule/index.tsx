@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Reducer";
 
@@ -7,6 +7,9 @@ import ManagePage from "./components/ScheduleManage";
 import DataViewPage from "./components/ScheduleDataView";
 
 const MySchedule: React.FC = () => {
+    //紀錄上一頁
+    const historyPage = useRef<string>("");
+
     const isEditOpen = useSelector(
         (state: RootState) => state.mySchedule.isEditOpen
     );
@@ -15,6 +18,10 @@ const MySchedule: React.FC = () => {
     );
     const isDataViewOpen = useSelector(
         (state: RootState) => state.mySchedule.isDataViewOpen
+    );
+
+    const editScheduleName = useSelector(
+        (state: RootState) => state.mySchedule.editScheduleName
     );
 
     useEffect(() => {}, []);
@@ -33,6 +40,7 @@ const MySchedule: React.FC = () => {
     if (isManageOpen) {
         dataViewElement = <DataViewPage />;
     }
+
     return (
         <div className="my-schedule">
             {editElement}
