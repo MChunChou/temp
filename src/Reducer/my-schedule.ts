@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 interface StateParams {
     isEditOpen: boolean;
     isManageOpen: boolean;
@@ -19,27 +19,31 @@ const mySchedule = createSlice({
     name: "mySchedule",
     initialState: initialState,
     reducers: {
-        scheduleChange: (state, action: PayloadAction<string>) => {
+        scheduleChange: (state: StateParams, action: PayloadAction<string>) => {
             state.editScheduleName = action.payload;
         },
-        setEditData: (state, action: PayloadAction<any>) => {
-            state.editData = action.payload;
+        setEditData: (state: StateParams, action: PayloadAction<any>) => {
+            // state.editData = action.payload;
         },
-        editOpen: (state) => {
+        editOpen: (state: StateParams) => {
             state.isEditOpen = true;
             state.isManageOpen = false;
             state.isDataViewOpen = false;
         },
-        manageOpen: (state) => {
+        manageOpen: (state: StateParams) => {
             state.isManageOpen = true;
             state.isEditOpen = false;
             state.isDataViewOpen = false;
         },
-        dataViewOpen: (state) => {
+        dataViewOpen: (state: StateParams) => {
             state.isDataViewOpen = true;
             state.isEditOpen = false;
             state.isManageOpen = false;
         },
+    },
+    extraReducers: (builder) => {
+        // builder.addCase(, ()=>{
+        // })
     },
 });
 

@@ -10,6 +10,9 @@ interface GridTableProps {
     getShrinkColumns?: (isExpand) => any;
     onRefresh?: () => void;
     onGridReady?: (api) => void;
+    onColumnMoved?: (evt?) => void;
+    onRowMoved?: (evt?) => void;
+    onExpand?: (evt?) => void;
 }
 
 interface DataOptions {

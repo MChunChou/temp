@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import * as fh from "../../utils/fetch-helper";
@@ -58,7 +58,7 @@ const getScheduleMainParams = (node: any, selected: any, task: any) => {
         nodeSet.add(
             node.find((n: any) => {
                 return n.keyStage === task.keyStage;
-            }).taskId
+            })?.taskId || null
         );
     });
 
@@ -71,12 +71,15 @@ const getScheduleMainParams = (node: any, selected: any, task: any) => {
 };
 
 const View: React.FC<any> = (props: any) => {
+    const theOrder = useRef<any>({});
+
     const [data, setData] = useState<any>([]);
     const [isDetail, setisDetail] = useState<any>(false);
     const [detail, setDetail] = useState<any>();
     const [detailColumn, setDetailColumn] = useState<any>({});
     const [detailKeyStage, setDetailKeyStage] = useState<string>("");
     const [ctlDate, setCtlDate] = useState<any>(null);
+    const [gridAPI, setGridAPI] = useState<any>();
 
     useEffect(() => {
         getData();
@@ -134,7 +137,9 @@ const View: React.FC<any> = (props: any) => {
 
     const getInfoColumn = (isExpand: boolean, isShrink?: boolean): any[] => {
         const res: any[] = [];
-        props.selected.Info.forEach(
+        const info = theOrder.current?.Info || props.selected.Info;
+
+        info.forEach(
             (info: { name: string; header_name: string }, idx: number) => {
                 let pinned: string | null = null;
                 let cellRenderer = null;
@@ -190,68 +195,81 @@ const View: React.FC<any> = (props: any) => {
     };
 
     const getTaskColumn = (k: string) => {
+        const task = theOrder.current.Task || props.selected.Task;
         // 過濾大節點以及非屬於 "K" 節點的
-        const res = props.selected.Task.filter((task: any) => {
-            return (
-                !props.node.some((n: any) => n.taskId === task.taskId) &&
-                task.keyStage === k
-            );
-        }).map((task: { taskId: string; taskName: any }) => {
-            return {
-                field: task.taskId + "",
-                headerName: task.taskName,
-                cellRenderer: TaskComponent,
-                cellRendererParams: { ...task },
-                initialWidth: 150,
-                resizable: true,
-                minWidth: 150,
-                lockPinned: true,
-                sortable: true,
-                comparator: (v1: any, v2: any, n1: RowNode, n2: RowNode) => {
-                    if (v1 && v2 && v1.planDateEnd && v2.planDateEnd) {
-                        const d1 = new Date(v1.planDateEnd);
-                        const d2 = new Date(v2.planDateEnd);
-                        return v1.planDateEnd === v2.planDateEnd
-                            ? 0
-                            : d1 > d2
-                            ? 1
-                            : -1;
-                    }
+        const res = task
+            .filter((task: any) => {
+                return (
+                    !props.node.some((n: any) => n.taskId === task.taskId) &&
+                    task.keyStage === k
+                );
+            })
+            .map((task: { taskId: string; taskName: any }) => {
+                return {
+                    field: task.taskId + "",
+                    headerName: task.taskName,
+                    cellRenderer: TaskComponent,
+                    cellRendererParams: { ...task },
+                    initialWidth: 150,
+                    resizable: true,
+                    minWidth: 150,
+                    lockPinned: true,
+                    sortable: true,
+                    comparator: (
+                        v1: any,
+                        v2: any,
+                        n1: RowNode,
+                        n2: RowNode
+                    ) => {
+                        if (v1 && v2 && v1.planDateEnd && v2.planDateEnd) {
+                            const d1 = new Date(v1.planDateEnd);
+                            const d2 = new Date(v2.planDateEnd);
+                            return v1.planDateEnd === v2.planDateEnd
+                                ? 0
+                                : d1 > d2
+                                ? 1
+                                : -1;
+                        }
 
-                    return 0;
-                },
-                filterValueGetter: (v: any) => {
-                    const actlCompleteDate =
-                        v.data[v.column.colId].actlCompleteDate;
-                    const planDateEnd = v.data[v.column.colId].planDateEnd;
-                    return (
-                        (actlCompleteDate
-                            ? dateFormat(
-                                  new Date(actlCompleteDate),
-                                  "yyyy/mm/dd"
-                              )
-                            : "") +
-                        (planDateEnd
-                            ? dateFormat(new Date(planDateEnd), "yyyy/mm/dd")
-                            : "")
-                    );
-                },
-            };
-        });
+                        return 0;
+                    },
+                    filterValueGetter: (v: any) => {
+                        const actlCompleteDate =
+                            v.data[v.column.colId].actlCompleteDate;
+                        const planDateEnd = v.data[v.column.colId].planDateEnd;
+                        return (
+                            (actlCompleteDate
+                                ? dateFormat(
+                                      new Date(actlCompleteDate),
+                                      "yyyy/mm/dd"
+                                  )
+                                : "") +
+                            (planDateEnd
+                                ? dateFormat(
+                                      new Date(planDateEnd),
+                                      "yyyy/mm/dd"
+                                  )
+                                : "")
+                        );
+                    },
+                };
+            });
 
         return res;
     };
 
     const nodeColumns = () => {
         const nodeSet = new Set();
+        const task = theOrder.current.Task || props.selected.Task;
 
-        props.selected.Task.forEach((task: any) => {
+        task.forEach((task: any) => {
+            const node = props.node.find((n: any) => {
+                return n.keyStage === task.keyStage;
+            });
             //檢查在 selected 中用到的大節點 並取其 taskId
-            nodeSet.add(
-                props.node.find((n: any) => {
-                    return n.keyStage === task.keyStage;
-                }).taskId
-            );
+            if (node) {
+                nodeSet.add(node.taskId);
+            }
         });
 
         const res = props.node
@@ -391,6 +409,22 @@ const View: React.FC<any> = (props: any) => {
 
     // console.warn(getProgressCards());
 
+    const onOrderChange = (node: string, order: any[]) => {
+        const oldOrder = theOrder.current[node] || props.selected[node];
+        const newOrder = order;
+        oldOrder.forEach((column: any) => {
+            if (
+                !order.some(
+                    (c: any) => JSON.stringify(c) === JSON.stringify(column)
+                )
+            ) {
+                newOrder.push(column);
+            }
+        });
+
+        theOrder.current = { ...theOrder.current, [node]: newOrder };
+    };
+
     let d = null;
     if (isDetail) {
         d = (
@@ -399,14 +433,46 @@ const View: React.FC<any> = (props: any) => {
                 sortData={sortData}
                 detailColumn={detailColumn}
                 breadcrumb={["fileName", detailKeyStage]}
+                onOrderChange={onOrderChange}
+                order={props.selected.Task}
+                node={detailKeyStage}
             ></Detail>
         );
     }
+
     return (
         <div className="view">
             {/* <Progress cards={getProgressCards()}/> */}
 
-            <div className="table-control"></div>
+            <div className="table-control">
+                <button
+                    onClick={() => {
+                        const saveOrder = { ...theOrder.current };
+                        const rowNodes: any[] = [];
+                        gridAPI.api.forEachNode((rowNode: any) => {
+                            rowNodes.push(
+                                props.selected.List.find((list: any) =>
+                                    list.match(rowNode.data.facCd)
+                                )
+                            );
+                        });
+
+                        saveOrder.list = rowNodes;
+                        // console.log(rowNodes);
+                        console.log(saveOrder);
+
+                        // const afterColumns = gridAPI.columnApi
+                        //     .getAllGridColumns()
+                        //     .map((column: { colId: any }) => {
+                        //         // console.log(column);
+                        //         return column.colId;
+                        //     });
+                        // console.log(afterColumns);
+                    }}
+                >
+                    SAVE
+                </button>
+            </div>
 
             <GridTable
                 dataDefs={{
@@ -418,6 +484,15 @@ const View: React.FC<any> = (props: any) => {
                 isExpandComponent={true}
                 getExpandColumns={getExpandColumns}
                 getShrinkColumns={getShrinkColumns}
+                onExpand={() => {
+                    const afterColumns = gridAPI.columnApi
+                        .getAllGridColumns()
+                        .map((column: { colId: any }) => {
+                            // console.log(column);
+                            return column.colId;
+                        });
+                    onOrderChange("info", afterColumns);
+                }}
                 isCsv={true}
                 getCsvData={(api: any) => {
                     const csvData: any[] = [];
@@ -488,6 +563,43 @@ const View: React.FC<any> = (props: any) => {
                 }}
                 onRefresh={() => {
                     getData();
+                }}
+                onColumnMoved={(evt) => {
+                    console.log("Info column moved", evt, props);
+                    //檢查是否在 info 中
+                    // console.log(
+                    //     props.selected.Info?.some(
+                    //         (select: any) => select.name === evt.column.colId
+                    //     )
+                    // );
+
+                    if (
+                        props.selected.Info?.some(
+                            (select: any) => select.name === evt.column.colId
+                        )
+                    ) {
+                        const afterColumns = gridAPI.columnApi
+                            .getAllGridColumns()
+                            .filter((column: { colId: any }) => {
+                                return props.selected.Info?.some(
+                                    (info: any) => info.name === column.colId
+                                );
+                            })
+                            .map((column: { colId: any }) => {
+                                // console.log(column);
+                                return props.selected.Info?.find(
+                                    (o: any) => o.name === column.colId
+                                );
+                            });
+
+                        onOrderChange("Info", afterColumns);
+                    }
+                }}
+                onRowMoved={() => {
+                    console.log("Tool Moved");
+                }}
+                onGridReady={(api) => {
+                    setGridAPI(api);
                 }}
             />
 

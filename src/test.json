@@ -27,6 +27,13 @@
           "data_type": "text",
           "width": 100,
           "display": "open"
+       },
+       {
+          "name": "no",
+          "header_name": "no.",
+          "data_type": "text",
+          "width": 100,
+          "display": "open"
        }
     ],
     "list": [
@@ -50,12 +57,18 @@
        {
           "taskName": "ICP-MASS",
           "taskId": "1000",
-          "keyStage": "PHK",
+          "keyStage": null,
           "isAutoSync": "Y"
        },
        {
           "taskName": "取水測值",
           "taskId": "1001",
+          "keyStage": "T1",
+          "isAutoSync": "N"
+       },
+       {
+          "taskName": "1005",
+          "taskId": "1005",
           "keyStage": "T1",
           "isAutoSync": "N"
        }

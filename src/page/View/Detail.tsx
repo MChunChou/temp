@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import { Breadcrumbs } from "@mui/material";
 import Link from "@mui/material/Link";
 
 const Detail: React.FC<any> = (props: any) => {
+    const isOrderChange = useRef(false);
     const [gridAPI, setGridAPI] = useState<any>();
-
     const setisDetail = props.setisDetail;
-
     const data = props.sortData(false);
     const columns = props.detailColumn;
     return (
@@ -16,18 +15,40 @@ const Detail: React.FC<any> = (props: any) => {
                 onClick={() => {
                     setisDetail(false);
 
-                    const rowNodes: any[] = [];
-                    gridAPI.api.forEachNode((rowNode: any) => {
-                        rowNodes.push(rowNode.data.facCd);
-                    });
-                    console.log(rowNodes);
-                    const afterColumns = gridAPI.columnApi
-                        .getAllGridColumns()
-                        .map((column: { colId: any }) => {
-                            console.log(column);
-                            return column.colId;
+                    if (isOrderChange.current) {
+                        const rowNodes: any[] = [];
+                        gridAPI.api.forEachNode((rowNode: any) => {
+                            rowNodes.push(rowNode.data.facCd);
                         });
-                    console.log(afterColumns);
+
+                        // console.log(rowNodes);
+                        const afterColumns = gridAPI.columnApi
+                            .getAllGridColumns()
+                            .filter((column: { colId: any }) => {
+                                return props.order?.some(
+                                    (o: any) => o.taskId === column.colId
+                                );
+                            })
+                            .map((column: { colId: any }) => {
+                                return props.order.find(
+                                    (o: any) => o.taskId === column.colId
+                                );
+                            });
+
+                        // props.order.forEach((column: any) => {
+                        //     if (
+                        //         !afterColumns.some(
+                        //             (c: any) => c.taskId === column.taskId
+                        //         )
+                        //     ) {
+                        //         afterColumns.push(column);
+                        //     }
+                        // });
+                        // console.log(afterColumns);
+
+                        props.onOrderChange &&
+                            props.onOrderChange("Task", afterColumns);
+                    }
                 }}
             >
                 <i className="fa fa-times-circle"></i>
@@ -54,6 +75,10 @@ const Detail: React.FC<any> = (props: any) => {
                     }}
                     onGridReady={(api) => {
                         setGridAPI(api);
+                    }}
+                    onColumnMoved={() => {
+                        console.log("Task column moved");
+                        isOrderChange.current = true;
                     }}
                 />
             </div>

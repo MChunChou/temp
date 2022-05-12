@@ -314,15 +314,15 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onRowSelected={() => {}}
                 onSelectionChanged={() => {}}
                 tooltipShowDelay={0}
-                suppressDragLeaveHidesColumns={true}
+                // suppressDragLeaveHidesColumns={true}
                 rowDragManaged={true}
                 suppressMoveWhenRowDragging={true}
                 animateRows={true}
-                onColumnMoved={() => {
-                    console.log("columns");
+                onColumnMoved={(evt) => {
+                    props.onColumnMoved && props.onColumnMoved(evt);
                 }}
                 onRowDragEnd={() => {
-                    console.log("row move");
+                    props.onRowMoved && props.onRowMoved();
                 }}
                 // onColumnResized={onGridSizeChanged}
                 // tooltipHideDelay={8000}

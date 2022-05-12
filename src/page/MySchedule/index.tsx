@@ -19,7 +19,6 @@ const MySchedule: React.FC = () => {
     const isDataViewOpen = useSelector(
         (state: RootState) => state.mySchedule.isDataViewOpen
     );
-
     const editScheduleName = useSelector(
         (state: RootState) => state.mySchedule.editScheduleName
     );

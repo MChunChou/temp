@@ -12,6 +12,7 @@ const isEditAble = (dataSource: any, isAutoSync: any) => {
 const ViewTask: React.FC<any> = (props: any) => {
     // console.log(props);
     const { value, dataSource, isAutoSync } = props;
+
     const {
         actlCompleteDate,
         isActlEdieable,
