@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, {
+    useState,
+    useEffect,
+    useMemo,
+    useRef,
+    useCallback,
+} from "react";
 import { AgGridReact } from "ag-grid-react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import * as fh from "../../utils/fetch-helper";
@@ -80,6 +86,7 @@ const View: React.FC<any> = (props: any) => {
     const [detailKeyStage, setDetailKeyStage] = useState<string>("");
     const [ctlDate, setCtlDate] = useState<any>(null);
     const [gridAPI, setGridAPI] = useState<any>();
+    const [forceUpdate, setForceUpdate] = useState(false);
 
     useEffect(() => {
         getData();
@@ -105,6 +112,19 @@ const View: React.FC<any> = (props: any) => {
                 setData(res);
             }
         });
+    };
+
+    const removeColumn = (node: string, taskId: string) => {
+        const oldOrder = theOrder.current[node] || props.selected[node];
+        const removeIdx = oldOrder.findIndex((element: any) => {
+            return element.taskId == taskId;
+        });
+
+        if (removeIdx > -1) {
+            oldOrder.splice(removeIdx, 1);
+            theOrder.current = { ...theOrder.current, [node]: oldOrder };
+            // setForceUpdate((old) => !old);
+        }
     };
 
     const getDisplayData = useMemo(() => {
@@ -144,6 +164,7 @@ const View: React.FC<any> = (props: any) => {
                 let pinned: string | null = null;
                 let cellRenderer = null;
                 let rowDrag = false;
+                let dndLock = false;
 
                 if (isShrink && idx > 0) {
                     return;
@@ -159,6 +180,7 @@ const View: React.FC<any> = (props: any) => {
                     if (idx === 0) {
                         cellRenderer = LinkC;
                         rowDrag = true;
+                        dndLock = true;
                     }
                 }
 
@@ -186,6 +208,28 @@ const View: React.FC<any> = (props: any) => {
                             : nodeA.data[info.name] > nodeB.data[info.name]
                             ? 1
                             : -1;
+                    },
+
+                    headerComponentParams: {
+                        isRemove: pinned ? false : true,
+                        onRemove: () => {
+                            const oldOrder =
+                                theOrder.current["Info"] ||
+                                props.selected["Info"];
+                            const removeIdx = oldOrder.findIndex(
+                                (element: any) => {
+                                    return element.name == info.name;
+                                }
+                            );
+
+                            if (removeIdx > -1) {
+                                oldOrder.splice(removeIdx, 1);
+                                theOrder.current = {
+                                    ...theOrder.current,
+                                    Info: oldOrder,
+                                };
+                            }
+                        },
                     },
                 });
             }
@@ -215,6 +259,12 @@ const View: React.FC<any> = (props: any) => {
                     minWidth: 150,
                     lockPinned: true,
                     sortable: true,
+                    headerComponentParams: {
+                        isRemove: true,
+                        onRemove: () => {
+                            removeColumn("Task", task.taskId);
+                        },
+                    },
                     comparator: (
                         v1: any,
                         v2: any,

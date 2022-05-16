@@ -90,6 +90,26 @@ export default (props) => {
         control = props.controlComponent;
     }
 
+    let removeElement = null;
+    if (props.isRemove) {
+        removeElement = (
+            <div
+                onClick={() => {
+                    const columnDefs = props.api.getColumnDefs();
+                    const index = columnDefs.findIndex(
+                        (def) => def.colId === props.column.colId
+                    );
+                    if (index > -1) {
+                        columnDefs.splice(index, 1);
+                        props.api.setColumnDefs(columnDefs);
+                        props.onRemove && props.onRemove();
+                    }
+                }}
+            >
+                <i className="fa fa-times"></i>
+            </div>
+        );
+    }
     return (
         <div className="headerTitleCell">
             <div className="headerLabel l">
@@ -99,6 +119,7 @@ export default (props) => {
             <div className="headerLabel r">
                 {menu}
                 {control}
+                {removeElement}
             </div>
         </div>
     );

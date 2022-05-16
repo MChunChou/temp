@@ -327,6 +327,12 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 // onColumnResized={onGridSizeChanged}
                 // tooltipHideDelay={8000}
                 // asyncTransactionWaitMillis={10}
+                onDisplayedColumnsChanged={(evt) => {
+                    // console.log(
+                    //     "virtual column",
+                    //     evt.columnApi.getAllGridColumns()
+                    // );
+                }}
             />
         </div>
     );
