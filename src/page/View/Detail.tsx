@@ -7,7 +7,7 @@ const Detail: React.FC<any> = (props: any) => {
     const isOrderChange = useRef(false);
     const [gridAPI, setGridAPI] = useState<any>();
     const setisDetail = props.setisDetail;
-    const data = props.sortData(false);
+    const data = props.sortData(props.node);
     const columns = props.detailColumn;
     return (
         <div className="table2nd">

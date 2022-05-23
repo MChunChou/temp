@@ -100,7 +100,10 @@ export const getDelayDays = (endDate: DateType, completeDate: DateType) => {
 };
 
 /**
- *
+ * Check is Delay
+ * @description
+ *  when endDate exist , completeDate not exist and today > endDate
+ *  return true
  * @param endDate
  * @param completeDate
  * @returns boolean
@@ -113,6 +116,7 @@ export const isDelay = (endDate: DateType, completeDate: DateType) => {
 
     return false;
 };
+
 /**
  *
  * @param startDate
@@ -165,6 +169,49 @@ export const isActualDate = (
     completeDate: DateType
 ) => {
     return completeDate && endDate && completeDate > endDate;
+};
+
+/**
+ * Check is close deadline with {days}
+ * @description
+ *  when completeDate is not exist , endDate is exist , and  today < endDate
+ *
+ * @param endDate
+ * @param completeDate
+ * @param closeDays
+ * @returns
+ */
+export const isCloseDeadLine = (
+    endDate: DateType,
+    completeDate: DateType,
+    closeDays: number = 1
+) => {
+    const today = new Date();
+
+    if (!completeDate && endDate && today <= endDate) {
+        const diffDays = (endDate.getTime() - today.getTime()) / DAY_MS;
+        if (diffDays <= closeDays) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+export const isOverDue = (endDate: DateType, completeDate: DateType) => {
+    if (endDate && completeDate) {
+        return completeDate > endDate;
+    }
+
+    return false;
+};
+
+export const isOnTime = (endDate: DateType, completeDate: DateType) => {
+    if (endDate && completeDate) {
+        return completeDate <= endDate;
+    }
+
+    return false;
 };
 
 class DateHelper {

@@ -8,6 +8,7 @@ import React, {
 import { AgGridReact } from "ag-grid-react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import * as fh from "../../utils/fetch-helper";
+import { Dropdown } from "primereact/dropdown";
 
 // import TaskComponent from "./TaskComponent";
 
@@ -20,9 +21,25 @@ import { format as dateFormat } from "../../utils/date-helper";
 import Progress from "../../compoments/Progress/Progress";
 import { DesktopDateTimePicker } from "@mui/lab";
 import { RowNode } from "ag-grid-community";
+import {
+    isDateInPlan,
+    isDelay,
+    isCloseDeadLine,
+    isOverDue,
+    isOnTime,
+} from "../../utils/date-helper";
 
 //測試資料
 import testD from "../../test.json";
+
+const citySelectItems = [
+    { label: "Ongoing", value: 0 },
+    { label: "in 3days", value: 1 },
+    { label: "in 7days", value: 2 },
+    { label: "overdue", value: 3 },
+    { label: "on time", value: 4 },
+    { label: "delay", value: 5 },
+];
 
 const LinkC = (props: any) => {
     return (
@@ -87,6 +104,7 @@ const View: React.FC<any> = (props: any) => {
     const [ctlDate, setCtlDate] = useState<any>(null);
     const [gridAPI, setGridAPI] = useState<any>();
     const [forceUpdate, setForceUpdate] = useState(false);
+    const [status, setStatus] = useState<any>(5);
 
     useEffect(() => {
         getData();
@@ -132,7 +150,7 @@ const View: React.FC<any> = (props: any) => {
         }
     }, [data]);
 
-    const sortData = (isNode?: boolean) => {
+    const sortData = (node?: any) => {
         if (data.length > 0) {
             // sort for toolInfo
             const afterSort = data.sort((a: any, b: any) => {
@@ -149,10 +167,118 @@ const View: React.FC<any> = (props: any) => {
                 return newData;
             });
 
-            return gridData;
+            return filterDate(gridData, node);
+            // return gridData;
         }
 
         return [];
+    };
+
+    const filterDate = (data: any, node?: any) => {
+        // console.log("key", node, "status", status, props);
+        const filter: any[] = [];
+
+        if (status === null) {
+            return data;
+        }
+
+        data.forEach((d: any, index: number) => {
+            const cpData = { ...d };
+            let isFitOne = false;
+            for (let o of Object.entries(cpData)) {
+                let [key, value]: [string, any] = o;
+
+                if (value && typeof value !== "string") {
+                    // console.warn(
+                    //     node && !(value.keyStaget == node),
+                    //     node,
+                    //     value.keyStaget
+                    // );
+
+                    if (node) {
+                        // console.error(!(value.keyStaget == node));
+                        if (!(value.keyStaget == node)) {
+                            continue;
+                        }
+
+                        if (
+                            props.node.some(
+                                (n: any) => n.taskId === value.taskId
+                            )
+                        ) {
+                            continue;
+                        }
+                    }
+
+                    const start = value.planDateStart
+                        ? new Date(value.planDateStart)
+                        : null;
+                    const end = value.planDateEnd
+                        ? new Date(value.planDateEnd)
+                        : null;
+                    const complete = value.actlCompleteDate
+                        ? new Date(value.actlCompleteDate)
+                        : null;
+                    const today = new Date();
+
+                    switch (status) {
+                        case 0:
+                            if (isDateInPlan(today, start, end)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        case 1:
+                            if (isCloseDeadLine(end, complete, 3)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        case 2:
+                            if (isCloseDeadLine(end, complete, 7)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        case 3:
+                            if (isOverDue(end, complete)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        case 4:
+                            if (isOnTime(end, complete)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        case 5:
+                            if (isDelay(end, complete)) {
+                                isFitOne = true;
+                            } else {
+                                cpData[key] = {};
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                }
+            }
+
+            console.warn("cpData", cpData, isFitOne);
+            if (isFitOne) {
+                filter.push({ ...cpData });
+            }
+        });
+
+        console.log(filter);
+        return filter;
     };
 
     const getInfoColumn = (isExpand: boolean, isShrink?: boolean): any[] => {
@@ -493,7 +619,16 @@ const View: React.FC<any> = (props: any) => {
     return (
         <div className="view">
             {/* <Progress cards={getProgressCards()}/> */}
-
+            <Dropdown
+                optionLabel="name"
+                value={status}
+                options={citySelectItems}
+                onChange={(e) => {
+                    setStatus(e.value);
+                }}
+                showClear={false}
+            />
+            {status}
             <div className="table-control">
                 <button
                     onClick={() => {
