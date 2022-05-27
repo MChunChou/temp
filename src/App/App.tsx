@@ -21,7 +21,13 @@ import View from "../page/View/View";
 // import View from "../View";
 import DND from "../page/DND";
 import "../styles/style.css";
+import "../styles/css/style.css";
 import MySchedule from "../page/MySchedule";
+import SopManagement from "../page/SopManagement";
+import SopManagementII from "../page/SopManagement/indexCopey";
+import Create from "../page/SopManagement/Create";
+import SopTwoPage from "../page/SopManagement/SopManagement";
+import SopDetail from "../page/SopDetail";
 
 const selected = {
     List: testData.list,
@@ -129,6 +135,9 @@ function App() {
                         <span>
                             <Link to={"/dnd"}>dnd</Link>
                         </span>
+                        <span>
+                            <Link to={"/sop"}>sop</Link>
+                        </span>
                         <Switch>
                             <Route exact path="/">
                                 <View
@@ -148,6 +157,19 @@ function App() {
                             </Route>
                             <Route exact path="/dnd">
                                 <DND cards={[]} />
+                            </Route>
+                            <Route exact path="/sop">
+                                <SopManagement />
+                            </Route>
+                            <Route exact path="/sop/:taskID">
+                                <SopDetail />
+                            </Route>
+
+                            <Route exact path="/sopII">
+                                <SopManagementII />
+                            </Route>
+                            <Route exact path="/create">
+                                <Create />
                             </Route>
                         </Switch>
                     </div>

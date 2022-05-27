@@ -104,7 +104,7 @@ const View: React.FC<any> = (props: any) => {
     const [ctlDate, setCtlDate] = useState<any>(null);
     const [gridAPI, setGridAPI] = useState<any>();
     const [forceUpdate, setForceUpdate] = useState(false);
-    const [status, setStatus] = useState<any>(5);
+    const [status, setStatus] = useState<any>(null);
 
     useEffect(() => {
         getData();
@@ -271,13 +271,11 @@ const View: React.FC<any> = (props: any) => {
                 }
             }
 
-            console.warn("cpData", cpData, isFitOne);
             if (isFitOne) {
                 filter.push({ ...cpData });
             }
         });
 
-        console.log(filter);
         return filter;
     };
 
@@ -369,6 +367,12 @@ const View: React.FC<any> = (props: any) => {
         // 過濾大節點以及非屬於 "K" 節點的
         const res = task
             .filter((task: any) => {
+                if (k === "ALL") {
+                    return !props.node.some(
+                        (n: any) => n.taskId === task.taskId
+                    );
+                }
+
                 return (
                     !props.node.some((n: any) => n.taskId === task.taskId) &&
                     task.keyStage === k
@@ -506,7 +510,12 @@ const View: React.FC<any> = (props: any) => {
     };
 
     const getProgressCards = () => {
-        // console.log(data, props.node);
+        console.log(
+            "GetProgressCards ============== Data",
+            data,
+            "Node",
+            props.node
+        );
         /**
          * {
          *  title: 大節點名稱,
@@ -518,7 +527,9 @@ const View: React.FC<any> = (props: any) => {
 
         const toolCount = data.length;
 
-        const result: any = {};
+        const result: any = {
+            ALL: 0,
+        };
 
         // props.node.forEach((n: any) => {
         //     result[n.taskName] = { max: 0, value: 0 };
@@ -526,6 +537,7 @@ const View: React.FC<any> = (props: any) => {
 
         /* TODO: 需要 Filter Dept */
         data.forEach((d: any) => {
+            /* 每一筆 Tool */
             const res: any = {};
             let total = 0;
             let complete = 0;
@@ -539,19 +551,25 @@ const View: React.FC<any> = (props: any) => {
                     }
 
                     if (res[keyStaget] && planDateEnd) {
+                        total += 1;
                         res[keyStaget].total += 1;
                         if (actlCompleteDate) {
+                            complete += 1;
                             res[keyStaget].complete += 1;
                         }
                     }
                 }
             });
 
+            if (total === complete) {
+                result.ALL++;
+            }
+
             Object.keys(res)
                 .filter((key) => {
                     return res[key].total > 0;
                 })
-                .map((key) => {
+                .forEach((key) => {
                     if (!result[key]) {
                         result[key] = 0;
                     }
@@ -583,8 +601,6 @@ const View: React.FC<any> = (props: any) => {
         // return null
     };
 
-    // console.warn(getProgressCards());
-
     const onOrderChange = (node: string, order: any[]) => {
         const oldOrder = theOrder.current[node] || props.selected[node];
         const newOrder = order;
@@ -599,6 +615,15 @@ const View: React.FC<any> = (props: any) => {
         });
 
         theOrder.current = { ...theOrder.current, [node]: newOrder };
+    };
+
+    const openDetail = (node: string) => {
+        setisDetail(true);
+        setDetailColumn([
+            ...getInfoColumn(false, true),
+            ...getTaskColumn(node),
+        ]);
+        setDetailKeyStage(node);
     };
 
     let d = null;
@@ -618,6 +643,13 @@ const View: React.FC<any> = (props: any) => {
 
     return (
         <div className="view">
+            <button
+                onClick={() => {
+                    openDetail("ALL");
+                }}
+            >
+                ALL
+            </button>
             {/* <Progress cards={getProgressCards()}/> */}
             <Dropdown
                 optionLabel="name"
@@ -644,7 +676,7 @@ const View: React.FC<any> = (props: any) => {
 
                         saveOrder.list = rowNodes;
                         // console.log(rowNodes);
-                        console.log(saveOrder);
+                        // console.log(saveOrder);
 
                         // const afterColumns = gridAPI.columnApi
                         //     .getAllGridColumns()

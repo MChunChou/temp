@@ -7,7 +7,6 @@ import React, {
 } from "react";
 
 import { AgGridReact } from "ag-grid-react";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -17,6 +16,32 @@ import CustomHeader from "./CustomHeader";
 import FullWidthCellRenderer from "../../page/Control";
 import icons from "../../styles/icon.svg";
 import * as eh from "../../utils/export-helper";
+
+interface GridTableProps {
+    dataDefs: DataOptions;
+    columnDefs: ColumnsOptions;
+    gridDefs?: any;
+    expandComponent?: React.Component;
+    isExpandComponent?: boolean;
+    control?: React.ReactElement;
+    isCsv?: boolean;
+    getCsvData?: (api: any) => any;
+    getExpandColumns?: (isExpand: boolean) => any;
+    getShrinkColumns?: (isExpand: boolean) => any;
+    onRefresh?: () => void;
+    onGridReady?: (api: any) => void;
+    onColumnMoved?: (evt?: any) => void;
+    onRowMoved?: (evt?: any) => void;
+    onExpand?: (evt?: any) => void;
+}
+
+interface DataOptions {
+    data?: object[];
+}
+
+interface ColumnsOptions {
+    groups?: any[];
+}
 
 const Icon = (props: any) => {
     return (
@@ -31,10 +56,6 @@ const Icon = (props: any) => {
 };
 
 const ToolTip = (props: any) => {
-    //     const data = useMemo(
-    //         () => props.api.getDisplayedRowAtIndex(props.rowIndex).data,
-    //         []
-    //     );
     return (
         <div
             className="custom-tooltip"
@@ -333,6 +354,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                     //     evt.columnApi.getAllGridColumns()
                     // );
                 }}
+                {...props.gridDefs}
             />
         </div>
     );

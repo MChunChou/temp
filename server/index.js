@@ -3,7 +3,12 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const createDate = require("./createTestData");
+const multer = require("multer");
+
 const app = express();
+
+const upload = multer({ dest: "uploads/" });
+const sopData = require("./createSOPData");
 app.use(cors())
     .use(
         bodyParser.urlencoded({
@@ -96,7 +101,8 @@ function getMySchedule() {
                     taskId: 1005,
                     planDateStart: "2020/1/3",
                     planDateEnd: "2021/1/18",
-                    actlCompleteDate: "2021/2/2",
+                    actlCompleteDate: null,
+                    // actlCompleteDate: "2021/2/2",
                     isActlEdieable: "true",
                     isPlanEditable: "true",
                     keyStaget: "T1",
@@ -205,7 +211,7 @@ function getMySchedule() {
                     taskId: "0001",
                     planDateStart: "2011/7/1",
                     planDateEnd: "2018/9/2",
-                    actlCompleteDate: null,
+                    actlCompleteDate: "2021/7/8",
                     isActlEdieable: "true",
                     isPlanEditable: "true",
                     keyStaget: "PHK",
@@ -214,7 +220,7 @@ function getMySchedule() {
                     taskId: "0002",
                     planDateStart: "2017/5/20",
                     planDateEnd: "2021/7/8",
-                    actlCompleteDate: null,
+                    actlCompleteDate: "2021/7/8",
                     isActlEdieable: "true",
                     isPlanEditable: "false",
                     keyStaget: "T1",
@@ -274,6 +280,17 @@ app.get("/download/data", function (req, res) {
     res.json(createDate());
 });
 
+app.post("/upload", function (req, res) {
+    res.json({ ok: true });
+});
+
+app.get("/sop/detail", function (req, res) {
+    res.json({ detail: sopData.detail });
+});
+
+app.get("/sop", function (req, res) {
+    res.json({ sop: sopData.sop });
+});
 const port = process.env.PORT || 8000;
 app.listen(port, function (error) {
     if (error) {
