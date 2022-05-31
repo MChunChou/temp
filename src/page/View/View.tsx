@@ -9,6 +9,7 @@ import { AgGridReact } from "ag-grid-react";
 import GridTable from "../../compoments/GridTable/GridTable";
 import * as fh from "../../utils/fetch-helper";
 import { Dropdown } from "primereact/dropdown";
+import Select from "@mui/material/Select";
 
 // import TaskComponent from "./TaskComponent";
 
@@ -39,8 +40,18 @@ const citySelectItems = [
     { label: "overdue", value: 3 },
     { label: "on time", value: 4 },
     { label: "delay", value: 5 },
+    { label: "no", value: null },
 ];
 
+const Status = [
+    "date in plan",
+    "3 days",
+    "7 days",
+    "dead line",
+    "overdue",
+    "on time",
+    "delay",
+];
 const LinkC = (props: any) => {
     return (
         <Link
@@ -196,8 +207,7 @@ const View: React.FC<any> = (props: any) => {
                     // );
 
                     if (node) {
-                        // console.error(!(value.keyStaget == node));
-                        if (!(value.keyStaget == node)) {
+                        if (!(findNodeWithTaskId(value.taskId + "") == node)) {
                             continue;
                         }
 
@@ -446,6 +456,8 @@ const View: React.FC<any> = (props: any) => {
             const node = props.node.find((n: any) => {
                 return n.keyStage === task.keyStage;
             });
+
+            // console.log("node------------------- ", node);
             //檢查在 selected 中用到的大節點 並取其 taskId
             if (node) {
                 nodeSet.add(node.taskId);
@@ -509,13 +521,50 @@ const View: React.FC<any> = (props: any) => {
         return getColumn(false, isExpand);
     };
 
+    /**
+     * node {String }
+     * data  Example
+     * {
+     *   actlCompleteDate: "2021/2/2"
+     *   isActlEdieable: "true"
+     *   isPlanEditable: "true"
+     *   keyStaget: "T1"
+     *   planDateEnd: "2021/1/2"
+     *   planDateStart: "2020/1/1"
+     *   taskId: "1001"
+     * }
+     */
+    const filterNode = useCallback((node: string, data: string) => {
+        const taskSetting = props.selected.Task;
+
+        console.log(taskSetting);
+    }, []);
+
+    // 需要從 儲存的 設定中取得 當前的 taskID
+    const findNodeWithTaskId = useCallback((taskId: string) => {
+        const taskSetting = props.selected.Task;
+        const task = taskSetting.find((t: any) => {
+            return t.taskId + "" === taskId;
+        });
+        // console.log(taskId, task, taskSetting);
+        // return task.keyStage;
+        return task && task.keyStage;
+    }, []);
+
+    const isMainNode = useCallback((node: { taskId: string }) => {
+        const mainNodes = props.node;
+        return mainNodes.some((mainNode: { taskId: string }) => {
+            return mainNode.taskId === node.taskId;
+        });
+    }, []);
+
     const getProgressCards = () => {
-        console.log(
-            "GetProgressCards ============== Data",
-            data,
-            "Node",
-            props.node
-        );
+        // console.log(
+        //     "GetProgressCards ============== Data",
+        //     data,
+        //     "Node",
+        //     props.node
+        // );
         /**
          * {
          *  title: 大節點名稱,
@@ -543,19 +592,24 @@ const View: React.FC<any> = (props: any) => {
             let complete = 0;
 
             d.taskList.forEach((task: any) => {
-                if (!props.node.some((n: any) => n.taskId === task.taskId)) {
-                    const { actlCompleteDate, keyStaget, planDateEnd } = task;
+                if (!isMainNode(task)) {
+                    // console.log(task);
+                    const { actlCompleteDate, keyStaget, planDateEnd, taskId } =
+                        task;
 
-                    if (!res[keyStaget]) {
-                        res[keyStaget] = { total: 0, complete: 0 };
+                    const keyStage =
+                        findNodeWithTaskId(taskId + "") || keyStaget;
+
+                    if (!res[keyStage]) {
+                        res[keyStage] = { total: 0, complete: 0 };
                     }
 
-                    if (res[keyStaget] && planDateEnd) {
+                    if (res[keyStage] && planDateEnd) {
                         total += 1;
-                        res[keyStaget].total += 1;
+                        res[keyStage].total += 1;
                         if (actlCompleteDate) {
                             complete += 1;
-                            res[keyStaget].complete += 1;
+                            res[keyStage].complete += 1;
                         }
                     }
                 }
@@ -650,7 +704,8 @@ const View: React.FC<any> = (props: any) => {
             >
                 ALL
             </button>
-            {/* <Progress cards={getProgressCards()}/> */}
+            <Progress cards={getProgressCards()} />
+
             <Dropdown
                 optionLabel="name"
                 value={status}
@@ -660,7 +715,7 @@ const View: React.FC<any> = (props: any) => {
                 }}
                 showClear={false}
             />
-            {status}
+            {Status[status]}
             <div className="table-control">
                 <button
                     onClick={() => {
