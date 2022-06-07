@@ -18,15 +18,24 @@ const cities = [
     { name: "Istanbul", code: "IST" },
     { name: "Paris", code: "PRS" },
 ];
+const scopes = [
+    { name: "dept1", code: "dept1" },
+    { name: "dept2", code: "dept2" },
+    { name: "dept3", code: "dept3" },
+    { name: "de88", code: "de88" },
+];
 
-const CellSelector = forwardRef((props: any, ref) => {
-    const [value, setValue] = useState(parseInt(props.value));
+const CellSelector = forwardRef((props: ICellRendererParams, ref) => {
+    const [value, setValue] = useState(props.value);
     const refInput = useRef<any>(null);
 
     useEffect(() => {
-        // focus on the input
         refInput && refInput.current.focus();
     }, []);
+
+    const handleOnChange = (evt: any) => {
+        setValue(evt.target.value);
+    };
 
     /* Component Editor Lifecycle methods */
     useImperativeHandle(ref, () => {
@@ -34,7 +43,7 @@ const CellSelector = forwardRef((props: any, ref) => {
             // the final value to send to the grid, on completion of editing
             getValue() {
                 // this simple editor doubles any value entered into the input
-                return value * 2;
+                return value;
             },
 
             // Gets called once before editing starts, to give editor a chance to
@@ -47,19 +56,21 @@ const CellSelector = forwardRef((props: any, ref) => {
             // If you return true, then the result of the edit will be ignored.
             isCancelAfterEnd() {
                 // our editor will reject any value greater than 1000
-                return value > 1000;
+                return false;
             },
         };
     });
 
     return (
-        <input
-            type="number"
-            ref={refInput}
-            value={value}
-            onChange={(event) => setValue(+event.target.value)}
-            style={{ width: "100%" }}
-        />
+        <select ref={refInput} value={value} onChange={handleOnChange}>
+            {scopes.map((scope) => {
+                return (
+                    <option key={scope.code} value={scope.code}>
+                        {scope.name}
+                    </option>
+                );
+            })}
+        </select>
     );
 });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 
 import {
     faAngleDown,
@@ -18,7 +18,9 @@ import Icon from "../../styles/img/icon.svg";
 import SopUpload from "./components/SopUpload";
 import CellAction from "./components/CellAction";
 import CellDownload from "./components/CellDownload";
-import CellSelector from "./components/CellSelector";
+import CellSelector from "./components/CellSelectorEditor";
+import { FirstDataRenderedEvent } from "ag-grid-community";
+
 const scopes = [
     { name: "dept1", code: "dept1" },
     { name: "dept2", code: "dept2" },
@@ -27,13 +29,21 @@ const scopes = [
 ];
 
 const SopDetail = () => {
+    const gridRef = useRef<any>();
     const history = useHistory();
     const params: { taskID: string } = useParams();
-
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [detailData, setDetailData] = useState<any>([]);
+
     const detailColumnDefs = useMemo(() => {
         return [
+            {
+                headerName: "",
+                checkboxSelection: true,
+                suppressMenu: false,
+                filter: false,
+                sortable: false,
+            },
             { headerName: "Fab", field: "make" },
             { headerName: "Dept", field: "key" },
             {
@@ -46,7 +56,7 @@ const SopDetail = () => {
                 field: "scope",
                 editable: true,
                 cellEditor: CellSelector,
-                cellEditorPopup: true,
+                // cellEditorPopup: true,
                 // cellEditorParams: {
                 //     cellHeight: 50,
                 //     values ["Ireland", "USA"],
@@ -63,7 +73,14 @@ const SopDetail = () => {
         fetch("http://localhost:8000/sop/detail")
             .then((res) => res.json())
             .then((res) => {
-                console.log(res.detail);
+                res.detail.sort((a: any, b: any) => {
+                    if (a.selected && b.selected) {
+                        return 0;
+                    }
+
+                    return a.selected ? -1 : 1;
+                });
+
                 setDetailData(res.detail);
             });
     }, []);
@@ -80,11 +97,25 @@ const SopDetail = () => {
         setIsUploadOpen(false);
     };
 
-    const handleSaveLink = () => {};
+    const handleSaveLink = () => {
+        if (gridRef) {
+            console.log(gridRef, gridRef.current.api.getSelectedRows());
+        }
+    };
 
     const handlePrevious = () => {};
 
     const handleNext = () => {};
+
+    const onGridReady = (gridApi: any) => {
+        gridRef.current = gridApi;
+    };
+
+    const onFirstDataRendered = (event: FirstDataRenderedEvent) => {
+        gridRef.current.api.forEachNode((node: any) => {
+            node.setSelected(node.data.selected);
+        });
+    };
 
     return (
         <div className="sop details">
@@ -145,7 +176,11 @@ const SopDetail = () => {
                         groups: detailColumnDefs,
                     }}
                     gridDefs={{
-                        editType: "fullRow",
+                        // editType: "fullRow",
+                        onGridReady,
+                        onFirstDataRendered,
+                        suppressRowClickSelection: true,
+                        rowSelection: "multiple",
                     }}
                 />
             </div>

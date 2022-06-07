@@ -18,7 +18,6 @@ import store from "../Reducer/index";
 import Filter from "../page/Filter";
 import Demo from "../page/Demo";
 import View from "../page/View/View";
-// import View from "../View";
 import DND from "../page/DND";
 import "../styles/style.css";
 import "../styles/css/style.css";
