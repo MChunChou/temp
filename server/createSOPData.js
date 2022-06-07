@@ -22,6 +22,7 @@ const detail = [
         owner: "KP0T11",
         date: "24/08/2008",
         tcount: 2,
+        selected: true,
     },
     {
         id: "cc",
@@ -70,6 +71,7 @@ const detail = [
         owner: "KP02A1",
         date: "24/08/2008",
         tcount: 1,
+        selected: true,
     },
 ];
 
