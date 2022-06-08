@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "primereact/button";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import GridTable from "../../compoments/GridTable/GridTable";
@@ -32,8 +32,10 @@ const SopDetail = () => {
     const gridRef = useRef<any>();
     const history = useHistory();
     const params: { taskID: string } = useParams();
+    const loaction = useLocation();
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [detailData, setDetailData] = useState<any>([]);
+    console.log(loaction);
 
     const detailColumnDefs = useMemo(() => {
         return [

@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import { ICellRendererParams } from "ag-grid-community";
 
-function CellLink(props: ICellRendererParams) {
-    const path = `/sop/${props.data.make}`;
+interface CellLinkProps extends ICellRendererParams {
+    pathField?: string;
+    by?: string;
+}
+
+function CellLink(props: CellLinkProps) {
+    const path = `/sop/detail?value=${
+        props.pathField ? props.data[props.pathField] : props.value
+    }&&page=${props.by}`;
+
     return <Link to={path}>{props.value}</Link>;
 }
 

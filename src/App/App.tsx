@@ -160,7 +160,7 @@ function App() {
                             <Route exact path="/sop">
                                 <SopManagement />
                             </Route>
-                            <Route exact path="/sop/:taskID">
+                            <Route exact path="/sop/detail">
                                 <SopDetail />
                             </Route>
 

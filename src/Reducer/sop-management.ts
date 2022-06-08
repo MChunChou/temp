@@ -1,20 +1,20 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
 interface StateParams {
-    taskId: string[];
+    sequence: string[];
 }
 
 const initialState: StateParams = {
-    taskId: [],
+    sequence: [],
 };
 
 const sopManagement = createSlice({
     name: "sopManagement",
     initialState: initialState,
     reducers: {
-        setTaskId: (state: StateParams, action: PayloadAction<string[]>) => {
-            state.taskId = action.payload;
-        },
+        // setTaskId: (state: StateParams, action: PayloadAction<string[]>) => {
+        //     state.taskId = action.payload;
+        // },
     },
     extraReducers: (builder) => {
         // builder.addCase(, ()=>{
@@ -22,6 +22,6 @@ const sopManagement = createSlice({
     },
 });
 
-export const { setTaskId } = sopManagement.actions;
+export const {} = sopManagement.actions;
 
 export default sopManagement.reducer;

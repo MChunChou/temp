@@ -48,7 +48,10 @@ const SopManagement: React.FC = () => {
                             />
                         }
                     >
-                        <SopSummary title="SOP Summary Linked By Task" />
+                        <SopSummary
+                            title="SOP Summary Linked By Task"
+                            by="task"
+                        />
                     </TabPanel>
                     <TabPanel
                         header={
@@ -59,7 +62,10 @@ const SopManagement: React.FC = () => {
                             />
                         }
                     >
-                        <SopSummary title="Task Summary Linked By SOP" />
+                        <SopSummary
+                            title="Task Summary Linked By SOP"
+                            by="sop"
+                        />
                     </TabPanel>
                 </TabView>
             </div>

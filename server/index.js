@@ -292,8 +292,18 @@ app.get("/sop/detail", function (req, res) {
 });
 
 app.get("/sop", function (req, res) {
-    res.json({ sop: sopData.sop });
+    let sop = null;
+    if (req.query.by === "sop") {
+        sop = sopData.bySop;
+    }
+
+    if (req.query.by === "task") {
+        sop = sopData.sop;
+    }
+
+    res.json({ sop });
 });
+
 const port = process.env.PORT || 8000;
 app.listen(port, function (error) {
     if (error) {
