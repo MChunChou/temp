@@ -288,7 +288,16 @@ app.post("/upload", function (req, res) {
 });
 
 app.get("/sop/detail", function (req, res) {
-    res.json({ detail: sopData.detail });
+    let sop = null;
+    if (req.query.by === "sop") {
+        sop = sopData.detailSop;
+    }
+
+    if (req.query.by === "task") {
+        sop = sopData.detail;
+    }
+
+    res.json({ detail: sop });
 });
 
 app.get("/sop", function (req, res) {

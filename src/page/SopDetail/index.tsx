@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, {
+    useEffect,
+    useMemo,
+    useState,
+    useRef,
+    useCallback,
+} from "react";
 
 import {
     faAngleDown,
@@ -10,6 +16,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "primereact/button";
 import { useParams, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import GridTable from "../../compoments/GridTable/GridTable";
 
@@ -21,6 +29,9 @@ import CellDownload from "./components/CellDownload";
 import CellSelector from "./components/CellSelectorEditor";
 import { FirstDataRenderedEvent } from "ag-grid-community";
 
+import queryString from "query-string";
+import { RootState } from "../../Reducer";
+
 const scopes = [
     { name: "dept1", code: "dept1" },
     { name: "dept2", code: "dept2" },
@@ -29,50 +40,87 @@ const scopes = [
 ];
 
 const SopDetail = () => {
+    const count = useSelector((state: RootState) => state);
+    const dispatch = useDispatch();
+
     const gridRef = useRef<any>();
     const history = useHistory();
     const params: { taskID: string } = useParams();
-    const loaction = useLocation();
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [detailData, setDetailData] = useState<any>([]);
-    console.log(loaction);
+
+    const loaction = useLocation();
+    const query = queryString.parseUrl(loaction.search).query;
+    const queryPage = query.page + "";
+    const queryValue = query.value + "";
 
     const detailColumnDefs = useMemo(() => {
-        return [
-            {
-                headerName: "",
-                checkboxSelection: true,
-                suppressMenu: false,
-                filter: false,
-                sortable: false,
-            },
-            { headerName: "Fab", field: "make" },
-            { headerName: "Dept", field: "key" },
-            {
-                headerName: "Task File Name",
-                field: "model",
-                cellRenderer: CellDownload,
-            },
-            {
-                headerName: "Task Scope",
-                field: "scope",
-                editable: true,
-                cellEditor: CellSelector,
-                // cellEditorPopup: true,
-                // cellEditorParams: {
-                //     cellHeight: 50,
-                //     values ["Ireland", "USA"],
-                // },
-            },
-            { headerName: "Task Description", field: "desc", editable: true },
-            { headerName: "Owner", field: "owner" },
-            { headerName: "Update DT", field: "date" },
-            { headerName: "Action", field: "action", cellRenderer: CellAction },
-        ];
+        switch (queryPage) {
+            case "task":
+                return [
+                    {
+                        headerName: "",
+                        checkboxSelection: true,
+                        suppressMenu: false,
+                        filter: false,
+                        sortable: false,
+                    },
+                    { headerName: "Fab", field: "make" },
+                    { headerName: "Dept", field: "key" },
+                    {
+                        headerName: "Task File Name",
+                        field: "model",
+                        cellRenderer: CellDownload,
+                    },
+                    {
+                        headerName: "Task Scope",
+                        field: "scope",
+                        editable: true,
+                        cellEditor: CellSelector,
+                        // cellEditorPopup: true,
+                        // cellEditorParams: {
+                        //     cellHeight: 50,
+                        //     values ["Ireland", "USA"],
+                        // },
+                    },
+                    {
+                        headerName: "Task Description",
+                        field: "desc",
+                        editable: true,
+                    },
+                    { headerName: "Owner", field: "owner" },
+                    { headerName: "Update DT", field: "date" },
+                    {
+                        headerName: "Action",
+                        field: "action",
+                        cellRenderer: CellAction,
+                    },
+                ];
+            case "sop":
+                return [
+                    {
+                        headerName: "",
+                        checkboxSelection: true,
+                        suppressMenu: false,
+                        filter: false,
+                        sortable: false,
+                    },
+                    { headerName: "TaskID", field: "taskId" },
+                    { headerName: "KeyStage", field: "keyStage" },
+                    { headerName: "Task Name", field: "taskName" },
+                    { headerName: "Task Description", field: "desc" },
+                ];
+            default:
+                return [];
+        }
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:8000/sop/detail")
+        fetchData();
+    }, []);
+
+    const fetchData = useCallback(() => {
+        fetch(`http://localhost:8000/sop/detail?by=${queryPage}`)
             .then((res) => res.json())
             .then((res) => {
                 res.detail.sort((a: any, b: any) => {
@@ -85,7 +133,23 @@ const SopDetail = () => {
 
                 setDetailData(res.detail);
             });
-    }, []);
+    }, [queryPage]);
+
+    const isUpload = useMemo(() => {
+        if (queryPage && queryPage.match(/sop/g)) {
+            return false;
+        }
+
+        return true;
+    }, [queryPage]);
+
+    const isLinkCanBeZero = useMemo(() => {
+        if (queryPage && queryPage.match(/sop/g)) {
+            return false;
+        }
+
+        return true;
+    }, [queryPage]);
 
     const handleClose = () => {
         history.push("/sop");
@@ -101,7 +165,15 @@ const SopDetail = () => {
 
     const handleSaveLink = () => {
         if (gridRef) {
+            const links = gridRef.current.api.getSelectedRows();
+            if (!isLinkCanBeZero && links.length === 0) {
+                console.log("links zero");
+                onFirstDataRendered(); // set default link
+                return;
+            }
+
             console.log(gridRef, gridRef.current.api.getSelectedRows());
+            fetchData();
         }
     };
 
@@ -113,7 +185,7 @@ const SopDetail = () => {
         gridRef.current = gridApi;
     };
 
-    const onFirstDataRendered = (event: FirstDataRenderedEvent) => {
+    const onFirstDataRendered = () => {
         gridRef.current.api.forEachNode((node: any) => {
             node.setSelected(node.data.selected);
         });
@@ -128,9 +200,7 @@ const SopDetail = () => {
                             <span onClick={handleClose}>SOP Summary</span>
                             <span>
                                 SOP Management For Task :
-                                <span className="breadfont">
-                                    {params.taskID}
-                                </span>
+                                <span className="breadfont">{queryValue}</span>
                             </span>
                         </Breadcrumbs>
 
@@ -142,12 +212,14 @@ const SopDetail = () => {
                         </Button>
                     </div>
                     <div className="buttonGroup">
-                        <Button
-                            className="create info active"
-                            onClick={handleOpenUpload}
-                        >
-                            <FontAwesomeIcon icon={faPlus} />
-                        </Button>
+                        {isUpload && (
+                            <Button
+                                className="create info active"
+                                onClick={handleOpenUpload}
+                            >
+                                <FontAwesomeIcon icon={faPlus} />
+                            </Button>
+                        )}
                         <Button
                             className="savelink info"
                             onClick={handleSaveLink}

@@ -208,8 +208,38 @@ const bySop = [
         count: 2,
     },
 ];
+
+const detailSop = [
+    {
+        taskId: "0121",
+        keyStage: "PHK",
+        taskName: "自動接水",
+        desc: "loeran sdkill Oehi tail dtest",
+    },
+    {
+        taskId: "0122",
+        keyStage: "PHK",
+        taskName: "自動接水",
+        desc: "loeran sdkill Oehi tail dtest",
+    },
+    {
+        taskId: "0125",
+        keyStage: "T1",
+        taskName: "自動接水",
+        desc: "loeran sdkill Oehi tail dtest",
+        selected: true,
+    },
+    {
+        taskId: "0129",
+        keyStage: "T0",
+        taskName: "自動接水",
+        desc: "loeran sdkill Oehi tail dtest",
+    },
+];
+
 module.exports = {
     detail,
     sop,
     bySop,
+    detailSop,
 };
