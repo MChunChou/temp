@@ -42,7 +42,7 @@ export const MyContext = React.createContext<{
     getControlOpen: (idx: any) => boolean;
 }>({
     controlOpen: undefined,
-    setControlOpen: (idx: any, open: any) => {},
+    setControlOpen: (idx: any, open: any) => { },
     getControlOpen: (idx: any): boolean => {
         return false;
     },
@@ -167,6 +167,10 @@ function App() {
                             <Route exact path="/sopII">
                                 <SopManagementII />
                             </Route>
+                            <Route exact path="/sopII/:taskId">
+                                <SopTwoPage />
+                            </Route>
+
                             <Route exact path="/create">
                                 <Create />
                             </Route>

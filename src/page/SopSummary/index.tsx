@@ -1,42 +1,19 @@
 import React, { useMemo, useState, useEffect } from "react";
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import GridTable from "../../../compoments/GridTable/GridTable";
-import CellDownload from "../../SopDetail/components/CellDownload";
-
-import {setSequence} from '../../../Reducer/sop-management'
-import CellLink from "./CellLink";
+import GridTable from "../../compoments/GridTable/GridTable";
+import CellDownload from "../SopDetail/components/CellDownload";
+import CellLink from "./components/CellLink";
 
 interface SummaryProps {
     titleClass?: string;
     title: string;
     by: string;
+    data: any;
 }
 
 const Summary = (props: SummaryProps) => {
-    const dispatch = useDispatch();
-    const [summaryData, setSummaryData] = useState<any>(null);
-
-    useEffect(() => {
-        const by = props.by;
-
-        fetch("http://localhost:8000/sop?by=" + by)
-            .then((res) => res.json())
-            .then((res) => {
-                switch (by) {
-                    case 'sop':
-                        dispatch(setSequence({key: by, value: res.sop.map((sop:any)=>sop.file)}));
-                        setSummaryData(res.sop);                        
-                        break;
-                    case 'task':
-                        dispatch(setSequence({key: by, value: res.sop.map((sop:any)=>sop.make)}));
-                        setSummaryData(res.sop);                        
-                        break;
-                    default:                        
-                        break;
-                }
-            });
-    }, []);
+    const summaryData = props.data
 
     const taskColumnDefs = useMemo(() => {
         return [

@@ -6,7 +6,9 @@ const sopSetting = {
     sop: {
         isUpload: false,
     },
-    task: {},
+    task: {
+        isUpload: true,
+    },
 };
 
 export default sopSetting;

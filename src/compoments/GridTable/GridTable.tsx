@@ -140,6 +140,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 initShrinkWidth += columnDef.actualWidth;
             }
         });
+
         setShrinkWidth(initShrinkWidth - 12);
     };
 
@@ -332,8 +333,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 getRowHeight={getRowHeight}
                 isFullWidthCell={isFullWidthCell}
                 fullWidthCellRenderer={fullWidthCellRenderer}
-                onRowSelected={() => {}}
-                onSelectionChanged={() => {}}
+                onRowSelected={() => { }}
+                onSelectionChanged={() => { }}
                 tooltipShowDelay={0}
                 // suppressDragLeaveHidesColumns={true}
                 rowDragManaged={true}

@@ -27,13 +27,11 @@ import SopUpload from "./components/SopUpload";
 import CellAction from "./components/CellAction";
 import CellDownload from "./components/CellDownload";
 import CellSelector from "./components/CellSelectorEditor";
-import { FirstDataRenderedEvent } from "ag-grid-community";
 
 import queryString from "query-string";
-import { RootState } from "../../Reducer";
 
 interface SopDetailProps {
-
+    sequence: string[];
 }
 
 const scopes = [
@@ -43,14 +41,11 @@ const scopes = [
     { name: "de88", code: "de88" },
 ];
 
-const SopDetail = () => {
-    const sequence = useSelector((state: RootState) => state.sopManagement.sequence);
-    console.log(sequence)
-    const dispatch = useDispatch();
+const SopDetail = (props: SopDetailProps) => {
 
     const gridRef = useRef<any>();
     const history = useHistory();
-    const params: { taskID: string } = useParams();
+
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [detailData, setDetailData] = useState<any>([]);
 
@@ -60,6 +55,7 @@ const SopDetail = () => {
     const queryPage = query.page + "";
     const queryValue = query.value + "";
 
+    const sequence = props.sequence;
     const detailColumnDefs = useMemo(() => {
         switch (queryPage) {
             case "task":
@@ -70,6 +66,7 @@ const SopDetail = () => {
                         suppressMenu: false,
                         filter: false,
                         sortable: false,
+                        suppressMovable: true,
                     },
                     { headerName: "Fab", field: "make" },
                     { headerName: "Dept", field: "key" },
@@ -83,11 +80,6 @@ const SopDetail = () => {
                         field: "scope",
                         editable: true,
                         cellEditor: CellSelector,
-                        // cellEditorPopup: true,
-                        // cellEditorParams: {
-                        //     cellHeight: 50,
-                        //     values ["Ireland", "USA"],
-                        // },
                     },
                     {
                         headerName: "Task Description",
@@ -110,6 +102,7 @@ const SopDetail = () => {
                         suppressMenu: false,
                         filter: false,
                         sortable: false,
+                        suppressMovable: true,
                     },
                     { headerName: "TaskID", field: "taskId" },
                     { headerName: "KeyStage", field: "keyStage" },
@@ -185,8 +178,8 @@ const SopDetail = () => {
     };
 
     const queryIndex = useMemo(() => {
-        if (sequence[queryPage]) {
-            const findIndex = sequence[queryPage].findIndex((v: any) => {
+        if (sequence) {
+            const findIndex = sequence.findIndex((v: any) => {
                 if (queryPage === 'task') {
                     return v === queryValue;
                 }
@@ -203,14 +196,14 @@ const SopDetail = () => {
 
     const handlePrevious = useCallback(() => {
         if (queryIndex > 0) {
-            history.push(`/sop/detail?value=${sequence[queryPage][queryIndex - 1]}&&page=${queryPage}`)
+            history.push(`/sop?value=${sequence[queryIndex - 1]}&&page=${queryPage}`)
         }
 
     }, [JSON.stringify(sequence), queryIndex]);
 
     const handleNext = useCallback(() => {
-        if (queryIndex > -1 && queryIndex < sequence[queryPage].length - 1) {
-            history.push(`/sop/detail?value=${sequence[queryPage][queryIndex + 1]}&&page=${queryPage}`)
+        if (queryIndex > -1 && queryIndex < sequence.length - 1) {
+            history.push(`/sop?value=${sequence[queryIndex + 1]}&&page=${queryPage}`)
         }
 
     }, [JSON.stringify(sequence), queryIndex]);
@@ -237,7 +230,7 @@ const SopDetail = () => {
                                 <span className="breadfont">{queryValue}</span>
                             </span>
                         </Breadcrumbs>
-                        {sequence[queryPage] && (<>
+                        {sequence && (<>
                             <Button className="previous" onClick={handlePrevious}>
                                 <FontAwesomeIcon icon={faAngleUp} />
                             </Button>
@@ -275,7 +268,7 @@ const SopDetail = () => {
             <SopUpload
                 isOpen={isUploadOpen}
                 onClose={handleCloseUpload}
-                task={params.taskID}
+                task={queryValue}
             />
             <div className="view">
                 <GridTable

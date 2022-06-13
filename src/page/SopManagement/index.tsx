@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { render } from "react-dom";
 import { AgGridReact } from "ag-grid-react";
 
@@ -6,8 +6,11 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Button } from "primereact/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
-import SopSummary from "./components/Summary";
+import SopSummary from "./../SopSummary";
+import SopDetail from "./../SopDetail/SopDetail";
 import testData from "../../test.json";
+import { useParams, useLocation } from "react-router-dom";
+import queryString from "query-string";
 
 const sopData = testData.sop;
 
@@ -29,11 +32,30 @@ const TabHeader = (props: {
 };
 
 const SopManagement: React.FC = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const icon = <FontAwesomeIcon icon={faLink} />;
+    const indexMapping = ['task', 'sop'];
 
-    return (
-        <div className="sop">
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [summaryData, setSummaryData] = useState<any>();
+    const loaction = useLocation();
+    const query = queryString.parseUrl(loaction.search).query;
+    const queryValue = query.value;
+
+    useEffect(() => {
+
+        const getSummaryData = () => {
+            fetch("http://localhost:8000/sop?by=" + indexMapping[activeIndex])
+                .then((res) => res.json())
+                .then((res) => {
+                    setSummaryData(res.sop);
+                });
+        }
+
+        getSummaryData()
+
+    }, [activeIndex]);
+
+    const getSummaryElement = useCallback(() => {
+        return <div className="sop">
             <div className="tabs">
                 <TabView
                     activeIndex={activeIndex}
@@ -51,6 +73,7 @@ const SopManagement: React.FC = () => {
                         <SopSummary
                             title="SOP Summary Linked By Task"
                             by="task"
+                            data={summaryData}
                         />
                     </TabPanel>
                     <TabPanel
@@ -65,11 +88,41 @@ const SopManagement: React.FC = () => {
                         <SopSummary
                             title="Task Summary Linked By SOP"
                             by="sop"
+                            data={summaryData}
+
                         />
                     </TabPanel>
                 </TabView>
             </div>
         </div>
+    }, [activeIndex, summaryData])
+
+
+    const detailSequence = useMemo(() => {
+        if (summaryData && summaryData.length > 0) {
+            switch (activeIndex) {
+                case 0:
+                    return summaryData.map((data: { make: string }) => data.make)
+                case 1:
+                    return summaryData.map((data: { file: string }) => data.file)
+                default: return []
+            }
+        }
+    }, [JSON.stringify(summaryData), activeIndex]);
+
+    const getDetailElement = useCallback(() => {
+
+
+        return <SopDetail
+            // sequence={{ [indexMapping[activeIndex]]: detailSequence }}
+            sequence={detailSequence}
+        />
+    }, [detailSequence]);
+
+    const viewElement: React.ReactNode = queryValue ? getDetailElement() : getSummaryElement();
+
+    return (
+        <>{viewElement}</>
     );
 };
 
