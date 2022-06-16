@@ -36,6 +36,7 @@ const SopManagement: React.FC = () => {
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [summaryData, setSummaryData] = useState<any>();
+    const [test, setTest] = useState(false)
     const loaction = useLocation();
     const query = queryString.parseUrl(loaction.search).query;
     const queryValue = query.value;
@@ -53,6 +54,16 @@ const SopManagement: React.FC = () => {
         getSummaryData()
 
     }, [activeIndex]);
+
+    console.log('Query', query, queryValue)
+    useEffect(() => {
+        console.log('test', test)
+        if (queryValue) {
+            setTest(false)
+        } else {
+            setTest(true)
+        }
+    }, [JSON.stringify(query)])
 
     const getSummaryElement = useCallback(() => {
         return <div className="sop">
@@ -116,8 +127,10 @@ const SopManagement: React.FC = () => {
         return <SopDetail
             // sequence={{ [indexMapping[activeIndex]]: detailSequence }}
             sequence={detailSequence}
+            data={summaryData}
+            value={test}
         />
-    }, [detailSequence]);
+    }, [detailSequence, test]);
 
     const viewElement: React.ReactNode = queryValue ? getDetailElement() : getSummaryElement();
 

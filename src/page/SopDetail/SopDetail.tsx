@@ -32,6 +32,9 @@ import queryString from "query-string";
 
 interface SopDetailProps {
     sequence: string[];
+    data: any
+    page?: string
+    value?: boolean
 }
 
 const scopes = [
@@ -42,12 +45,16 @@ const scopes = [
 ];
 
 const SopDetail = (props: SopDetailProps) => {
-
+    console.log(props.value)
     const gridRef = useRef<any>();
     const history = useHistory();
 
+
     const [isUploadOpen, setIsUploadOpen] = useState(false);
     const [detailData, setDetailData] = useState<any>([]);
+    const [isControlAbled, setIsControlAbled] = useState(() => {
+        return props.value
+    })
 
     const loaction = useLocation();
 
@@ -59,41 +66,45 @@ const SopDetail = (props: SopDetailProps) => {
     const detailColumnDefs = useMemo(() => {
         switch (queryPage) {
             case "task":
-                return [
-                    {
+                const defs: any[] = [{ headerName: "Fab", field: "make" },
+                { headerName: "Dept", field: "key" },
+                {
+                    headerName: "Task File Name",
+                    field: "model",
+                    cellRenderer: CellDownload,
+                },
+                {
+                    headerName: "Task Scope",
+                    field: "scope",
+                    editable: isControlAbled,
+                    cellEditor: CellSelector,
+                },
+                {
+                    headerName: "Task Description",
+                    field: "desc",
+                    editable: isControlAbled,
+                },
+                { headerName: "Owner", field: "owner" },
+                { headerName: "Update DT", field: "date" }]
+
+
+                if (isControlAbled) {
+                    defs.splice(0, 1, {
                         headerName: "",
                         checkboxSelection: true,
                         suppressMenu: false,
                         filter: false,
                         sortable: false,
                         suppressMovable: true,
-                    },
-                    { headerName: "Fab", field: "make" },
-                    { headerName: "Dept", field: "key" },
-                    {
-                        headerName: "Task File Name",
-                        field: "model",
-                        cellRenderer: CellDownload,
-                    },
-                    {
-                        headerName: "Task Scope",
-                        field: "scope",
-                        editable: true,
-                        cellEditor: CellSelector,
-                    },
-                    {
-                        headerName: "Task Description",
-                        field: "desc",
-                        editable: true,
-                    },
-                    { headerName: "Owner", field: "owner" },
-                    { headerName: "Update DT", field: "date" },
-                    {
+                    })
+                    defs.push({
                         headerName: "Action",
                         field: "action",
                         cellRenderer: CellAction,
-                    },
-                ];
+                    })
+                }
+
+                return defs
             case "sop":
                 return [
                     {
@@ -140,7 +151,7 @@ const SopDetail = (props: SopDetailProps) => {
             return false;
         }
 
-        return true;
+        return true && isControlAbled;
     }, [queryPage]);
 
     const isLinkCanBeZero = useMemo(() => {
@@ -218,8 +229,10 @@ const SopDetail = (props: SopDetailProps) => {
         });
     };
 
-    return (
-        <div className="sop details">
+    let controlElement: React.ReactNode = null;
+
+    if (isControlAbled) {
+        controlElement = <>
             <div className="topControl">
                 <div className="topMenu">
                     <div className="breadcrumb">
@@ -230,7 +243,7 @@ const SopDetail = (props: SopDetailProps) => {
                                 <span className="breadfont">{queryValue}</span>
                             </span>
                         </Breadcrumbs>
-                        {sequence && (<>
+                        {isControlAbled && sequence && (<>
                             <Button className="previous" onClick={handlePrevious}>
                                 <FontAwesomeIcon icon={faAngleUp} />
                             </Button>
@@ -249,27 +262,53 @@ const SopDetail = (props: SopDetailProps) => {
                                 <FontAwesomeIcon icon={faPlus} />
                             </Button>
                         )}
-                        <Button
-                            className="savelink info"
-                            onClick={handleSaveLink}
-                        >
-                            <svg className="btn-icon">
-                                <use xlinkHref={Icon + "#savelink"} />
-                            </svg>
-                        </Button>
+                        {isControlAbled && (
+                            <Button
+                                className="savelink info"
+                                onClick={handleSaveLink}
+                            >
+                                <svg className="btn-icon">
+                                    <use xlinkHref={Icon + "#savelink"} />
+                                </svg>
+                            </Button>
+                        )}
                     </div>
                 </div>
-                <div className="close">
-                    <Button onClick={handleClose}>
-                        <FontAwesomeIcon icon={faTimes} />
-                    </Button>
-                </div>
+                {isControlAbled && (
+                    <div className="close">
+                        <Button onClick={handleClose}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </Button>
+                    </div>
+                )}
             </div>
             <SopUpload
                 isOpen={isUploadOpen}
                 onClose={handleCloseUpload}
                 task={queryValue}
             />
+        </>
+    } else {
+        controlElement = (
+            <div className="topControl">
+                <div className="topMenu">
+                    <div className="breadcrumb">
+                        <Breadcrumbs>
+                            <span>SOP Summary</span>
+                            <span>
+                                SOP Management For Task :
+                                <span className="breadfont">{queryValue}</span>
+                            </span>
+                        </Breadcrumbs>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="sop details">
+            {controlElement}
             <div className="view">
                 <GridTable
                     dataDefs={{

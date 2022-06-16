@@ -10,6 +10,7 @@ import GridTable from "../../compoments/GridTable/GridTable";
 import * as fh from "../../utils/fetch-helper";
 import { Dropdown } from "primereact/dropdown";
 import Select from "@mui/material/Select";
+import SelectFilter from "../../compoments/GridTable/components/SelectFilter";
 
 // import TaskComponent from "./TaskComponent";
 
@@ -293,12 +294,14 @@ const View: React.FC<any> = (props: any) => {
         const res: any[] = [];
         const info = theOrder.current?.Info || props.selected.Info;
 
+        console.log(props)
         info.forEach(
             (info: { name: string; header_name: string }, idx: number) => {
                 let pinned: string | null = null;
                 let cellRenderer = null;
                 let rowDrag = false;
                 let dndLock = false;
+                let filter: React.ReactNode | string = 'agTextColumnFilter';
 
                 if (isShrink && idx > 0) {
                     return;
@@ -312,9 +315,10 @@ const View: React.FC<any> = (props: any) => {
                     pinned = "left";
 
                     if (idx === 0) {
-                        cellRenderer = LinkC;
+                        // cellRenderer = LinkC;
                         rowDrag = true;
-                        dndLock = true;
+                        // dndLock = true;
+                        filter = SelectFilter
                     }
                 }
 
@@ -324,10 +328,18 @@ const View: React.FC<any> = (props: any) => {
                     pinned: pinned,
                     tooltipField: info.name,
                     cellRenderer: cellRenderer,
-                    // suppressAutoSize: true,
-                    rowDrag: rowDrag,
+                    // suppressAutoSize: true,                    
+                    // rowDrag: rowDrag,
                     suppressSizeToFit: true,
                     lockPinned: true,
+                    filter: filter,
+                    filterParams: {
+                        options: [
+                            { label: 'bookNo_1', value: 'bookNo_1' },
+                            { label: 'bookNo_2', value: 'bookNo_2' },
+                            { label: 'bookNo_3', value: 'bookNo_3' },
+                        ]
+                    },
                     // rowDrag: true,
                     // columnGroupShow: info.name === 'facCd' ? 'close' : 'open',
                     comparator: function (
@@ -340,8 +352,8 @@ const View: React.FC<any> = (props: any) => {
                         return nodeA.data[info.name] === nodeB.data[info.name]
                             ? 0
                             : nodeA.data[info.name] > nodeB.data[info.name]
-                            ? 1
-                            : -1;
+                                ? 1
+                                : -1;
                     },
 
                     headerComponentParams: {
@@ -417,8 +429,8 @@ const View: React.FC<any> = (props: any) => {
                             return v1.planDateEnd === v2.planDateEnd
                                 ? 0
                                 : d1 > d2
-                                ? 1
-                                : -1;
+                                    ? 1
+                                    : -1;
                         }
 
                         return 0;
@@ -430,15 +442,15 @@ const View: React.FC<any> = (props: any) => {
                         return (
                             (actlCompleteDate
                                 ? dateFormat(
-                                      new Date(actlCompleteDate),
-                                      "yyyy/mm/dd"
-                                  )
+                                    new Date(actlCompleteDate),
+                                    "yyyy/mm/dd"
+                                )
                                 : "") +
                             (planDateEnd
                                 ? dateFormat(
-                                      new Date(planDateEnd),
-                                      "yyyy/mm/dd"
-                                  )
+                                    new Date(planDateEnd),
+                                    "yyyy/mm/dd"
+                                )
                                 : "")
                         );
                     },
@@ -704,7 +716,7 @@ const View: React.FC<any> = (props: any) => {
             >
                 ALL
             </button>
-            <Progress cards={getProgressCards()} />
+            {/* <Progress cards={getProgressCards()} /> */}
 
             <Dropdown
                 optionLabel="name"

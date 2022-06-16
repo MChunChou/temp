@@ -61,9 +61,9 @@ const CellAction = (props: ICellRendererParams) => {
 
     return (
         <span className="action">
-            <Button className="Edit" onClick={handleEdit}>
+            {/* <Button className="Edit" onClick={handleEdit}>
                 <FontAwesomeIcon icon={faPen} />
-            </Button>
+            </Button> */}
 
             <input
                 onChange={handleUpload}
