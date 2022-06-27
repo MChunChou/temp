@@ -17,6 +17,8 @@ import FullWidthCellRenderer from "../../page/Control";
 import icons from "../../styles/icon.svg";
 import * as eh from "../../utils/export-helper";
 
+import CellHeaderAction from './components/CellHeaderAction'
+
 interface GridTableProps {
     dataDefs: DataOptions;
     columnDefs: ColumnsOptions;
@@ -105,6 +107,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
     const components = useMemo(() => {
         return {
             agColumnHeader: CustomHeader,
+            headerAction: CellHeaderAction
         };
     }, []);
 

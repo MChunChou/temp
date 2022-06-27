@@ -12,9 +12,9 @@ import { Dropdown } from "primereact/dropdown";
 import Select from "@mui/material/Select";
 import SelectFilter from "../../compoments/GridTable/components/SelectFilter";
 
-// import TaskComponent from "./TaskComponent";
+import TaskComponent from "./TaskComponent";
 
-import TaskComponent from "./ViewTask";
+// import TaskComponent from "./ViewTask";
 
 import Detail from "./Detail";
 import { Link } from "react-router-dom";
@@ -22,7 +22,7 @@ import * as eh from "../../utils/export-helper";
 import { format as dateFormat } from "../../utils/date-helper";
 import Progress from "../../compoments/Progress/Progress";
 import { DesktopDateTimePicker } from "@mui/lab";
-import { RowNode } from "ag-grid-community";
+import { GridApi, RowNode } from "ag-grid-community";
 import {
     isDateInPlan,
     isDelay,
@@ -33,6 +33,7 @@ import {
 
 //測試資料
 import testD from "../../test.json";
+import { grid } from "@mui/system";
 
 const citySelectItems = [
     { label: "Ongoing", value: 0 },
@@ -53,6 +54,7 @@ const Status = [
     "on time",
     "delay",
 ];
+
 const LinkC = (props: any) => {
     return (
         <Link
@@ -122,6 +124,9 @@ const View: React.FC<any> = (props: any) => {
         getData();
     }, [props.node, props.selected, props.taskOptions]);
 
+
+
+
     const getData = () => {
         // 取得 post 用資訊
         const params = getScheduleMainParams(
@@ -163,11 +168,14 @@ const View: React.FC<any> = (props: any) => {
     }, [data]);
 
     const sortData = (node?: any) => {
+        const list = theOrder.current.List || props.selected.List;
         if (data.length > 0) {
             // sort for toolInfo
             const afterSort = data.sort((a: any, b: any) => {
-                const ai = props.selected.List.indexOf(a.toolInfo.facCd);
-                const bi = props.selected.List.indexOf(b.toolInfo.facCd);
+
+                const ai = list.findIndex((list: any) => list.match(a.toolInfo.facCd));
+                const bi = list.findIndex((list: any) => list.match(b.toolInfo.facCd));
+
                 return ai - bi;
             });
 
@@ -291,10 +299,19 @@ const View: React.FC<any> = (props: any) => {
     };
 
     const getInfoColumn = (isExpand: boolean, isShrink?: boolean): any[] => {
-        const res: any[] = [];
-        const info = theOrder.current?.Info || props.selected.Info;
+        const res: any[] = [{
+            field: '',
+            headerName: '',
+            pinned: 'left',
+            cellRenderer: 'headerAction',
+            cellRenndereParams: {
+                isChecked: true
+            },
+            rowDrag: true
+        }];
 
-        console.log(props)
+        const info = theOrder.current?.Info || props.selected.Info;
+        // console.log("Render Info ", info)
         info.forEach(
             (info: { name: string; header_name: string }, idx: number) => {
                 let pinned: string | null = null;
@@ -463,6 +480,7 @@ const View: React.FC<any> = (props: any) => {
     const nodeColumns = () => {
         const nodeSet = new Set();
         const task = theOrder.current.Task || props.selected.Task;
+        console.log("Render Task", task, nodeSet)
 
         task.forEach((task: any) => {
             const node = props.node.find((n: any) => {
@@ -482,6 +500,7 @@ const View: React.FC<any> = (props: any) => {
             })
             .map(
                 (task: { taskId: string; taskName: any; keyStage: string }) => {
+                    console.log(task)
                     return {
                         field: task.taskId + "",
                         headerName: task.taskName,
@@ -518,6 +537,7 @@ const View: React.FC<any> = (props: any) => {
                 }
             );
 
+        console.log(res)
         return res;
     };
 
@@ -670,10 +690,13 @@ const View: React.FC<any> = (props: any) => {
     const onOrderChange = (node: string, order: any[]) => {
         const oldOrder = theOrder.current[node] || props.selected[node];
         const newOrder = order;
+
+        // console.log(newOrder, theOrder)
         oldOrder.forEach((column: any) => {
             if (
                 !order.some(
-                    (c: any) => JSON.stringify(c) === JSON.stringify(column)
+                    // (c: any) => JSON.stringify(c) === JSON.stringify(column)
+                    (c: any) => JSON.stringify(column).match(JSON.stringify(c))
                 )
             ) {
                 newOrder.push(column);
@@ -691,6 +714,12 @@ const View: React.FC<any> = (props: any) => {
         ]);
         setDetailKeyStage(node);
     };
+
+    const saveRowChange = () => {
+        if (gridAPI) {
+
+        }
+    }
 
     let d = null;
     if (isDetail) {
@@ -732,6 +761,7 @@ const View: React.FC<any> = (props: any) => {
                 <button
                     onClick={() => {
                         const saveOrder = { ...theOrder.current };
+
                         const rowNodes: any[] = [];
                         gridAPI.api.forEachNode((rowNode: any) => {
                             rowNodes.push(
@@ -741,9 +771,9 @@ const View: React.FC<any> = (props: any) => {
                             );
                         });
 
-                        saveOrder.list = rowNodes;
+                        saveOrder.List = rowNodes;
                         // console.log(rowNodes);
-                        // console.log(saveOrder);
+                        console.log(saveOrder);
 
                         // const afterColumns = gridAPI.columnApi
                         //     .getAllGridColumns()
@@ -778,6 +808,9 @@ const View: React.FC<any> = (props: any) => {
                     onOrderChange("info", afterColumns);
                 }}
                 isCsv={true}
+                gridDefs={{
+                    // rowModelType: 'infinite'
+                }}
                 getCsvData={(api: any) => {
                     const csvData: any[] = [];
                     const csvInfoHead: any[] = [];
@@ -846,7 +879,22 @@ const View: React.FC<any> = (props: any) => {
                     return csvData;
                 }}
                 onRefresh={() => {
-                    getData();
+
+
+                    if (gridAPI) {
+                        theOrder.current = {}
+
+                        setTimeout(() => {
+                            getData();
+                        }, 500)
+
+                        gridAPI.api.setColumnDefs(getColumn(false));
+
+                        // gridAPI.api.refreshCells()
+                        // gridAPI.api.refreshInfiniteCache()
+                        // gridAPI.api.redrawRows([])
+                    }
+
                 }}
                 onColumnMoved={(evt) => {
                     console.log("Info column moved", evt, props);
@@ -880,7 +928,17 @@ const View: React.FC<any> = (props: any) => {
                     }
                 }}
                 onRowMoved={() => {
-                    console.log("Tool Moved");
+                    // console.log("Tool Moved", gridAPI, props);
+                    const newRowsDefs: any[] = []
+                    gridAPI.api.forEachNode((node: any) => {
+                        // 湊成 taskID|FacCd
+                        const facCd = node.data.facCd;
+                        newRowsDefs.push(props.selected.List.find((list: any) => list.match(facCd)));
+                    })
+
+                    // console.log(newRowsDefs);
+
+                    onOrderChange('List', newRowsDefs);
                 }}
                 onGridReady={(api) => {
                     setGridAPI(api);
