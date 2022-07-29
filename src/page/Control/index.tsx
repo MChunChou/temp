@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import MyCalendar from "../../compoments/Calendar";
 
 const Control = (props: any) => {
-    console.log("Control", props.data);
+    console.log("Control", props.data, props);
 
     const {
         actlCompleteDate,
@@ -34,7 +34,7 @@ const Control = (props: any) => {
                 <div className="date">
                     <label>
                         Plan Start
-                        {planDateStart && planDateStart.toLocaleDateString()}
+                        {start && start.toLocaleDateString()}
                     </label>
                     <MyCalendar
                         disabled={!isEditAbled}
@@ -47,7 +47,7 @@ const Control = (props: any) => {
                 <div className="date">
                     <label>
                         Plan End
-                        {planDateEnd && planDateEnd.toLocaleDateString()}
+                        {end && end.toLocaleDateString()}
                     </label>
                     <MyCalendar
                         disabled={!isEditAbled}
@@ -80,6 +80,7 @@ const Control = (props: any) => {
                     <textarea
                         value={remark}
                         onChange={(event) => {
+                            console.warn(props.api.getSelectedNodes(),)
                             setRemark(event.target.value);
                         }}
                     ></textarea>

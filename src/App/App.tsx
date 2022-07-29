@@ -7,6 +7,8 @@ import "primereact/resources/primereact.min.css";
 // v5
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+// import { Router, Route, Switch, Link } from "react-router-dom";
+import TestRouter from './TestRouter'
 
 import testData from "../test.json";
 import Calendar from "../compoments/Calendar/Calendar";
@@ -116,71 +118,72 @@ function App() {
                     />
                     <Route path="/block" element={<Demo />} />
                 </Routes> */}
+                <div>
+                    <span>
+                        <Link to={"/"}>Root</Link>
+                    </span>
+                    <span>
+                        <Link to={"/view"}>MySchedule</Link>
+                    </span>
+                    <span>
+                        <Link to={"/filter"}>Filter</Link>
+                    </span>
+                    <span>
+                        <Link to={"/block"}>block</Link>
+                    </span>
+                    <span>
+                        <Link to={"/dnd"}>dnd</Link>
+                    </span>
+                    <span>
+                        <Link to={"/sop"}>sop</Link>
+                    </span>
+                    <span>
+                        <Link to={"/demo"}>demo</Link>
+                    </span>
+                </div>
 
-                <Router>
-                    <div>
-                        <span>
-                            <Link to={"/"}>Root</Link>
-                        </span>
-                        <span>
-                            <Link to={"/view"}>MySchedule</Link>
-                        </span>
-                        <span>
-                            <Link to={"/filter"}>Filter</Link>
-                        </span>
-                        <span>
-                            <Link to={"/block"}>block</Link>
-                        </span>
-                        <span>
-                            <Link to={"/dnd"}>dnd</Link>
-                        </span>
-                        <span>
-                            <Link to={"/sop"}>sop</Link>
-                        </span>
-                        <Switch>
-                            <Route exact path="/">
-                                <View
-                                    selected={selected}
-                                    node={node}
-                                    taskOptions={taskOption}
-                                />
-                            </Route>
-                            <Route exact path="/view">
-                                <MySchedule />
-                            </Route>
-                            <Route exact path="/filter">
-                                <Filter />
-                            </Route>
-                            <Route exact path="/block">
-                                <Demo />
-                            </Route>
-                            <Route exact path="/dnd">
-                                <DND cards={[]} />
-                            </Route>
-                            <Route exact path="/sop">
-                                <SopManagement />
-                            </Route>
-                            <Route exact path="/sop/detail">
-                                <SopDetail />
-                            </Route>
+                <Switch>
+                    <Route exact path="/">
+                        <View
+                            selected={selected}
+                            node={node}
+                            taskOptions={taskOption}
+                        />
+                    </Route>
+                    <Route exact path="/view">
+                        <MySchedule />
+                    </Route>
+                    <Route exact path="/filter">
+                        <Filter />
+                    </Route>
+                    <Route exact path="/block">
+                        <Demo />
+                    </Route>
+                    <Route exact path="/dnd">
+                        <DND cards={[]} />
+                    </Route>
+                    <Route exact path="/sop">
+                        <SopManagement />
+                    </Route>
+                    <Route exact path="/sop/detail">
+                        <SopDetail />
+                    </Route>
+                    <Route exact path="/sopII">
+                        <SopManagementII />
+                    </Route>
+                    <Route exact path="/sopII/:taskId">
+                        <SopTwoPage />
+                    </Route>
+                    <Route exact path="/create">
+                        <Create />
+                    </Route>
+                    <TestRouter />
+                </Switch>
 
-                            <Route exact path="/sopII">
-                                <SopManagementII />
-                            </Route>
-                            <Route exact path="/sopII/:taskId">
-                                <SopTwoPage />
-                            </Route>
-
-                            <Route exact path="/create">
-                                <Create />
-                            </Route>
-                        </Switch>
-                    </div>
-                </Router>
             </div>
 
-            <div>test</div>
-            <div>test1</div>
+            {/* <div>test</div>
+            <div>test1</div> */}
         </Provider>
     );
 }

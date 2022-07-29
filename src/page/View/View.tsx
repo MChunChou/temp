@@ -302,12 +302,20 @@ const View: React.FC<any> = (props: any) => {
         const res: any[] = [{
             field: '',
             headerName: '',
+            maxWidth: 50,
             pinned: 'left',
             cellRenderer: 'headerAction',
             cellRenndereParams: {
                 isChecked: true
             },
-            rowDrag: true
+            headerComponentParams: {
+                enableSorting: false,
+                enableMenu: false
+            },
+            rowDrag: true,
+            checkboxSelection: true,
+            headerCheckboxSelection: true,
+
         }];
 
         const info = theOrder.current?.Info || props.selected.Info;
@@ -347,6 +355,8 @@ const View: React.FC<any> = (props: any) => {
                     cellRenderer: cellRenderer,
                     // suppressAutoSize: true,                    
                     // rowDrag: rowDrag,
+                    // maxWidth: 150,
+                    // minWidth: 100,
                     suppressSizeToFit: true,
                     lockPinned: true,
                     filter: filter,
@@ -426,6 +436,7 @@ const View: React.FC<any> = (props: any) => {
                     initialWidth: 150,
                     resizable: true,
                     minWidth: 150,
+                    // maxWidth: 150,
                     lockPinned: true,
                     sortable: true,
                     headerComponentParams: {
@@ -810,6 +821,7 @@ const View: React.FC<any> = (props: any) => {
                 isCsv={true}
                 gridDefs={{
                     // rowModelType: 'infinite'
+                    rowSelection: 'multiple'
                 }}
                 getCsvData={(api: any) => {
                     const csvData: any[] = [];
@@ -833,8 +845,7 @@ const View: React.FC<any> = (props: any) => {
                             if (i > 0) {
                                 nodeHead.push("");
                             }
-
-                            console.log(t);
+                            // console.log(t);
                             infoHead.push({
                                 field: t.field,
                                 name: t.headerName,
@@ -847,32 +858,59 @@ const View: React.FC<any> = (props: any) => {
                         ...csvInfoHead.map((head) => head.name),
                         ...nodeHead,
                     ]);
+
                     csvData.push([
                         "",
                         ...csvInfoHead.map((head) => ""),
                         ...infoHead.map((info) => info.name),
                     ]);
 
-                    sortData(false).forEach((data: any) => {
+
+                    gridAPI.api.forEachNodeAfterFilterAndSort((node: any) => {
+                        console.log(node)
+
                         const start: string[] = ["Start"];
                         const end: string[] = ["End"];
                         const conplete: string[] = ["Complete"];
 
                         csvInfoHead.forEach((head) => {
-                            start.push(data[head.header]);
-                            end.push(data[head.header]);
-                            conplete.push(data[head.header]);
+                            start.push(node.data[head.header]);
+                            end.push(node.data[head.header]);
+                            conplete.push(node.data[head.header]);
                         });
 
                         infoHead.forEach((info) => {
-                            start.push(data[info.field].planDateStart);
-                            end.push(data[info.field].planDateEnd);
-                            conplete.push(data[info.field].actlCompleteDate);
+                            start.push(node.data[info.field] ? node.data[info.field].planDateStart : '');
+                            end.push(node.data[info.field] ? node.data[info.field].planDateEnd : '');
+                            conplete.push(node.data[info.field] ? node.data[info.field].actlCompleteDate : '');
                         });
+
                         csvData.push(start);
                         csvData.push(end);
                         csvData.push(conplete);
-                    });
+
+                    })
+
+                    // sortData(false).forEach((data: any) => {
+                    //     const start: string[] = ["Start"];
+                    //     const end: string[] = ["End"];
+                    //     const conplete: string[] = ["Complete"];
+
+                    //     csvInfoHead.forEach((head) => {
+                    //         start.push(data[head.header]);
+                    //         end.push(data[head.header]);
+                    //         conplete.push(data[head.header]);
+                    //     });
+
+                    //     infoHead.forEach((info) => {
+                    //         start.push(data[info.field] ? data[info.field].planDateStart : '');
+                    //         end.push(data[info.field] ? data[info.field].planDateEnd : '');
+                    //         conplete.push(data[info.field] ? data[info.field].actlCompleteDate : '');
+                    //     });
+                    //     csvData.push(start);
+                    //     csvData.push(end);
+                    //     csvData.push(conplete);
+                    // });
 
                     // console.log(sortData(), csvInfoHead,nodeHead,infoHead);
 

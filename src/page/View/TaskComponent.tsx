@@ -53,7 +53,7 @@ const TaskComponent = (props: any) => {
 
         const res = await fetch(
             "http://localhost:8000/update/date?data=" +
-                JSON.stringify(updateData)
+            JSON.stringify(updateData)
         )
             .then((r) => {
                 return r.json();

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export default (props) => {
+    console.error("Customer", props)
     const [ascSort, setAscSort] = useState("inactive");
     const [descSort, setDescSort] = useState("inactive");
     const [noSort, setNoSort] = useState("inactive");

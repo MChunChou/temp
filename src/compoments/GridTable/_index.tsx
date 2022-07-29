@@ -7,42 +7,41 @@ import React, {
 } from "react";
 
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef, GridReadyEvent } from "ag-grid-community";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+
+import CellHeaderAction from "./components/CellHeaderAction";
+import CellFooterAction from "./components/CellFooterAction";
 
 interface GridTableProps {
     columnDef: ColDef;
 }
 
+const defaultColDef = {
+    resizable: false,
+    sortable: true,
+    lockPinned: true,
+
+}
+
+const components = {
+    cellHeaderAction: CellHeaderAction,
+    cellFooterAction: CellFooterAction
+}
+
 const GridTable = (props: GridTableProps) => {
     const gridRef = useRef<AgGridReact>(null);
 
+
     const [rowData, setRowData] = useState();
-    const [defaultColDef] = useState({
-        resizable: false,
-        wrapText: true,
-        sortable: true,
-        // alwaysShowHorizontalScroll: true,
-        // alwaysShowVerticalScroll: true,
-        filter: "agTextColumnFilter",
-        /* Set not dnd for pinned*/
-        lockPinned: true,
-        headerComponentParams: {
-            enableMenu: true,
-        },
+    const [gridAPI, setGridAPI] = useState<GridReadyEvent>();
 
-        /* Default Use filter in first row */
-        // suppressMenu: true,
-        // floatingFilter: true,
+    const onGridReady = useCallback((api: GridReadyEvent) => {
+        setGridAPI(api);
 
-        /* Using in paginatoion */
-        // pagination: true,
-        // paginationAutoPageSize: 2,
-        // suppressAutoSize: true,
-        // suppressSizeToFit: true,
-    });
+    }, []);
 
     let tableControl: React.ReactNode | null = null;
     return (
@@ -56,6 +55,8 @@ const GridTable = (props: GridTableProps) => {
                 rowDragManaged={true}
                 suppressMoveWhenRowDragging={true}
                 animateRows={true}
+                // event
+                onGridReady={onGridReady}
             />
         </div>
     );

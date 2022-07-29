@@ -18,6 +18,7 @@ import icons from "../../styles/icon.svg";
 import * as eh from "../../utils/export-helper";
 
 import CellHeaderAction from './components/CellHeaderAction'
+import { GridReadyEvent } from "ag-grid-community";
 
 interface GridTableProps {
     dataDefs: DataOptions;
@@ -127,8 +128,10 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
         getData();
     }, [props.dataDefs.data]);
 
-    const onGridReady = (api: any) => {
+    const onGridReady = (api: GridReadyEvent) => {
+        console.warn(api)
         setGridAPI(api);
+
         props.onGridReady && props.onGridReady(api);
     };
 
@@ -202,6 +205,7 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
 
     const autoSizeAll = useCallback(
         (skipHeader) => {
+
             const allColumnIds: any[] = [];
             gridRef.current.columnApi
                 .getAllColumns()
@@ -209,13 +213,30 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                     allColumnIds.push(column.getId());
                 });
             // gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
-            gridRef.current.columnApi.autoSizeAllColumns();
+            gridRef.current.columnApi.autoSizeAllColumns(true);
+            gridRef.current.api.sizeColumnsToFit();
+
             // console.log(gridAPI);
             getShrinkWidth(gridRef.current.columnApi);
             // gridAPI.columnApi.autoSizeAllColumns();
         },
         [gridAPI]
     );
+
+    const doTheTest = () => {
+        console.log("====== Test Starat =======")
+        console.log(gridRef.current)
+        gridRef.current.columnApi
+            .getAllColumns()
+            .forEach((column: { getId: () => any }) => {
+                console.log(column)
+            });
+
+
+        gridRef.current.api.sizeColumnsToFit();
+
+        console.log("====== Test End =======")
+    }
 
     return (
         <div className="grid-table ag-theme-alpine">
@@ -275,13 +296,16 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 <button
                     onClick={() => {
                         let csvData;
+
                         if (props.getCsvData) {
                             csvData = props.getCsvData(gridRef.current.api);
                         } else {
-                            csvData = gridRef.current.api.getDataAsCsv();
+                            csvData = gridRef.current.api.getDataAsCsv({
+                                onlySelected: true
+                            });
                         }
 
-                        eh.csv(csvData, "testFileName");
+                        // eh.csv(csvData, "testFileName");
                     }}
                 >
                     csv
@@ -328,6 +352,8 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                 onGridColumnsChanged={() => {
                     autoSizeAll(false);
                     // getShrinkWidthgr);
+
+                    doTheTest()
                 }}
                 rowData={rowData}
                 columnDefs={columnDefs}
@@ -358,6 +384,9 @@ const GridTable: React.FC<GridTableProps> = (props: GridTableProps) => {
                     //     evt.columnApi.getAllGridColumns()
                     // );
                 }}
+                rowMultiSelectWithClick={true}
+                // suppressRowDeselection={true}
+                suppressRowClickSelection={true}
                 {...props.gridDefs}
             />
         </div>
